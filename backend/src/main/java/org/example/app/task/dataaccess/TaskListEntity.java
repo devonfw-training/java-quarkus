@@ -2,15 +2,15 @@ package org.example.app.task.dataaccess;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
 import org.example.app.general.dataaccess.ApplicationPersistenceEntity;
 import org.example.app.task.common.TaskList;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 /**
  * {@link TaskList} implementation as {@link ApplicationPersistenceEntity}.

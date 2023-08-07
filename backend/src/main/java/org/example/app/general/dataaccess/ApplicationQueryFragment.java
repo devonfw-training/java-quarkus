@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import java.util.function.Function;
 
 import org.example.app.general.common.search.LikePatternSyntax;
 import org.example.app.general.common.search.SearchCriteria;
@@ -20,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import com.google.common.base.Function;
 import com.querydsl.core.FilteredClause;
 import com.querydsl.core.support.QueryBase;
 import com.querydsl.core.types.OrderSpecifier;
@@ -30,6 +27,9 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQuery;
+
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 /**
  * Abstract base class for query fragment of spring-data repository.

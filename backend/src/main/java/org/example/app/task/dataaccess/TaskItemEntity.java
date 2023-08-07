@@ -2,15 +2,15 @@ package org.example.app.task.dataaccess;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.example.app.general.dataaccess.ApplicationPersistenceEntity;
 import org.example.app.task.common.TaskItem;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 /**
  * {@link TaskItem} implementation as {@link ApplicationPersistenceEntity}.

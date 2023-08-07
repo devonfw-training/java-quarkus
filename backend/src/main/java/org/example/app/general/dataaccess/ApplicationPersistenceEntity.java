@@ -1,11 +1,11 @@
 package org.example.app.general.dataaccess;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
-
 import org.example.app.general.common.ApplicationEntity;
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Version;
 
 /**
  * Abstract base class for all persistent entities of this app.

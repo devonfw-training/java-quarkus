@@ -15,13 +15,12 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>2.12.2.Final</quarkus.platform.version>
-
+    <quarkus.platform.version>3.2.3.Final</quarkus.platform.version>
     <!-- Run integration tests by default -->
     <skipITs>false</skipITs>
-    <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
+    <surefire-plugin.version>3.0.0</surefire-plugin.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
-    <querydsl.version>4.3.1</querydsl.version>
+    <querydsl.version>5.0.0</querydsl.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -102,12 +101,14 @@
       <groupId>com.querydsl</groupId>
       <artifactId>querydsl-jpa</artifactId>
       <version>${querydsl.version}</version>
+      <classifier>jakarta</classifier>
     </dependency>
     <dependency>
       <groupId>com.querydsl</groupId>
       <artifactId>querydsl-apt</artifactId>
       <scope>provided</scope>
       <version>${querydsl.version}</version>
+      <classifier>jakarta</classifier>
     </dependency>
 
     <!-- Test -->

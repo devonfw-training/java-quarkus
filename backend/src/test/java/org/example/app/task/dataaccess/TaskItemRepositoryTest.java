@@ -3,8 +3,6 @@ package org.example.app.task.dataaccess;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.assertj.core.api.Assertions;
 import org.example.app.general.common.search.LikePatternSyntax;
 import org.example.app.general.common.search.SortOrderBy;
@@ -14,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 /**
  * Test of {@link TaskItemRepository}.
