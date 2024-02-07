@@ -1,11 +1,11 @@
 package org.example.app.task.logic;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.example.app.task.common.TaskItemEto;
 import org.example.app.task.dataaccess.TaskItemEntity;
 import org.mapstruct.Mapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@link Mapper} for {@link org.example.app.task.common.TaskItem}.

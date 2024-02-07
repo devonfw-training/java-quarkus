@@ -4,12 +4,12 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.transaction.Transactional;
-
-import org.example.app.task.dataaccess.TaskItemEntity;
-import org.example.app.task.dataaccess.TaskItemRepository;
+import org.example.app.boredapi.common.ActivityTo;
+import org.example.app.boredapi.logic.UcFindRandomActivity;
+import org.example.app.task.common.TaskItemEto;
 
 /**
- * Use-Case to add a {@link org.example.app.task.common.TaskItem} with a random activity grabbed from
+ * Use-Case to create a {@link org.example.app.task.common.TaskItem} with a random activity grabbed from
  * <a href="https://www.boredapi.com/">The Bored API</a>.
  *
  * @see <a href="https://www.boredapi.com/">The Bored API</a>
@@ -20,25 +20,25 @@ import org.example.app.task.dataaccess.TaskItemRepository;
 public class UcAddRandomActivityTaskItem {
 
   @Inject
-  TaskItemRepository taskItemRepository;
-
+  UcFindRandomActivity ucFindRandomActivity;
   @Inject
-  ActivityService activityService;
+  UcSaveTaskItem ucSaveTaskItem;
 
   /**
-   * @param taskListId id the {@link org.example.app.task.dataaccess.TaskListEntity#getId() primary key} of the
-   *        {@link org.example.app.task.dataaccess.TaskListEntity} for which to add a random task.
-   * @return the {@link TaskItemEntity#getId() primary key} of the newly added {@link TaskItemEntity}.
+   * @param taskListId id the {@link org.example.app.task.common.TaskList#getId() primary key} of the
+   *        {@link org.example.app.task.common.TaskList} for which to add a random task.
+   * @return the {@link TaskItemEto#getId() primary key} of the newly added {@link TaskItemEto}.
    */
   // @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM)
   public Long addRandom(Long taskListId) {
+    final ActivityTo randomActivity = ucFindRandomActivity.findRandomActivity();
 
-    TaskItemEntity entity = new TaskItemEntity();
-    entity.setTaskListId(taskListId);
-    entity.setTitle(this.activityService.getRandomActivity());
+    final TaskItemEto item = new TaskItemEto();
+    item.setTaskListId(taskListId);
+    item.setTitle(randomActivity.getActivity());
+    item.setStarred(randomActivity.getAccessibility() > 0);
 
-    entity = this.taskItemRepository.save(entity);
-    return entity.getId();
+    return this.ucSaveTaskItem.save(item);
   }
 
 }

@@ -1,23 +1,22 @@
 package org.example.app.task.logic;
 
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 import org.assertj.core.api.Assertions;
 import org.example.app.task.common.TaskItemEto;
 import org.junit.jupiter.api.Test;
-
-import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
 
 /**
  * Test of {@link UcSaveTaskItem}.
  */
 @QuarkusTest
-public class UcSaveTaskItemTest extends Assertions {
+class UcSaveTaskItemTest extends Assertions {
 
   @Inject
-  private UcFindTaskItem ucFindTaskItem;
+  UcFindTaskItem ucFindTaskItem;
 
   @Inject
-  private UcSaveTaskItem ucSaveTaskItem;
+  UcSaveTaskItem ucSaveTaskItem;
 
   @Test
   public void saveTaskItem() {
