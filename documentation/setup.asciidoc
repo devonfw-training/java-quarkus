@@ -48,7 +48,16 @@ Next, we import the new `backend` project into our Eclipse IDE:
 
 ===== Import into IntelliJ
 
-* TODO explain here
+* Open IntelliJ `File` menu and select `Project structure`
+* In the `Project structure` Popup select `Modules`, click on `+` and `Import Module`
+
+image::images/Intellij-import-module.png[]
+* Select the `java-quarkus` project and confirm with `OK`
+
+image::images/Intellij-select-project.png[]
+* Select to import using `Maven` and confirm with `Create`
+
+image::images/Intellij-import-with-maven.png[]
 
 === Build Frontend
 The frontend is written in react and can be build with yarn. Please go into `frontend` and run `yarn install` on a command line. Please do not use npm.
