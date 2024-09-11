@@ -59,7 +59,7 @@ This images are defined as services in docker compose.
 A volume is a shared directory in the host, visible from some or all containers.
 Similarly, networks define the communication rules between containers, and between a container and the host.
 The option `-d` starts the containers in the background (as daemon).
-Otherwise (without `-d`= your terminal will get blocked and if your enter `[Ctrl][c]` the containers will be terminated.
+Otherwise (without `-d`) your terminal will get blocked and if your enter `[Ctrl][c]` the containers will be terminated.
 * To list all build images run `docker-compose images`
 * Run this command to see that the containers arte up and running `docker-compose ps`
 
