@@ -19,6 +19,9 @@ We will learn how to run docker compose with postgres, our application and keycl
 
 ==== Running with docker
 
+HINT: The following `docker` commands need to be executed inside the `backend` sub-folder of your `java-quarkus` project.
+However, the docker-compose commands need to be run directly in the top-level `java-quarkus` project folder.
+
 Familiarize yourself with the structure of `Dockerfile.jvm` and `docker-compose.yaml`
 
 First create a separate network for the database and app by running: :
