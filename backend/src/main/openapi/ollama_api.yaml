@@ -1,0 +1,45 @@
+openapi: 3.0.0
+info:
+  title: Ollama LLM API
+  description: API specification for interacting with a locally hosted Ollama model
+  version: 1.0.0
+servers:
+  - url: http://localhost:11434
+paths:
+  /api/generate:
+    post:
+      summary: Generate text from a model
+      description: Sends a prompt to the specified Ollama model and returns a response.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model:
+                  type: string
+                  example: "llama3"
+                prompt:
+                  type: string
+                  example: "Why is the sky blue?"
+                stream:
+                  type: boolean
+                  example: false
+                keep_alive:
+                  type: integer
+                  example: 600
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "The sky appears blue due to Rayleigh scattering..."
+                  status:
+                    type: string
+                    example: "success"
