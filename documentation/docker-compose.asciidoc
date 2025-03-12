@@ -47,13 +47,22 @@ To run the containers you had to execute many commands.
 It would be easier if we only had to execute one command. We can achieve this by using Docker Compose.
 
 ===== Running Docker compose
-Docker Compose works by applying many rules declared within a single docker-compose.yml configuration file.
+Docker Compose works by applying many rules declared within a single `docker-compose.yml` configuration file.
 
+* To provide the Ollama container with the required environment variables, create an `.env` file under `/backend` and add two variables:
++
+[source, properties]
+----
+OLLAMA_MODEL=llama3.2
+OLLAMA_KEEP_ALIVE_TIME=30m
+----
 * Start application by running `docker-compose up`
 +
-With this command we started container for our backend app, database and keycloak.
-This images are defined as services in docker compose. A volume is a shared directory in the host, visible from some or all containers.
+With this command we started container for our backend app, database, keycloak and ollama.
+These images are defined as services in docker compose. A volume is a shared directory in the host, visible from some or all containers.
 Similarly, networks define the communication rules between containers, and between a container and the host.
++
+_Note:_ It will take some minutes until the Ollama AI model is downloaded and finishes to start up.
 * To list all build images run `docker-compose images`
 * Run this command to see that the containers arte up and running `docker-compose ps`
 
