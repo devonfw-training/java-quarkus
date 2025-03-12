@@ -137,7 +137,6 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-client-reactive-jackson</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.wiremock</groupId>
@@ -148,11 +147,7 @@
     <dependency>
       <groupId>io.quarkiverse.openapi.generator</groupId>
       <artifactId>quarkus-openapi-generator</artifactId>
-      <version>2.8.1</version>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-rest-client-reactive-jackson</artifactId>
+      <version>${openapi.generator.version}</version>
     </dependency>
   </dependencies>
   <build>

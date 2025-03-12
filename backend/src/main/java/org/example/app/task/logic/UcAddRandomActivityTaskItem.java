@@ -51,9 +51,10 @@ public class UcAddRandomActivityTaskItem {
    *
    * @param taskListId the {@link org.example.app.task.dataaccess.TaskListEntity#getId() primary key} of the
    *                   {@link org.example.app.task.dataaccess.TaskListEntity} to which random tasks will be added.
+   * @param listTitle  the title of the task list
    */
-  public void addMultipleRandom(Long taskListId) {
-    List<TaskItemEto> taskItems = this.activityService.getMultipleRandomActivities();
+  public void addMultipleRandom(Long taskListId, String listTitle) {
+    List<TaskItemEto> taskItems = this.activityService.getMultipleRandomActivities(listTitle);
 
     List<TaskItemEntity> entities = taskItems.stream()
             .map(eto -> {

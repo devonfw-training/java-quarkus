@@ -56,10 +56,10 @@ class UcAddRandomTaskItemTest {
     task2.setTitle("Ride bike in the morning");
     List<TaskItemEto> taskItems = List.of(task1, task2);
 
-    given(this.activityServiceMock.getMultipleRandomActivities()).willReturn(taskItems);
+    given(this.activityServiceMock.getMultipleRandomActivities("Spare time")).willReturn(taskItems);
 
     // When
-    this.ucAddRandomTaskItem.addMultipleRandom(2L);
+    this.ucAddRandomTaskItem.addMultipleRandom(2L, "Spare time");
 
     // Then
     ArgumentCaptor<List<TaskItemEntity>> captor = ArgumentCaptor.forClass(List.class);

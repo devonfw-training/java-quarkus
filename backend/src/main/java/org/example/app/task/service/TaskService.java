@@ -168,7 +168,7 @@ public class TaskService {
     taskList.setTitle(listTitle);
 
     Long taskListId = this.ucSaveTaskList.save(taskList);
-    this.ucAddRandomActivityTask.addMultipleRandom(taskListId);
+    this.ucAddRandomActivityTask.addMultipleRandom(taskListId, listTitle);
 
     return Response.created(URI.create("/task/list/" + taskListId)).build();
   }

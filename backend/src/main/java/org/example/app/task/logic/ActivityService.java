@@ -58,13 +58,15 @@ public class ActivityService {
   /**
    * Retrieves multiple random activity suggestions.
    *
+   * @param listTitle the title of the task list
    * @return a list of {@link TaskItemEto} objects, each representing a suggested activity
    */
   @Fallback(fallbackMethod = "fallbackActivities")
   @Timeout(unit = ChronoUnit.SECONDS, value = 30)
-  public List<TaskItemEto> getMultipleRandomActivities() {
+  public List<TaskItemEto> getMultipleRandomActivities(String listTitle) {
 
-    String prompt = "Give me 5-10 random items (containing maximal 5-6 words) which I can add to my ToDo list and return them in the provided JSON format.";
+    String prompt = String.format("Give me 5-10 random items (containing maximal 5-6 words) which are related to the " +
+            "topic %s and which I can add to my ToDo list and return them in the provided JSON format.", listTitle);
     QueryLlmRequest request = buildRequest(prompt, RESPONSE_JSON_SCHEMA);
     return sendRequestAndParseResponse(request, new TypeReference<>() {});
   }
@@ -142,9 +144,10 @@ public class ActivityService {
   /**
    * List of fallback activities in case the suggestion service is down.
    *
+   * @param listTitle the title of the task list (not used in fallback)
    * @return a list of default task items
    */
-  private List<TaskItemEto> fallbackActivities() {
+  private List<TaskItemEto> fallbackActivities(String listTitle) {
     return List.of(
             createTaskItem("Walk the dog"),
             createTaskItem("Pick up books"),

@@ -181,7 +181,7 @@ class TaskServiceTest extends Assertions {
         void shouldCallRandomActivitiesUseCaseAndReturn201() {
 
           given().when().body("Shopping list").contentType(ContentType.TEXT).post("/task/list/multiple-random-activities").then().statusCode(201);
-          then(TaskServiceTest.this.addRandomActivityTaskItem).should().addMultipleRandom(anyLong());
+          then(TaskServiceTest.this.addRandomActivityTaskItem).should().addMultipleRandom(anyLong(), anyString());
         }
 
         @Test
