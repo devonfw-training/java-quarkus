@@ -2,6 +2,7 @@ package org.example.app.task.service;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -159,8 +160,9 @@ public class TaskService {
   @Consumes(MediaType.TEXT_PLAIN)
   @Operation(summary = "Create new task list with multiple items", description = "Create a new task list with the given name and add multiple random activities to the new list")
   @APIResponse(responseCode = "201", description = "Task list with items successfully created")
+  @APIResponse(responseCode = "400", description = "Validation error")
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
-  public Response addMultipleRandomActivities(@Schema(required = true, example = "Shopping list", description = "Title of the task list") String listTitle) {
+  public Response addMultipleRandomActivities(@NotBlank @Schema(required = true, example = "Shopping list", description = "Title of the task list") String listTitle) {
 
     TaskListEto taskList = new TaskListEto();
     taskList.setTitle(listTitle);
@@ -176,6 +178,7 @@ public class TaskService {
   @Consumes(MediaType.APPLICATION_JSON)
   @Operation(summary = "Add all ingredients from recipe to a new task list", description = "Extract all ingredients from the given recipe and add them to a newly created task list")
   @APIResponse(responseCode = "201", description = "Task list with ingredients successfully created")
+  @APIResponse(responseCode = "400", description = "Validation error")
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
   public Response addExtractedIngredients(@Schema(required = true, example = """
           {"listTitle": "Shopping list",
