@@ -46,22 +46,7 @@ const AddTodo: FC<{ addTodo: (text: string) => void }> = ({ addTodo }) => {
           </FormControl>
         </form>
       </Container>
-      <Snackbar
-        open={open}
-        autoHideDuration={4000}
-        onClose={() => setOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      >
-        <Alert
-          // icon={<Check fontSize="inherit" />}
-          elevation={6}
-          variant="filled"
-          onClose={() => setOpen(false)}
-          severity="success"
-        >
-          Successfully added item!
-        </Alert>
-      </Snackbar>
+      
     </div>
   );
 };

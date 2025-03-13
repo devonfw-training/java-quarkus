@@ -5,3 +5,8 @@ export interface TaskItemType {
   starred: any;
   taskListId: number;
 }
+
+export interface TaskListType {
+  id: number;
+  title: string;
+}

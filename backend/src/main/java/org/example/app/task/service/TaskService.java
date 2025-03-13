@@ -1,6 +1,7 @@
 package org.example.app.task.service;
 
 import java.net.URI;
+import java.util.List;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -99,6 +100,19 @@ public class TaskService {
       throw new NotFoundException("TaskList with id " + id + " does not exist.");
     }
     return task;
+  }
+
+  /**
+   * @return all {@link TaskListEto}.
+   */
+  @GET
+  @Path("/lists")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Operation(summary = "Fetch task lists", description = "Fetch all task list")
+  @APIResponse(responseCode = "200", description = "Task lists", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = TaskListEto[].class)))
+  @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
+  public List<TaskListEto> findTaskLists() {
+    return this.ucFindTaskList.findAll();
   }
 
   /**

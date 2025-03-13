@@ -1,8 +1,14 @@
-import {TaskItemType} from "../../types";
-import {IconButton, Menu, MenuItem, Typography} from "@material-ui/core";
-import {DeleteTwoTone as DeleteIcon, EditTwoTone as EditIcon, Star as StarIcon, StarTwoTone as StarIconOutlined, SvgIconComponent,} from "@material-ui/icons";
+import { IconButton, Menu, MenuItem, Typography } from "@material-ui/core";
+import {
+  DeleteTwoTone as DeleteIcon,
+  EditTwoTone as EditIcon,
+  Star as StarIcon,
+  StarTwoTone as StarIconOutlined,
+  SvgIconComponent,
+} from "@material-ui/icons";
+import React, { useState } from "react";
 import useChangeMenuIcon from "../../hooks/useChangeMenuIcon";
-import React, {useState} from "react";
+import { TaskItemType } from "../../types/types";
 
 const ITEM_HEIGHT = 48;
 

@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Button,
   CssBaseline,
   Divider,
   Drawer,
@@ -9,30 +10,29 @@ import {
   ListItemIcon,
   ListItemText,
   makeStyles,
-  useTheme,
+  Slide,
   Toolbar,
   Typography,
-  Slide,
-  Button,
-  useScrollTrigger,
   useMediaQuery,
+  useScrollTrigger,
+  useTheme,
 } from "@material-ui/core";
 import {
+  Info as AboutIcon,
+  InfoOutlined as AboutIconOutlined,
+  ArrowBack as BackIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
-  NotesOutlined as TodoIcon,
-  InfoOutlined as AboutIconOutlined,
-  Info as AboutIcon,
   Menu as MenuIcon,
-  ArrowBack as BackIcon,
-  SettingsOutlined as SettingsIconOutlined,
   Settings as SettingsIcon,
+  SettingsOutlined as SettingsIconOutlined,
+  NotesOutlined as TodoIcon,
 } from "@material-ui/icons";
-import { Link, useLocation } from "wouter";
 import clsx from "clsx";
 import { useState } from "react";
+import { Link, useLocation } from "wouter";
 import CustomLink from "./CustomLink";
-import MoreMenu from "./Actions/MoreMenu";
+import MoreMenu from "./Dialogs/MoreMenu";
 
 const drawerWidth = 240;
 

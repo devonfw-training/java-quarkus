@@ -1,14 +1,22 @@
-import {TaskItemType} from "../../types";
-import React, {forwardRef, useContext, useState} from "react";
-import {DeleteConfirm} from "../Actions/DeleteConfirm";
-import EditConfirm from "../Actions/EditConfirm";
-import {Card, CardContent, Checkbox, Container, Grid, Typography, useMediaQuery,} from "@material-ui/core";
-import {Draggable} from "react-beautiful-dnd";
-import {DeleteConfirmContext} from "../../context/DeleteConfirmContext";
-import ActionsMenu from "../Actions/ActionsMenu";
-import {SmallTextContext} from "../../context/SmallTextContext";
-import {ThemeContext} from "../../context/ThemeContext";
-import {MainContext} from "../../context/MainContext";
+import {
+  Card,
+  CardContent,
+  Checkbox,
+  Container,
+  Grid,
+  Typography,
+  useMediaQuery,
+} from "@material-ui/core";
+import { forwardRef, useContext, useState } from "react";
+import { Draggable } from "react-beautiful-dnd";
+import { DeleteConfirmContext } from "../../context/DeleteConfirmContext";
+import { MainContext } from "../../context/MainContext";
+import { SmallTextContext } from "../../context/SmallTextContext";
+import { ThemeContext } from "../../context/ThemeContext";
+import { TaskItemType } from "../../types/types";
+import ActionsMenu from "../Dialogs/ActionsMenu";
+import { DeleteConfirm } from "../Dialogs/DeleteConfirm";
+import EditConfirm from "../Dialogs/EditConfirm";
 
 interface Props {
   todo: TaskItemType;
@@ -19,9 +27,8 @@ interface Props {
 
 const Todo = forwardRef(
   ({ todo, index, onDelete, onEdit }: Props, ref: any) => {
-    const { markComplete, delTodo, editTodo, markStar } = useContext(
-      MainContext
-    )!;
+    const { markComplete, delTodo, editTodo, markStar } =
+      useContext(MainContext)!;
     const matches = useMediaQuery("(max-width: 768px)");
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
@@ -85,7 +92,11 @@ const Todo = forwardRef(
                   style={checkedStyle}
                   className="todo-text"
                 >
-                  <Grid container alignItems="center" justifyContent="flex-start">
+                  <Grid
+                    container
+                    alignItems="center"
+                    justifyContent="flex-start"
+                  >
                     <Grid item>
                       <Checkbox
                         checked={todo.completed}

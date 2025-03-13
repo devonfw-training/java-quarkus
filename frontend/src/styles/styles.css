@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #3F51B5; 
+  --color-light-primary: #a2b0ff;
+  --color-light-gray: #EDEDED;
+  --color-light-gray2: #D9D9D9;
+  --color-black: #1e1e1e;
+}
+
+* {
+  scrollbar-color: var(--color-light-gray-2) var(--color-light-gray);
+  scrollbar-width: thin;
+  scroll-padding: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .add-todo {
+    margin-top: 10px;
+  }
+  .todo-text {
+    font-size: 1.3rem !important;
+  }
+  .card-content {
+    padding: 12px !important;
+  }
+}
+
+.card-content {
+  padding: 16px;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}

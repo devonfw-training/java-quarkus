@@ -1,10 +1,14 @@
-import {TaskItemType} from "../types";
-import {createContext, ReactNode, useEffect, useState} from "react";
-import {useRoute} from "wouter";
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { useRoute } from "wouter";
+import { TaskItemType, TaskListType } from "../types/types";
 
 interface MainContextInterface {
+  errorAlert: string;
   todos: TaskItemType[];
+  taskLists: TaskListType[];
+  setErrorAlert: React.Dispatch<React.SetStateAction<string>>;
   setTodos: React.Dispatch<React.SetStateAction<TaskItemType[]>>;
+  setTaskLists: React.Dispatch<React.SetStateAction<TaskListType[]>>;
   markComplete: (id: number) => void;
   delTodo: (id: number) => void;
   deleteAll: () => void;
@@ -20,40 +24,65 @@ interface Props {
 
 export const MainContext = createContext<MainContextInterface | null>(null);
 
-export const MainProvider = ({children}: Props) => {
+export const MainProvider = ({ children }: Props) => {
+  const [errorAlert, setErrorAlert] = useState("");
   const [, params] = useRoute("/:listId");
-  const listId = +(params?.listId || 1);
+  const listId = params?.listId;
   const [todos, setTodos] = useState<TaskItemType[]>([]);
+  const [taskLists, setTaskLists] = useState<TaskListType[]>([]);
 
   useEffect(() => {
-    fetch(`/api/task/list-with-items/${encodeURIComponent(listId)}`, {
+    if (undefined !== listId) {
+      fetch(`/api/task/list-with-items/${encodeURIComponent(+listId)}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((json) => setTodos(json.items))
+        .catch((error) => {
+          console.error(error);
+          setErrorAlert("Items could not be loaded!");
+        });
+    }
+  }, [listId]);
 
-      method: 'GET',
+  useEffect(() => {
+    fetch(`/api/task/lists`, {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(response => response.json())
-      .then(json => setTodos(json.items))
-      .catch(error => console.error(error));
+      .then((response) => response.json())
+      .then((json) => setTaskLists(json))
+      .catch((error) => {
+        console.error(error);
+        setErrorAlert("List could not be loaded!");
+      });
   }, []);
 
-  const saveTaskItem = (taskItem: TaskItemType, onSuccess: ((value: number) => any)) => {
+  const saveTaskItem = (
+    taskItem: TaskItemType,
+    onSuccess: (value: number) => any
+  ) => {
     // Send data to the backend via POST
-    fetch('/api/task/item', {
-
-      method: 'POST',
+    fetch("/api/task/item", {
+      method: "POST",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(taskItem) // body data type must match "Content-Type" header
-
+      body: JSON.stringify(taskItem), // body data type must match "Content-Type" header
     })
       .then((response) => response.json())
       .then(onSuccess)
-      .catch(error => console.error(error));
-  }
+      .catch((error) => {
+        console.error(error);
+        setErrorAlert("Item could not be saved!");
+      });
+  };
 
   const addTodo = (title: string) => {
     if (title.trim()) {
@@ -62,8 +91,9 @@ export const MainProvider = ({children}: Props) => {
         title,
         completed: false,
         starred: false,
-        taskListId: listId
-      }
+        taskListId: +listId!,
+      };
+      console.log(JSON.stringify(taskItem));
       saveTaskItem(taskItem, (newId) => {
         taskItem.id = newId;
         const orderTodos = [taskItem, ...todos];
@@ -77,43 +107,47 @@ export const MainProvider = ({children}: Props) => {
     text: string
   ) => {
     if (!(text === null) && text.trim()) {
-      const taskItem = todos.find(todo => todo.id === id);
+      const taskItem = todos.find((todo) => todo.id === id);
       if (taskItem) {
         taskItem.title = text;
-        saveTaskItem(taskItem, () => setTodos(
-          todos.map((todo) => {
-            if (todo.id === id) {
-              todo = taskItem
-            }
-            return todo;
-          }))
+        saveTaskItem(taskItem, () =>
+          setTodos(
+            todos.map((todo) => {
+              if (todo.id === id) {
+                todo = taskItem;
+              }
+              return todo;
+            })
+          )
         );
       }
     }
   };
   const markComplete = (id: number) => {
-    const taskItem = todos.find(todo => todo.id === id);
+    const taskItem = todos.find((todo) => todo.id === id);
     if (taskItem) {
       taskItem.completed = !taskItem.completed;
       saveTaskItem(taskItem, () => {
-          const orderTodos = todos.map(todo => todo.id === id ? taskItem : todo);
-          orderStarAndComplete(orderTodos);
-          setTodos(orderTodos);
-        }
-      );
+        const orderTodos = todos.map((todo) =>
+          todo.id === id ? taskItem : todo
+        );
+        orderStarAndComplete(orderTodos);
+        setTodos(orderTodos);
+      });
     }
   };
 
   const markStar = (id: number) => {
-    const taskItem = todos.find(todo => todo.id === id);
+    const taskItem = todos.find((todo) => todo.id === id);
     if (taskItem) {
       taskItem.starred = !taskItem.starred;
       saveTaskItem(taskItem, () => {
-          const orderTodos = todos.map(todo => todo.id === id ? taskItem : todo);
-          orderStarAndComplete(orderTodos);
-          setTodos(orderTodos);
-        }
-      );
+        const orderTodos = todos.map((todo) =>
+          todo.id === id ? taskItem : todo
+        );
+        orderStarAndComplete(orderTodos);
+        setTodos(orderTodos);
+      });
     }
   };
 
@@ -124,11 +158,14 @@ export const MainProvider = ({children}: Props) => {
 
   const delTodo = (id: number) => {
     fetch(`/api/task/item/${encodeURIComponent(id)}`, {
-      method: 'DELETE',
+      method: "DELETE",
     })
-      .then(() => setTodos(todos.filter(todo => todo.id !== id)))
-      .catch(error => console.error(error));
-  }
+      .then(() => setTodos(todos.filter((todo) => todo.id !== id)))
+      .catch((error) => {
+        console.error(error);
+        setErrorAlert("Item could not be deleted!");
+      });
+  };
 
   const deleteAll = () => setTodos([]);
   const moveTodo = (old: number, new_: number) => {
@@ -140,8 +177,12 @@ export const MainProvider = ({children}: Props) => {
   };
 
   const mainContextValue: MainContextInterface = {
+    errorAlert,
     todos,
+    taskLists,
+    setErrorAlert,
     setTodos,
+    setTaskLists,
     markComplete,
     delTodo,
     deleteAll,
