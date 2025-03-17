@@ -6,9 +6,15 @@ interface MainContextInterface {
   errorAlert: string;
   todos: TaskItemType[];
   taskLists: TaskListType[];
+  showSettings: boolean;
+  showAbout: boolean;
+  showCalendar: boolean;
   setErrorAlert: React.Dispatch<React.SetStateAction<string>>;
   setTodos: React.Dispatch<React.SetStateAction<TaskItemType[]>>;
   setTaskLists: React.Dispatch<React.SetStateAction<TaskListType[]>>;
+  changeShowSettings: () => void;
+  setShowAbout: React.Dispatch<React.SetStateAction<boolean>>;
+  changeShowCalendar: () => void;
   markComplete: (id: number) => void;
   delTodo: (id: number) => void;
   deleteAll: () => void;
@@ -30,6 +36,9 @@ export const MainProvider = ({ children }: Props) => {
   const listId = params?.listId;
   const [todos, setTodos] = useState<TaskItemType[]>([]);
   const [taskLists, setTaskLists] = useState<TaskListType[]>([]);
+  const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [showAbout, setShowAbout] = useState<boolean>(false);
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
 
   useEffect(() => {
     if (undefined !== listId) {
@@ -176,13 +185,27 @@ export const MainProvider = ({ children }: Props) => {
     setTodos(copy);
   };
 
+  const changeShowSettings = () => {
+    setShowSettings(!showSettings);
+  };
+
+  const changeShowCalendar = () => {
+    setShowCalendar(!showCalendar);
+  };
+
   const mainContextValue: MainContextInterface = {
     errorAlert,
     todos,
     taskLists,
+    showSettings,
+    showAbout,
+    showCalendar,
     setErrorAlert,
     setTodos,
     setTaskLists,
+    changeShowSettings,
+    setShowAbout,
+    changeShowCalendar,
     markComplete,
     delTodo,
     deleteAll,

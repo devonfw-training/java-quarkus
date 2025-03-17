@@ -1,8 +1,4 @@
-import { createContext, useEffect, useState, ReactNode } from "react";
-import {
-  enable as enableDarkMode,
-  disable as disableDarkMode,
-} from "darkreader";
+import { createContext, ReactNode, useEffect, useState } from "react";
 
 interface Props {
   children: ReactNode;
@@ -22,27 +18,15 @@ export const ThemeProvider = ({ children }: Props) => {
 
   const changeTheme = () => {
     setIsDark(!isDark);
-    if (isDark) {
-      enableDarkMode({
-        brightness: 100,
-        contrast: 90,
-        sepia: 10,
-      });
-    } else {
-      disableDarkMode();
-    }
-    localStorage.setItem("darkTheme", String(isDark));
   };
 
   useEffect(() => {
     if (isDark) {
-      enableDarkMode({
-        brightness: 100,
-        contrast: 90,
-        sepia: 10,
-      });
-    } else disableDarkMode();
-    localStorage.setItem("darkTheme", JSON.stringify(isDark));
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("darkTheme", String(isDark));
   }, [isDark]);
 
   const themeValue: ThemeInterface = {

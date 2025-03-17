@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from "react";
+import { createContext, ReactNode, useState } from "react";
 
 interface Props {
   children: ReactNode;
@@ -9,9 +9,8 @@ interface DeleteConfirmInterface {
   changeDeleteConfirm: () => void;
 }
 
-export const DeleteConfirmContext = createContext<DeleteConfirmInterface | null>(
-  null
-);
+export const DeleteConfirmContext =
+  createContext<DeleteConfirmInterface | null>(null);
 
 export const DeleteConfirmProvider = ({ children }: Props) => {
   const [isDeleteConfirmation, setIsDeleteConfirmation] = useState(
