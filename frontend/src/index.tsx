@@ -1,9 +1,9 @@
 import { render } from "react-dom";
-import App from "./App";
-import { DeleteConfirmProvider } from "./context/DeleteConfirmContext";
-import { MainProvider } from "./context/MainContext";
-import { SmallTextProvider } from "./context/SmallTextContext";
-import { ThemeProvider } from "./context/ThemeContext";
+import App from "./app";
+import { DeleteConfirmProvider } from "./provider/deleteConfirmProvider";
+import { MainProvider } from "./provider/mainProvider";
+import { ThemeProvider } from "./provider/themeProvider";
+import { TodoProvider } from "./provider/todoProvider";
 import "./styles/styles.css";
 import * as serviceWorkerRegistration from "./worker/serviceWorkerRegistration";
 
@@ -11,9 +11,9 @@ render(
   <MainProvider>
     <ThemeProvider>
       <DeleteConfirmProvider>
-        <SmallTextProvider>
+        <TodoProvider>
           <App />
-        </SmallTextProvider>
+        </TodoProvider>
       </DeleteConfirmProvider>
     </ThemeProvider>
   </MainProvider>,

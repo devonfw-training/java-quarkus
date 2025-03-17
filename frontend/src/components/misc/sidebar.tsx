@@ -1,12 +1,14 @@
 import { CalendarDays, PlusIcon } from "lucide-react";
 import { useContext } from "react";
 import { Link, useRoute } from "wouter";
-import { MainContext } from "../context/MainContext";
+import { MainContext } from "../../provider/mainProvider";
+import { TodoContext } from "../../provider/todoProvider";
 
 export default function Sidebar() {
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
-  const { taskLists, changeShowCalendar } = useContext(MainContext)!;
+  const { changeShowCalendar } = useContext(MainContext)!;
+  const { taskLists } = useContext(TodoContext)!;
 
   return (
     <div className="h-full dark:bg-black bg-light-gray w-3xs flex flex-col">

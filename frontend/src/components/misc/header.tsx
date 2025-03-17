@@ -1,11 +1,11 @@
 import { InfoIcon, SettingsIcon } from "lucide-react";
 import { useContext, useEffect, useRef } from "react";
 import { Link } from "wouter";
-import { DeleteConfirmContext } from "../context/DeleteConfirmContext";
-import { MainContext } from "../context/MainContext";
-import { ThemeContext } from "../context/ThemeContext";
-import About from "../pages/About";
-import Slider from "./Slider";
+import { DeleteConfirmContext } from "../../provider/deleteConfirmProvider";
+import { MainContext } from "../../provider/mainProvider";
+import { ThemeContext } from "../../provider/themeProvider";
+import Slider from "../utils/slider";
+import About from "./about";
 
 export default function Header() {
   const { showSettings, changeShowSettings, setShowAbout } =

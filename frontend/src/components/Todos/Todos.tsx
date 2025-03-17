@@ -1,13 +1,13 @@
-import { useContext, useState } from "react";
-import { MainContext } from "../../context/MainContext";
-import { Droppable, DragDropContext, DropResult } from "react-beautiful-dnd";
-import Todo from "./Todo";
 import { Snackbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import { useContext, useState } from "react";
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import FlipMove from "react-flip-move";
+import { TodoContext } from "../../provider/todoProvider";
+import Todo from "./todo";
 
 const Todos = () => {
-  const { todos, moveTodo } = useContext(MainContext)!;
+  const { todos, moveTodo } = useContext(TodoContext)!;
   const [deleteSnackOpen, setDeleteSnackOpen] = useState(false);
   const [editSnackOpen, setEditSnackOpen] = useState(false);
   const [dragging, setDragging] = useState(false);

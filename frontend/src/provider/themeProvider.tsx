@@ -1,13 +1,4 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
-
-interface Props {
-  children: ReactNode;
-}
-
-interface ThemeInterface {
-  isDark: boolean;
-  changeTheme: () => void;
-}
+import { createContext, useEffect, useState } from "react";
 
 export const ThemeContext = createContext<ThemeInterface | null>(null);
 
@@ -29,12 +20,9 @@ export const ThemeProvider = ({ children }: Props) => {
     localStorage.setItem("darkTheme", String(isDark));
   }, [isDark]);
 
-  const themeValue: ThemeInterface = {
-    isDark,
-    changeTheme,
-  };
-
   return (
-    <ThemeContext.Provider value={themeValue}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={{ isDark, changeTheme }}>
+      {children}
+    </ThemeContext.Provider>
   );
 };

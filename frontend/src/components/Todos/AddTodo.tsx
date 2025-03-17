@@ -1,13 +1,6 @@
-import { useState, FC, ChangeEvent } from "react";
-import {
-  FormControl,
-  Container,
-  Button,
-  TextField,
-  Snackbar,
-} from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+import { Button, Container, FormControl, TextField } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
+import { ChangeEvent, FC, useState } from "react";
 
 const AddTodo: FC<{ addTodo: (text: string) => void }> = ({ addTodo }) => {
   const [text, setText] = useState("");
@@ -46,7 +39,6 @@ const AddTodo: FC<{ addTodo: (text: string) => void }> = ({ addTodo }) => {
           </FormControl>
         </form>
       </Container>
-      
     </div>
   );
 };

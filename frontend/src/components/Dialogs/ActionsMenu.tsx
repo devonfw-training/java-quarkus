@@ -7,7 +7,6 @@ import {
   SvgIconComponent,
 } from "@material-ui/icons";
 import React, { useState } from "react";
-import useChangeMenuIcon from "../../hooks/useChangeMenuIcon";
 import { TaskItemType } from "../../types/types";
 
 const ITEM_HEIGHT = 48;
@@ -60,7 +59,6 @@ export default function ActionsMenu({
     (EventTarget & HTMLButtonElement) | null
   >(null);
   const open = Boolean(anchorEl);
-  const MenuIcon = useChangeMenuIcon();
 
   const options: Option[] = [
     {
@@ -112,9 +110,7 @@ export default function ActionsMenu({
         aria-haspopup="true"
         onClick={handleClick}
         centerRipple={false}
-      >
-        <MenuIcon />
-      </IconButton>
+      ></IconButton>
       <Menu
         id="long-menu"
         anchorEl={anchorEl}

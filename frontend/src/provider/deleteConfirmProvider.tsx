@@ -1,13 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
-
-interface Props {
-  children: ReactNode;
-}
-
-interface DeleteConfirmInterface {
-  isDeleteConfirmation: boolean;
-  changeDeleteConfirm: () => void;
-}
+import { createContext, useState } from "react";
 
 export const DeleteConfirmContext =
   createContext<DeleteConfirmInterface | null>(null);
@@ -22,13 +13,10 @@ export const DeleteConfirmProvider = ({ children }: Props) => {
     setIsDeleteConfirmation(!isDeleteConfirmation);
   };
 
-  const deleteConfirmValue: DeleteConfirmInterface = {
-    isDeleteConfirmation,
-    changeDeleteConfirm,
-  };
-
   return (
-    <DeleteConfirmContext.Provider value={deleteConfirmValue}>
+    <DeleteConfirmContext.Provider
+      value={{ isDeleteConfirmation, changeDeleteConfirm }}
+    >
       {children}
     </DeleteConfirmContext.Provider>
   );

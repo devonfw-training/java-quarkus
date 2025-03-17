@@ -9,14 +9,13 @@ import {
 } from "@material-ui/core";
 import { forwardRef, useContext, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { DeleteConfirmContext } from "../../context/DeleteConfirmContext";
-import { MainContext } from "../../context/MainContext";
-import { SmallTextContext } from "../../context/SmallTextContext";
-import { ThemeContext } from "../../context/ThemeContext";
+import { DeleteConfirmContext } from "../../provider/deleteConfirmProvider";
+import { ThemeContext } from "../../provider/themeProvider";
+import { TodoContext } from "../../provider/todoProvider";
 import { TaskItemType } from "../../types/types";
-import ActionsMenu from "../Dialogs/ActionsMenu";
-import { DeleteConfirm } from "../Dialogs/DeleteConfirm";
-import EditConfirm from "../Dialogs/EditConfirm";
+import ActionsMenu from "../dialogs/actionsMenu";
+import { DeleteConfirm } from "../dialogs/deleteConfirm";
+import EditConfirm from "../dialogs/editConfirm";
 
 interface Props {
   todo: TaskItemType;
@@ -28,12 +27,11 @@ interface Props {
 const Todo = forwardRef(
   ({ todo, index, onDelete, onEdit }: Props, ref: any) => {
     const { markComplete, delTodo, editTodo, markStar } =
-      useContext(MainContext)!;
+      useContext(TodoContext)!;
     const matches = useMediaQuery("(max-width: 768px)");
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
     const { isDeleteConfirmation } = useContext(DeleteConfirmContext)!;
-    const { isSmallText } = useContext(SmallTextContext)!;
     const { isDark } = useContext(ThemeContext)!;
     let checkedStyle = { textDecoration: "none" };
     if (todo.completed) checkedStyle.textDecoration = "line-through";
@@ -54,7 +52,7 @@ const Todo = forwardRef(
         WebkitBoxOrient: "vertical",
         overflow: "hidden",
         fontWeight: todo.starred ? 600 : "normal",
-        fontSize: matches ? "17px" : isSmallText ? "17px" : "24px",
+        fontSize: matches ? "17px" : "24px",
         color: "",
       },
     };

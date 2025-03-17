@@ -1,7 +1,7 @@
 import { GitHub, Group, YouTube } from "@material-ui/icons";
 import { X } from "lucide-react";
 import { forwardRef, useContext } from "react";
-import { MainContext } from "../context/MainContext";
+import { MainContext } from "../../provider/mainProvider";
 
 const About = forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElement>>(
   (props, ref) => {
