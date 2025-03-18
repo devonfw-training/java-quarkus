@@ -1,58 +1,60 @@
+import { X } from "lucide-react";
 import { useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  TextField,
-  Button,
-} from "@material-ui/core";
+import DialogBase from "./dialogBase";
 
 interface Props {
-  yes: (val: string) => void;
+  yes: (newTitle: string, newDeadline?: string) => void;
   open: boolean;
   close: () => void;
-  value: string;
+  title: string;
+  deadline?: string;
 }
 
-const EditConfirm = ({ open, close, value, yes }: Props) => {
-  const [newValue, setNewValue] = useState(value);
+const EditConfirm = ({ open, close, title, deadline, yes }: Props) => {
+  const [newTitle, setNewTitle] = useState(title);
+  const [newDeadline, setNewDeadline] = useState(deadline ?? "");
   const onClose = () => {
-    setNewValue(value);
+    setNewTitle(title);
+    setNewDeadline(deadline ?? "");
     close();
   };
+
   return (
-    <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">EDIT ITEM</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          Please provide the new name for this item.
-        </DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="name"
-          label="New Value"
+    <DialogBase show={open} close={onClose}>
+      <div className="flex flex-col dark:bg-black bg-white border-primary border-2 rounded-lg p-6 w-[500px]">
+        <div className="flex flex-row justify-between">
+          <h1 className="text-4xl dark:text-white text-black font-bold">
+            Todo
+          </h1>
+          <X
+            className="dark:text-white text-black w-11 h-11"
+            onClick={onClose}
+          />
+        </div>
+        <span className="dark:text-white text-black mt-6">Title</span>
+        <input
           type="text"
-          fullWidth
-          value={newValue}
-          onChange={(e) => setNewValue(e.target.value)}
+          className="dark:text-white text-black border-2 dark:border-white border-black p-4 rounded-lg mt-1"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
         />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">
-          Cancel
-        </Button>
-        <Button
-          onClick={() => newValue.trim() && yes(newValue)}
-          color="primary"
-          variant="contained"
+        <span className="dark:text-white text-black mt-6">Date (optional)</span>
+        <input
+          type="datetime-local"
+          className="dark:text-white text-black border-2 dark:border-white border-black p-4 rounded-lg mt-1"
+          value={newDeadline}
+          onChange={(e) => {
+            setNewDeadline(e.target.value);
+          }}
+        />
+        <button
+          className="mt-12 text-white bg-primary rounded-lg py-4 cursor-pointer"
+          onClick={() => newTitle.trim() && yes(newTitle, newDeadline)}
         >
-          OK
-        </Button>
-      </DialogActions>
-    </Dialog>
+          Save Todo
+        </button>
+      </div>
+    </DialogBase>
   );
 };
 

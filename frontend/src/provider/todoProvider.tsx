@@ -79,20 +79,22 @@ export const TodoProvider = ({ children }: Props) => {
       saveTaskItem(taskItem, (newId) => {
         taskItem.id = newId;
         const orderTodos = [taskItem, ...todos];
-        orderStarAndComplete(orderTodos);
+        orderStar(orderTodos);
         setTodos(orderTodos);
       });
     }
   };
 
-  const editTodo: (id: number, text: string) => void = (
+  const editTodo: (id: number, text: string, deadline?: string) => void = (
     id: number,
-    text: string
+    text: string,
+    deadline?: string
   ) => {
     if (!(text === null) && text.trim()) {
       const taskItem = todos.find((todo) => todo.id === id);
       if (taskItem) {
         taskItem.title = text;
+        taskItem.deadline = deadline;
         saveTaskItem(taskItem, () =>
           setTodos(
             todos.map((todo) => {
@@ -115,7 +117,7 @@ export const TodoProvider = ({ children }: Props) => {
         const orderTodos = todos.map((todo) =>
           todo.id === id ? taskItem : todo
         );
-        orderStarAndComplete(orderTodos);
+        orderStar(orderTodos);
         setTodos(orderTodos);
       });
     }
@@ -129,15 +131,14 @@ export const TodoProvider = ({ children }: Props) => {
         const orderTodos = todos.map((todo) =>
           todo.id === id ? taskItem : todo
         );
-        orderStarAndComplete(orderTodos);
+        orderStar(orderTodos);
         setTodos(orderTodos);
       });
     }
   };
 
-  const orderStarAndComplete = (todos: TaskItemType[]) => {
+  const orderStar = (todos: TaskItemType[]) => {
     todos.sort((x, y) => y.starred - x.starred);
-    todos.sort((x, y) => x.completed - y.completed);
   };
 
   const delTodo = (id: number) => {

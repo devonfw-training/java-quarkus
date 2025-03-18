@@ -1,14 +1,20 @@
-import { CalendarDays, PlusIcon } from "lucide-react";
-import { useContext } from "react";
+import { CalendarDays, PlusIcon, Trash } from "lucide-react";
+import { RefObject, useContext, useRef } from "react";
 import { Link, useRoute } from "wouter";
+import useShowOnHover from "../../hooks/showOnHover";
 import { MainContext } from "../../provider/mainProvider";
 import { TodoContext } from "../../provider/todoProvider";
+import { TaskListType } from "../../types/types";
 
 export default function Sidebar() {
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
   const { changeShowCalendar } = useContext(MainContext)!;
   const { taskLists } = useContext(TodoContext)!;
+
+  const map = taskLists.map((e, i) => {
+    return <ListItem key={i} e={e} i={i} listId={listId} />;
+  });
 
   return (
     <div className="h-full dark:bg-black bg-light-gray w-3xs flex flex-col">
@@ -20,31 +26,7 @@ export default function Sidebar() {
         <PlusIcon className="dark:text-white text-black" />
         <p className="dark:text-white text-black">Add list</p>
       </div>
-      <div className="overflow-y-auto flex-1 basis-0">
-        {taskLists.map((e, i) => {
-          return (
-            <Link href={`/${e.id}`} key={i}>
-              <div
-                className={`cursor-pointer ${
-                  listId && e.id === +listId
-                    ? "bg-primary"
-                    : "dark:hover:bg-primary hover:bg-light-primary"
-                }`}
-              >
-                <p
-                  className={`py-4 pl-6 ${
-                    listId && e.id === +listId
-                      ? "text-white"
-                      : "dark:text-white text-black"
-                  }`}
-                >
-                  {e.title}
-                </p>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+      <div className="overflow-y-auto flex-1 basis-0">{map}</div>
       <div
         className="flex flex-row gap-2.5 justify-center items-center dark:bg-primary bg-light-primary rounded-t-3xl py-8 cursor-pointer"
         onClick={changeShowCalendar}
@@ -55,3 +37,45 @@ export default function Sidebar() {
     </div>
   );
 }
+
+interface ListItem {
+  e: TaskListType;
+  i: number;
+  listId?: string;
+}
+
+const ListItem = (props: ListItem) => {
+  const listItemRef: RefObject<HTMLDivElement> = useRef(null);
+  const deleteIconRef: RefObject<HTMLDivElement> = useRef(null);
+  useShowOnHover(listItemRef, deleteIconRef);
+
+  return (
+    <div ref={listItemRef}>
+      <Link href={`/${props.e.id}`} key={props.i}>
+        <div
+          className={`cursor-pointer flex justify-between gap-2.5 items-center ${
+            props.listId && props.e.id === +props.listId
+              ? "bg-primary"
+              : "dark:hover:bg-primary hover:bg-light-primary"
+          }`}
+        >
+          <p
+            className={`my-4 ml-6 ${
+              props.listId && props.e.id === +props.listId
+                ? "text-white"
+                : "dark:text-white text-black"
+            }`}
+          >
+            {props.e.title}
+          </p>
+          <div
+            ref={deleteIconRef}
+            className="mr-2 hover:bg-white dark:hover:bg-black rounded-full w-10 h-10 flex justify-center items-center hidden"
+          >
+            <Trash className="w-6 h-6 text-red" />
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+};

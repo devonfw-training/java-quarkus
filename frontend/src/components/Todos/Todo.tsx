@@ -1,152 +1,106 @@
-import {
-  Card,
-  CardContent,
-  Checkbox,
-  Container,
-  Grid,
-  Typography,
-  useMediaQuery,
-} from "@material-ui/core";
-import { forwardRef, useContext, useState } from "react";
-import { Draggable } from "react-beautiful-dnd";
+import { CalendarDays, Edit2, Star, StarOff, Trash } from "lucide-react";
+import { forwardRef, RefObject, useContext, useRef, useState } from "react";
+import useShowOnHover from "../../hooks/showOnHover";
 import { DeleteConfirmContext } from "../../provider/deleteConfirmProvider";
-import { ThemeContext } from "../../provider/themeProvider";
 import { TodoContext } from "../../provider/todoProvider";
 import { TaskItemType } from "../../types/types";
-import ActionsMenu from "../dialogs/actionsMenu";
 import { DeleteConfirm } from "../dialogs/deleteConfirm";
 import EditConfirm from "../dialogs/editConfirm";
+import Checkbox from "../utils/checkbox";
 
 interface Props {
   todo: TaskItemType;
-  index: number;
   onDelete: () => void;
   onEdit: () => void;
 }
 
-const Todo = forwardRef(
-  ({ todo, index, onDelete, onEdit }: Props, ref: any) => {
-    const { markComplete, delTodo, editTodo, markStar } =
-      useContext(TodoContext)!;
-    const matches = useMediaQuery("(max-width: 768px)");
-    const [deleteOpen, setDeleteOpen] = useState(false);
-    const [editOpen, setEditOpen] = useState(false);
-    const { isDeleteConfirmation } = useContext(DeleteConfirmContext)!;
-    const { isDark } = useContext(ThemeContext)!;
-    let checkedStyle = { textDecoration: "none" };
-    if (todo.completed) checkedStyle.textDecoration = "line-through";
-    else checkedStyle.textDecoration = "none";
+const Todo = forwardRef(({ todo, onDelete, onEdit }: Props, ref: any) => {
+  const { markComplete, delTodo, editTodo, markStar } =
+    useContext(TodoContext)!;
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const { isDeleteConfirmation } = useContext(DeleteConfirmContext)!;
 
-    const styles: any = {
-      card: {
-        marginTop: matches ? 20 : 35,
-      },
-      icon: {
-        float: "right",
-        paddingTop: "10px",
-      },
-      text: {
-        wordBreak: "break-word",
-        display: "-webkit-box",
-        WebkitLineClamp: 2,
-        WebkitBoxOrient: "vertical",
-        overflow: "hidden",
-        fontWeight: todo.starred ? 600 : "normal",
-        fontSize: matches ? "17px" : "24px",
-        color: "",
-      },
-    };
+  const todoContainerRef: RefObject<HTMLDivElement> = useRef(null);
+  const todoOptionsRef: RefObject<HTMLDivElement> = useRef(null);
+  useShowOnHover(todoContainerRef, todoOptionsRef);
 
-    if (todo.starred) {
-      styles.text.color = isDark ? "#ffe066" : "#3f51b5";
-    }
+  const deleteTodo = (e: any) => {
+    if (e.shiftKey || isDeleteConfirmation) {
+      delTodo(todo.id);
+      onDelete();
+    } else setDeleteOpen(true);
+  };
 
-    const deleteTodo = (e: any) => {
-      if (e.shiftKey || isDeleteConfirmation) {
-        delTodo(todo.id);
-        onDelete();
-      } else setDeleteOpen(true);
-    };
-    return (
-      <Container ref={ref}>
-        <Draggable draggableId={"" + todo.id} index={index}>
-          {(p) => (
-            <Card
-              className="todo-card"
-              variant="outlined"
-              ref={p.innerRef}
-              {...p.draggableProps}
-              {...p.dragHandleProps}
-              style={{
-                ...styles.card,
-                userSelect: "none",
-                ...p.draggableProps.style,
-              }}
+  return (
+    <div ref={ref}>
+      <div
+        ref={todoContainerRef}
+        className="p-4 flex flex-row justify-between items-center border-2 dark:border-black border-light-gray rounded-lg hover:border-primary"
+      >
+        <div className="flex flex-row gap-6 items-center">
+          <Checkbox
+            state={todo.completed}
+            onClick={() => markComplete(todo.id)}
+          />
+          <div className="flex flex-col gap-1 justify-center">
+            <p className="dark:text-white text-black">{todo.title}</p>
+            <div
+              className={`flex flex-row items-center gap-1 ${
+                todo.deadline ? "" : "hidden"
+              }`}
             >
-              <CardContent className="card-content" style={{ padding: "16px" }}>
-                <Typography
-                  variant="h5"
-                  component="h2"
-                  style={checkedStyle}
-                  className="todo-text"
-                >
-                  <Grid
-                    container
-                    alignItems="center"
-                    justifyContent="flex-start"
-                  >
-                    <Grid item>
-                      <Checkbox
-                        checked={todo.completed}
-                        color="primary"
-                        style={{ marginRight: 5 }}
-                        onClick={() => markComplete(todo.id)}
-                        centerRipple={false}
-                      />
-                    </Grid>
-                    <Grid item style={{ flex: 2 }}>
-                      <div style={styles.text}>{todo.title}</div>
-                    </Grid>
-                    <Grid item>
-                      <ActionsMenu
-                        deleteTodo={(e) => deleteTodo(e)}
-                        setEditOpen={setEditOpen}
-                        todo={todo}
-                        markStar={markStar}
-                      />
-                    </Grid>
-                  </Grid>
-                </Typography>
-              </CardContent>
-            </Card>
-          )}
-        </Draggable>
-        <DeleteConfirm
-          yes={() => {
-            setDeleteOpen(false);
-            setTimeout(() => {
-              delTodo(todo.id);
-              onDelete();
-            }, 200);
-          }}
-          open={deleteOpen}
-          close={() => setDeleteOpen(false)}
-        />
-        <EditConfirm
-          yes={(val: string) => {
-            setEditOpen(false);
-            setTimeout(() => {
-              editTodo(todo.id, val);
-              onEdit();
-            }, 200);
-          }}
-          open={editOpen}
-          close={() => setEditOpen(false)}
-          value={todo.title}
-        />
-      </Container>
-    );
-  }
-);
+              <CalendarDays className="w-4 h-4 dark:text-white text-black" />
+              <p className="text-xs dark:text-white text-black">
+                {new Date(todo.deadline ?? "").toLocaleString()}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div ref={todoOptionsRef} className="flex-row hidden gap-2.5">
+          <Edit2
+            className="text-black dark:text-white cursor-pointer w-5 h-5"
+            onClick={() => setEditOpen(true)}
+          />
+          <span onClick={() => markStar(todo.id)}>
+            {todo.starred ? (
+              <Star className="dark:text-light-primary text-primary cursor-pointer w-5 h-5" />
+            ) : (
+              <StarOff className="dark:text-light-primary text-primary cursor-pointer w-5 h-5" />
+            )}
+          </span>
+          <Trash
+            className="text-red cursor-pointer w-5 h-5"
+            onClick={(e) => deleteTodo(e)}
+          />
+        </div>
+      </div>
+      <DeleteConfirm
+        yes={() => {
+          setDeleteOpen(false);
+          setTimeout(() => {
+            delTodo(todo.id);
+            onDelete();
+          }, 200);
+        }}
+        open={deleteOpen}
+        close={() => setDeleteOpen(false)}
+      />
+      <EditConfirm
+        yes={(newTitle: string, newDeadline?: string) => {
+          setEditOpen(false);
+          setTimeout(() => {
+            editTodo(todo.id, newTitle, newDeadline);
+            onEdit();
+          }, 200);
+        }}
+        open={editOpen}
+        close={() => setEditOpen(false)}
+        title={todo.title}
+        deadline={todo.deadline?.substring(0, 16)}
+      />
+    </div>
+  );
+});
 
 export default Todo;

@@ -1,21 +1,17 @@
 import { InfoIcon, SettingsIcon } from "lucide-react";
 import { useContext, useEffect, useRef } from "react";
 import { Link } from "wouter";
-import { DeleteConfirmContext } from "../../provider/deleteConfirmProvider";
 import { MainContext } from "../../provider/mainProvider";
-import { ThemeContext } from "../../provider/themeProvider";
-import Slider from "../utils/slider";
-import About from "./about";
+import { Settings } from "../menus/settingsMenu";
+import About from "../overlay/aboutOverlay";
 
 export default function Header() {
-  const { showSettings, changeShowSettings, setShowAbout } =
+  const { showSettings, setShowAbout, setShowSettings } =
     useContext(MainContext)!;
-  const { isDeleteConfirmation, changeDeleteConfirm } =
-    useContext(DeleteConfirmContext)!;
-  const { isDark, changeTheme } = useContext(ThemeContext)!;
-
   const headerRef = useRef(null);
   const aboutRef = useRef(null);
+  const settingsButtonRef = useRef(null);
+  const aboutButtonRef = useRef(null);
 
   useEffect(() => {
     const header: any = headerRef.current;
@@ -40,7 +36,8 @@ export default function Header() {
         <div className="flex gap-7 items-center">
           <button
             className="flex gap-2 items-center cursor-pointer"
-            onClick={changeShowSettings}
+            onClick={() => setShowSettings(!showSettings)}
+            ref={settingsButtonRef}
           >
             <SettingsIcon className="h-4 w-4 text-white" />
             <h1 className="text-base font-semibold text-white">SETTINGS</h1>
@@ -48,30 +45,15 @@ export default function Header() {
           <button
             className="flex gap-2 items-center cursor-pointer"
             onClick={() => setShowAbout(true)}
+            ref={aboutButtonRef}
           >
             <InfoIcon className="h-4 w-4 text-white" />
             <h1 className="text-base font-semibold text-white">ABOUT</h1>
           </button>
         </div>
       </header>
-      {/**
-       * SETTINGS DROPDOWN
-       */}
-      <div
-        className={`absolute top-16 right-36 z-10 p-3 flex flex-col gap-2.5 bg-white border-primary rounded-2xl border-2 ${
-          showSettings ? "" : "hidden"
-        }`}
-      >
-        <div className="flex justify-between items-center gap-2.5">
-          <p className="font-light">Darkmode</p>
-          <Slider state={isDark} onClick={changeTheme} />
-        </div>
-        <div className="flex justify-between items-center gap-2.5">
-          <p className="font-light">Disable delete confirmation</p>
-          <Slider state={isDeleteConfirmation} onClick={changeDeleteConfirm} />
-        </div>
-      </div>
-      <About ref={aboutRef} />
+      <Settings ignoreClick={[settingsButtonRef]} />
+      <About ref={aboutRef} ignoreClick={[aboutButtonRef]} />
     </div>
   );
 }

@@ -4,7 +4,7 @@ interface MainContextInterface {
   showAbout: boolean;
   showCalendar: boolean;
   setErrorAlert: React.Dispatch<React.SetStateAction<string>>;
-  changeShowSettings: () => void;
+  setShowSettings: React.Dispatch<React.SetStateAction<boolean>>;
   setShowAbout: React.Dispatch<React.SetStateAction<boolean>>;
   changeShowCalendar: () => void;
 }

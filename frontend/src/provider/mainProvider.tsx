@@ -9,10 +9,6 @@ export const MainProvider = ({ children }: Props) => {
   const [showAbout, setShowAbout] = useState<boolean>(false);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
 
-  const changeShowSettings = () => {
-    setShowSettings(!showSettings);
-  };
-
   const changeShowCalendar = () => {
     setShowCalendar(!showCalendar);
   };
@@ -25,7 +21,7 @@ export const MainProvider = ({ children }: Props) => {
         showAbout,
         showCalendar,
         setErrorAlert,
-        changeShowSettings,
+        setShowSettings,
         setShowAbout,
         changeShowCalendar,
       }}
