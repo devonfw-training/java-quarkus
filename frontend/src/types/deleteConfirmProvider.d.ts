@@ -1,4 +1,4 @@
-interface DeleteConfirmInterface {
+interface DeleteConfirmI {
   isDeleteConfirmation: boolean;
   changeDeleteConfirm: () => void;
 }

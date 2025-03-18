@@ -1,4 +1,4 @@
-interface ThemeInterface {
+interface ThemeI {
   isDark: boolean;
   changeTheme: () => void;
 }

@@ -4,7 +4,7 @@ import { Link, useRoute } from "wouter";
 import useShowOnHover from "../../hooks/showOnHover";
 import { MainContext } from "../../provider/mainProvider";
 import { TodoContext } from "../../provider/todoProvider";
-import { TaskListType } from "../../types/types";
+import { TaskListTypeI } from "../../types/types";
 
 export default function Sidebar() {
   const [, params] = useRoute("/:listId");
@@ -38,13 +38,13 @@ export default function Sidebar() {
   );
 }
 
-interface ListItem {
-  e: TaskListType;
+interface ListItemI {
+  e: TaskListTypeI;
   i: number;
   listId?: string;
 }
 
-const ListItem = (props: ListItem) => {
+const ListItem = (props: ListItemI) => {
   const listItemRef: RefObject<HTMLDivElement> = useRef(null);
   const deleteIconRef: RefObject<HTMLDivElement> = useRef(null);
   useShowOnHover(listItemRef, deleteIconRef);
@@ -70,7 +70,7 @@ const ListItem = (props: ListItem) => {
           </p>
           <div
             ref={deleteIconRef}
-            className="mr-2 hover:bg-white dark:hover:bg-black rounded-full w-10 h-10 flex justify-center items-center hidden"
+            className="mr-2 hover:bg-white dark:hover:bg-black rounded-full w-10 h-10 justify-center items-center hidden"
           >
             <Trash className="w-6 h-6 text-red" />
           </div>

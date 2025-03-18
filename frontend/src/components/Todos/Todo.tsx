@@ -3,18 +3,18 @@ import { forwardRef, RefObject, useContext, useRef, useState } from "react";
 import useShowOnHover from "../../hooks/showOnHover";
 import { DeleteConfirmContext } from "../../provider/deleteConfirmProvider";
 import { TodoContext } from "../../provider/todoProvider";
-import { TaskItemType } from "../../types/types";
+import { TaskItemTypeI } from "../../types/types";
 import { DeleteConfirm } from "../dialogs/deleteConfirm";
 import EditConfirm from "../dialogs/editConfirm";
 import Checkbox from "../utils/checkbox";
 
-interface Props {
-  todo: TaskItemType;
+interface TodoI {
+  todo: TaskItemTypeI;
   onDelete: () => void;
   onEdit: () => void;
 }
 
-const Todo = forwardRef(({ todo, onDelete, onEdit }: Props, ref: any) => {
+const Todo = forwardRef(({ todo, onDelete, onEdit }: TodoI, ref: any) => {
   const { markComplete, delTodo, editTodo, markStar } =
     useContext(TodoContext)!;
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -36,7 +36,11 @@ const Todo = forwardRef(({ todo, onDelete, onEdit }: Props, ref: any) => {
     <div ref={ref}>
       <div
         ref={todoContainerRef}
-        className="p-4 flex flex-row justify-between items-center border-2 dark:border-black border-light-gray rounded-lg hover:border-primary"
+        className={`p-4 flex flex-row gap-2.5 justify-between items-center border-2 rounded-lg hover:border-primary ${
+          todo.starred
+            ? "border-light-primary"
+            : "dark:border-black border-light-gray"
+        }`}
       >
         <div className="flex flex-row gap-6 items-center">
           <Checkbox
@@ -44,7 +48,7 @@ const Todo = forwardRef(({ todo, onDelete, onEdit }: Props, ref: any) => {
             onClick={() => markComplete(todo.id)}
           />
           <div className="flex flex-col gap-1 justify-center">
-            <p className="dark:text-white text-black">{todo.title}</p>
+            <p className="dark:text-white text-black break-all">{todo.title}</p>
             <div
               className={`flex flex-row items-center gap-1 ${
                 todo.deadline ? "" : "hidden"
@@ -63,7 +67,7 @@ const Todo = forwardRef(({ todo, onDelete, onEdit }: Props, ref: any) => {
             onClick={() => setEditOpen(true)}
           />
           <span onClick={() => markStar(todo.id)}>
-            {todo.starred ? (
+            {!todo.starred ? (
               <Star className="dark:text-light-primary text-primary cursor-pointer w-5 h-5" />
             ) : (
               <StarOff className="dark:text-light-primary text-primary cursor-pointer w-5 h-5" />

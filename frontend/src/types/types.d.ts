@@ -1,4 +1,4 @@
-export interface TaskItemType {
+export interface TaskItemTypeI {
   id: number;
   title: string;
   completed: any;
@@ -7,7 +7,7 @@ export interface TaskItemType {
   deadline?: string;
 }
 
-export interface TaskListType {
+export interface TaskListTypeI {
   id: number;
   title: string;
 }

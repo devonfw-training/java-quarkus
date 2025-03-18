@@ -2,7 +2,7 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import DialogBase from "./dialogBase";
 
-interface Props {
+interface EditConfirmI {
   yes: (newTitle: string, newDeadline?: string) => void;
   open: boolean;
   close: () => void;
@@ -10,7 +10,7 @@ interface Props {
   deadline?: string;
 }
 
-const EditConfirm = ({ open, close, title, deadline, yes }: Props) => {
+const EditConfirm = ({ open, close, title, deadline, yes }: EditConfirmI) => {
   const [newTitle, setNewTitle] = useState(title);
   const [newDeadline, setNewDeadline] = useState(deadline ?? "");
   const onClose = () => {
@@ -27,7 +27,7 @@ const EditConfirm = ({ open, close, title, deadline, yes }: Props) => {
             Todo
           </h1>
           <X
-            className="dark:text-white text-black w-11 h-11"
+            className="dark:text-white text-black w-11 h-11 cursor-pointer"
             onClick={onClose}
           />
         </div>

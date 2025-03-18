@@ -1,11 +1,11 @@
 import { Check } from "lucide-react";
 
-interface Props {
+interface CheckboxI {
   state: boolean;
   onClick: () => void;
 }
 
-const Checkbox = (props: Props) => {
+const Checkbox = (props: CheckboxI) => {
   return (
     <div
       className={`flex items-center justify-center h-6 w-6 border-2 border-light-primary rounded-md transition-all cursor-pointer ${

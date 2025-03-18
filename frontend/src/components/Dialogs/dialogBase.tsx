@@ -1,13 +1,13 @@
 import { ReactNode, RefObject, useRef } from "react";
 import useOutsideClick from "../../hooks/outsideClick";
 
-interface Props {
+interface DialogBaseI {
   children: ReactNode;
   show: boolean;
   close: () => void;
 }
 
-const DialogBase = ({ children, show, close }: Props) => {
+const DialogBase = ({ children, show, close }: DialogBaseI) => {
   const refObject = useRef(null);
   useOutsideClick([refObject as RefObject<HTMLElement>], () => close(), show);
 

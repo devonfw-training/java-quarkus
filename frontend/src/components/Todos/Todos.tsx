@@ -7,6 +7,7 @@ import { useRoute } from "wouter";
 import useHasOverflow from "../../hooks/hasOverflow";
 import useScrollbarWidth from "../../hooks/scrollBarWidth";
 import { TodoContext } from "../../provider/todoProvider";
+import { TaskItemTypeI } from "../../types/types";
 import Todo from "./todo";
 
 const Todos = () => {
@@ -68,7 +69,12 @@ const Todos = () => {
   );
 };
 
-function List({ title, todos }: List) {
+interface ListI {
+  title: string;
+  todos: TaskItemTypeI[];
+}
+
+function List({ title, todos }: ListI) {
   const scrollContainerRef = useRef(null);
   const scrollbarWidth = useScrollbarWidth();
   const hasOverflow = useHasOverflow(scrollContainerRef);

@@ -4,11 +4,11 @@ import { forwardRef, RefObject, useContext } from "react";
 import useOutsideClick from "../../hooks/outsideClick";
 import { MainContext } from "../../provider/mainProvider";
 
-interface Props {
+interface AboutI {
   ignoreClick: RefObject<HTMLElement>[];
 }
 
-const About = forwardRef<HTMLDivElement, Props>((props, ref) => {
+const About = forwardRef<HTMLDivElement, AboutI>((props, ref) => {
   const { showAbout, setShowAbout } = useContext(MainContext)!;
 
   useOutsideClick(

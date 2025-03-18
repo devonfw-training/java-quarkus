@@ -1,9 +1,8 @@
 import { createContext, useState } from "react";
 
-export const DeleteConfirmContext =
-  createContext<DeleteConfirmInterface | null>(null);
+export const DeleteConfirmContext = createContext<DeleteConfirmI | null>(null);
 
-export const DeleteConfirmProvider = ({ children }: Props) => {
+export const DeleteConfirmProvider = ({ children }: PropsI) => {
   const [isDeleteConfirmation, setIsDeleteConfirmation] = useState(
     JSON.parse(localStorage.getItem("deleteConfirmation")!) || false
   );

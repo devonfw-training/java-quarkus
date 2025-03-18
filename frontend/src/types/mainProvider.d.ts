@@ -1,4 +1,4 @@
-interface MainContextInterface {
+interface MainContextI {
   errorAlert: string;
   showSettings: boolean;
   showAbout: boolean;

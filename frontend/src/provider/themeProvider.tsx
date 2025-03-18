@@ -1,8 +1,8 @@
 import { createContext, useEffect, useState } from "react";
 
-export const ThemeContext = createContext<ThemeInterface | null>(null);
+export const ThemeContext = createContext<ThemeI | null>(null);
 
-export const ThemeProvider = ({ children }: Props) => {
+export const ThemeProvider = ({ children }: PropsI) => {
   const [isDark, setIsDark] = useState(
     JSON.parse(localStorage.getItem("darkTheme")!) || false
   );

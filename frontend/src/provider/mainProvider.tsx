@@ -1,8 +1,8 @@
 import { createContext, useState } from "react";
 
-export const MainContext = createContext<MainContextInterface | null>(null);
+export const MainContext = createContext<MainContextI | null>(null);
 
-export const MainProvider = ({ children }: Props) => {
+export const MainProvider = ({ children }: PropsI) => {
   const [errorAlert, setErrorAlert] = useState("");
 
   const [showSettings, setShowSettings] = useState<boolean>(false);

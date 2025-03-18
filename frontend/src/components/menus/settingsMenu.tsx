@@ -5,11 +5,11 @@ import { MainContext } from "../../provider/mainProvider";
 import { ThemeContext } from "../../provider/themeProvider";
 import Slider from "../utils/slider";
 
-interface Props {
+interface SettingsI {
   ignoreClick: RefObject<HTMLElement>[];
 }
 
-export const Settings = ({ ignoreClick }: Props) => {
+export const Settings = ({ ignoreClick }: SettingsI) => {
   const { showSettings, setShowSettings } = useContext(MainContext)!;
   const { isDeleteConfirmation, changeDeleteConfirm } =
     useContext(DeleteConfirmContext)!;

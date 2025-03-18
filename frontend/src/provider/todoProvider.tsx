@@ -1,17 +1,17 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRoute } from "wouter";
-import { TaskItemType, TaskListType } from "../types/types";
+import { TaskItemTypeI, TaskListTypeI } from "../types/types";
 import { MainContext } from "./mainProvider";
 
-export const TodoContext = createContext<TodoInterface | null>(null);
+export const TodoContext = createContext<TodoInterfaceI | null>(null);
 
-export const TodoProvider = ({ children }: Props) => {
+export const TodoProvider = ({ children }: PropsI) => {
   const { setErrorAlert } = useContext(MainContext)!;
 
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
-  const [todos, setTodos] = useState<TaskItemType[]>([]);
-  const [taskLists, setTaskLists] = useState<TaskListType[]>([]);
+  const [todos, setTodos] = useState<TaskItemTypeI[]>([]);
+  const [taskLists, setTaskLists] = useState<TaskListTypeI[]>([]);
 
   useEffect(() => {
     if (undefined !== listId) {
@@ -46,7 +46,7 @@ export const TodoProvider = ({ children }: Props) => {
   }, [setErrorAlert]);
 
   const saveTaskItem = (
-    taskItem: TaskItemType,
+    taskItem: TaskItemTypeI,
     onSuccess: (value: number) => any
   ) => {
     // Send data to the backend via POST
@@ -68,7 +68,7 @@ export const TodoProvider = ({ children }: Props) => {
 
   const addTodo = (title: string) => {
     if (title.trim()) {
-      const taskItem: TaskItemType = {
+      const taskItem: TaskItemTypeI = {
         id: Number.NaN,
         title,
         completed: false,
@@ -137,7 +137,7 @@ export const TodoProvider = ({ children }: Props) => {
     }
   };
 
-  const orderStar = (todos: TaskItemType[]) => {
+  const orderStar = (todos: TaskItemTypeI[]) => {
     todos.sort((x, y) => y.starred - x.starred);
   };
 

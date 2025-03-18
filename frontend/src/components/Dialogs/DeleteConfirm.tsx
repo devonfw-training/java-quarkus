@@ -8,13 +8,13 @@ import {
 } from "@material-ui/core";
 import DialogBase from "./dialogBase";
 
-interface Props {
+interface DeleteConfirmI {
   open: boolean;
   close: () => void;
   yes: () => void;
 }
 
-export const DeleteConfirm = ({ open, close, yes }: Props) => {
+export const DeleteConfirm = ({ open, close, yes }: DeleteConfirmI) => {
   return (
     <DialogBase show={open} close={close}>
       <div className="flex flex-col dark:bg-black bg-white border-primary border-2 rounded-lg p-6">
@@ -47,7 +47,7 @@ export const DeleteConfirm = ({ open, close, yes }: Props) => {
   );
 };
 
-export const DeleteAllConfirm = ({ open, close, yes }: Props) => {
+export const DeleteAllConfirm = ({ open, close, yes }: DeleteConfirmI) => {
   return (
     <Dialog open={open} onClose={close}>
       <DialogTitle>DELETE ALL ITEMS?</DialogTitle>

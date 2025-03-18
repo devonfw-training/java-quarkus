@@ -1,9 +1,9 @@
-interface Props {
+interface SliderI {
   state: boolean;
   onClick: () => void;
 }
 
-const Slider = (props: Props) => {
+const Slider = (props: SliderI) => {
   return (
     <div
       className={`flex items-center p-1 px-0.5 h-6 w-12 border-2 border-light-primary rounded-full transition-all cursor-pointer ${

@@ -1,4 +1,4 @@
-interface TodoInterface {
+interface TodoInterfaceI {
   todos: TaskItemType[];
   taskLists: TaskListType[];
 

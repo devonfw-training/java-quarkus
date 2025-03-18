@@ -1,3 +1,3 @@
-interface Props {
+interface PropsI {
   children: ReactNode;
 }
