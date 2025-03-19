@@ -12,7 +12,7 @@ import { DeleteConfirmContext } from "../../provider/deleteConfirmProvider";
 import { TodoContext } from "../../provider/todoProvider";
 import { TaskItemTypeI } from "../../types/types";
 import { DeleteTodoConfirm } from "../dialogs/todo/deleteTodoConfirm";
-import EditTodoConfirm from "../dialogs/todo/editTodoConfirm";
+import EditTodo from "../dialogs/todo/editTodo";
 import Checkbox from "../utils/checkbox";
 
 interface TodoI {
@@ -96,21 +96,17 @@ const Todo = forwardRef(({ todo, onDelete, onEdit }: TodoI, ref: any) => {
       <DeleteTodoConfirm
         yes={() => {
           setDeleteOpen(false);
-          setTimeout(() => {
-            delTodo(todo.id);
-            onDelete();
-          }, 200);
+          delTodo(todo.id);
+          onDelete();
         }}
         open={deleteOpen}
         close={() => setDeleteOpen(false)}
       />
-      <EditTodoConfirm
+      <EditTodo
         yes={(newTitle: string, newDeadline: string | null) => {
           setEditOpen(false);
-          setTimeout(() => {
-            editTodo(todo.id, newTitle, newDeadline);
-            onEdit();
-          }, 200);
+          editTodo(todo.id, newTitle, newDeadline);
+          onEdit();
         }}
         open={editOpen}
         close={() => {

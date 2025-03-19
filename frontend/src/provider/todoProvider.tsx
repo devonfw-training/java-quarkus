@@ -13,20 +13,23 @@ export const TodoProvider = ({ children }: PropsI) => {
   const [todos, setTodos] = useState<TaskItemTypeI[]>([]);
 
   useEffect(() => {
-    if (undefined !== listId) {
-      fetch(`/api/task/list-with-items/${encodeURIComponent(+listId)}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((json) => setTodos(json.items))
-        .catch((error) => {
-          console.error(error);
-          setErrorAlert("Items could not be loaded!");
-        });
+    if (undefined === listId) {
+      setTodos([]);
+      return;
     }
+
+    fetch(`/api/task/list-with-items/${encodeURIComponent(+listId!)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => setTodos(json.items))
+      .catch((error) => {
+        console.error(error);
+        setErrorAlert("Items could not be loaded!");
+      });
   }, [listId, setErrorAlert]);
 
   const saveTaskItem = (
@@ -51,10 +54,15 @@ export const TodoProvider = ({ children }: PropsI) => {
   };
 
   const addTodo = (title: string, deadline: string | null) => {
+    if (undefined === listId) {
+      return;
+    }
+
     if (title.trim()) {
       const taskItem: TaskItemTypeI = {
         id: Number.NaN,
         title,
+        version: 0,
         completed: false,
         starred: false,
         taskListId: +listId!,

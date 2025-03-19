@@ -10,10 +10,11 @@ import { TodoListContext } from "../../provider/todoListProvider";
 import { TodoContext } from "../../provider/todoProvider";
 import { TaskItemTypeI } from "../../types/types";
 import AddTodo from "../dialogs/todo/addTodo";
+import EditTodoList from "../dialogs/todoList/editTodoList";
 import Todo from "./todo";
 
 const Todos = () => {
-  const { taskLists } = useContext(TodoListContext)!;
+  const { taskLists, editTodoList } = useContext(TodoListContext)!;
   const { todos } = useContext(TodoContext)!;
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
@@ -21,21 +22,26 @@ const Todos = () => {
   const [deleteSnackOpen, setDeleteSnackOpen] = useState(false);
   const [editSnackOpen, setEditSnackOpen] = useState(false);
 
-  const [addTodoOpen, setAddTodoOpen] = useState(false);
+  const [showAddTodoOpen, setShowAddTodoOpen] = useState(false);
+  const [showEditTodoList, setShowEditTodoList] = useState(false);
+
+  const taskListTitle =
+    taskLists.filter((e) => listId && e.id === +listId)[0]?.title ??
+    (undefined === listId ? "Please select a list" : "Loading...");
 
   return (
     <div className="dark:bg-light-black w-full p-12 flex flex-col">
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-row gap-2.5 items-baseline">
-          <h1 className="text-3xl dark:text-white">
-            {taskLists.filter((e) => listId && e.id === +listId)[0]?.title ??
-              "Loading..."}
-          </h1>
-          <Edit2 className="cursor-pointer dark:text-white" />
+          <h1 className="text-3xl dark:text-white">{taskListTitle}</h1>
+          <Edit2
+            className="cursor-pointer dark:text-white"
+            onClick={() => setShowEditTodoList(true)}
+          />
         </div>
         <Plus
           className="cursor-pointer dark:text-light-primary text-primary w-10 h-10"
-          onClick={() => setAddTodoOpen(true)}
+          onClick={() => setShowAddTodoOpen(true)}
         />
       </div>
       <div className="mt-6 flex flex-row gap-6 w-full grow">
@@ -43,7 +49,16 @@ const Todos = () => {
         <List title="Done" todos={todos.filter((e) => e.completed)} />
       </div>
 
-      <AddTodo open={addTodoOpen} close={() => setAddTodoOpen(false)} />
+      <AddTodo open={showAddTodoOpen} close={() => setShowAddTodoOpen(false)} />
+      <EditTodoList
+        open={showEditTodoList}
+        close={() => setShowEditTodoList(false)}
+        yes={(newTitle: string) => {
+          setShowEditTodoList(false);
+          editTodoList(newTitle);
+        }}
+        title={taskListTitle}
+      ></EditTodoList>
 
       <Snackbar
         open={deleteSnackOpen}

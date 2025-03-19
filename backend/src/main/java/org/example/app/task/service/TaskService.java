@@ -76,9 +76,9 @@ public class TaskService {
 
     Long taskListId = this.ucSaveTaskList.save(taskList);
     if (taskList.getId() == null || taskList.getId() != taskListId) {
-      return Response.created(URI.create("/task/list/" + taskListId)).build();
+      return Response.created(URI.create("/task/list/" + taskListId)).entity(taskListId).build();
     }
-    return Response.ok().build();
+    return Response.ok(taskListId).build();
   }
 
   /**

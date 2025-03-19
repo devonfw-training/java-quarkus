@@ -1,16 +1,20 @@
 import { CalendarDays, PlusIcon, Trash } from "lucide-react";
-import { RefObject, useContext, useRef } from "react";
+import { RefObject, useContext, useEffect, useRef, useState } from "react";
 import { Link, useRoute } from "wouter";
 import useShowOnHover from "../../hooks/showOnHover";
+import { DeleteConfirmContext } from "../../provider/deleteConfirmProvider";
 import { MainContext } from "../../provider/mainProvider";
 import { TodoListContext } from "../../provider/todoListProvider";
 import { TaskListTypeI } from "../../types/types";
+import AddTodoList from "../dialogs/todoList/addTodoList";
+import { DeleteTodoListConfirm } from "../dialogs/todoList/deleteTodoListConfirm";
 
 export default function Sidebar() {
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
   const { changeShowCalendar } = useContext(MainContext)!;
   const { taskLists } = useContext(TodoListContext)!;
+  const [showTaskListAdd, setShowTaskListAdd] = useState(false);
 
   const map = taskLists.map((e, i) => {
     return <ListItem key={i} e={e} i={i} listId={listId} />;
@@ -22,7 +26,10 @@ export default function Sidebar() {
         Your lists
       </p>
       <hr className="dark:border-light-black border-light-gray2" />
-      <div className="flex items-center gap-2.5 py-4 pl-5 cursor-pointer dark:hover:bg-primary hover:bg-light-primary">
+      <div
+        className="flex items-center gap-2.5 py-4 pl-5 cursor-pointer dark:hover:bg-primary hover:bg-light-primary"
+        onClick={() => setShowTaskListAdd(true)}
+      >
         <PlusIcon className="dark:text-white text-black" />
         <p className="dark:text-white text-black">Add list</p>
       </div>
@@ -34,6 +41,10 @@ export default function Sidebar() {
         <CalendarDays className="dark:text-white text-black" />
         <p className="dark:text-white text-black text-md">Switch to calendar</p>
       </div>
+      <AddTodoList
+        open={showTaskListAdd}
+        close={() => setShowTaskListAdd(false)}
+      />
     </div>
   );
 }
@@ -45,9 +56,24 @@ interface ListItemI {
 }
 
 const ListItem = (props: ListItemI) => {
+  const { delTaskList } = useContext(TodoListContext)!;
+  const { isDeleteConfirmation } = useContext(DeleteConfirmContext)!;
   const listItemRef: RefObject<HTMLDivElement> = useRef(null);
   const deleteIconRef: RefObject<HTMLDivElement> = useRef(null);
+  const [showTaskListDelete, setShowTaskListDelete] = useState(false);
   useShowOnHover(listItemRef, deleteIconRef);
+
+  const deleteTaskList = (e: any) => {
+    if (e.shiftKey || isDeleteConfirmation) {
+      delTaskList(props.e.id);
+    } else setShowTaskListDelete(true);
+  };
+
+  useEffect(() => {
+    listItemRef.current!.onselectstart = () => {
+      return false;
+    };
+  }, []);
 
   return (
     <div ref={listItemRef}>
@@ -72,10 +98,24 @@ const ListItem = (props: ListItemI) => {
             ref={deleteIconRef}
             className="mr-2 hover:bg-white dark:hover:bg-black rounded-full w-10 h-10 justify-center items-center hidden"
           >
-            <Trash className="w-6 h-6 text-red" />
+            <Trash
+              className="w-6 h-6 text-red"
+              onClick={(e) => {
+                deleteTaskList(e);
+                e.stopPropagation();
+              }}
+            />
           </div>
         </div>
       </Link>
+      <DeleteTodoListConfirm
+        yes={() => {
+          setShowTaskListDelete(false);
+          delTaskList(props.e.id);
+        }}
+        open={showTaskListDelete}
+        close={() => setShowTaskListDelete(false)}
+      />
     </div>
   );
 };

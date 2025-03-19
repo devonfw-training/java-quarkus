@@ -2,7 +2,7 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import DialogBase from "../dialogBase";
 
-interface EditTodoConfirmI {
+interface EditTodoI {
   yes: (newTitle: string, newDeadline: string | null) => void;
   open: boolean;
   close: () => void;
@@ -10,13 +10,7 @@ interface EditTodoConfirmI {
   deadline: string | null;
 }
 
-const EditTodoConfirm = ({
-  open,
-  close,
-  title,
-  deadline,
-  yes,
-}: EditTodoConfirmI) => {
+const EditTodo = ({ open, close, title, deadline, yes }: EditTodoI) => {
   const [newTitle, setNewTitle] = useState(title);
   const [newDeadline, setNewDeadline] = useState(deadline);
   const onClose = () => {
@@ -64,4 +58,4 @@ const EditTodoConfirm = ({
   );
 };
 
-export default EditTodoConfirm;
+export default EditTodo;

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRoute } from "wouter";
+import { navigate } from "wouter/use-location";
 import { TaskListTypeI } from "../types/types";
 import { MainContext } from "./mainProvider";
 
@@ -27,12 +28,88 @@ export const TodoListProvider = ({ children }: PropsI) => {
       });
   }, [setErrorAlert]);
 
+  function editTodoList(newTitle: string) {
+    if (undefined === listId) {
+      return;
+    }
+
+    const taskList = taskLists.find((taskList) => taskList.id === +listId!);
+
+    if (taskList) {
+      taskList.title = newTitle;
+
+      fetch("/api/task/list", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(taskList),
+      })
+        .then(() => {
+          setTaskLists(taskLists);
+        })
+        .catch((error) => {
+          console.error(error);
+          setErrorAlert("Todo List could not be saved!");
+        });
+    }
+  }
+
+  const addTaskList = (title: string) => {
+    if (title.trim()) {
+      const taskList: TaskListTypeI = {
+        id: Number.NaN,
+        version: 0,
+        title,
+      };
+
+      fetch("/api/task/list", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(taskList), // body data type must match "Content-Type" header
+      })
+        .then((response) => response.json())
+        .then((newId) => {
+          taskList.id = newId;
+          const newTaskLists = [taskList, ...taskLists];
+          setTaskLists(newTaskLists);
+        })
+        .catch((error) => {
+          console.error(error);
+          setErrorAlert("List could not be created!");
+        });
+    }
+  };
+
+  const delTaskList = (id: number) => {
+    fetch(`/api/task/list/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+    })
+      .then(() => {
+        setTaskLists(taskLists.filter((taskList) => taskList.id !== id));
+        if (undefined !== listId && id === +listId) {
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setErrorAlert("List could not be deleted!");
+      });
+  };
+
   return (
     <TodoListContext.Provider
       value={{
         taskLists,
 
         setTaskLists,
+        editTodoList,
+        addTaskList,
+        delTaskList,
       }}
     >
       {children}

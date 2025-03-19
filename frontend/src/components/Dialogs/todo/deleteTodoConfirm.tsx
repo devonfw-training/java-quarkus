@@ -1,11 +1,3 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@material-ui/core";
 import DialogBase from "../dialogBase";
 
 interface DeleteTodoConfirmI {
@@ -44,26 +36,5 @@ export const DeleteTodoConfirm = ({ open, close, yes }: DeleteTodoConfirmI) => {
         </div>
       </div>
     </DialogBase>
-  );
-};
-
-export const DeleteAllConfirm = ({ open, close, yes }: DeleteTodoConfirmI) => {
-  return (
-    <Dialog open={open} onClose={close}>
-      <DialogTitle>DELETE ALL ITEMS?</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          Are you sure you want to delete all items?
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={close} color="primary">
-          No
-        </Button>
-        <Button onClick={yes} color="primary" variant="contained">
-          Yes
-        </Button>
-      </DialogActions>
-    </Dialog>
   );
 };
