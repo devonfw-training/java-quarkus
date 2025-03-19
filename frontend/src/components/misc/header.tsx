@@ -31,7 +31,7 @@ export default function Header() {
       >
         <Link href="/" className="flex gap-2 items-center">
           <img src="logo.png" alt="Logo" className="h-6 w-6" />
-          <h1 className="text-xl font-semibold text-white">MY TODO'S</h1>
+          <h1 className="text-xl font-semibold text-white">MY TODOS</h1>
         </Link>
         <div className="flex gap-7 items-center">
           <button

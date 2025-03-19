@@ -30,8 +30,8 @@ const About = forwardRef<HTMLDivElement, AboutI>((props, ref) => {
       />
       <h1 className="text-white text-4xl font-bold">About</h1>
       <p className="text-white mt-6 text-xl max-w-96 text-center font-medium">
-        <b>My Todo's</b> is a simple Todo App built using React.js and Quarkus
-        as the backend.
+        <b>My Todos</b> is a simple Todo App built using React.js, TailwindCSS,
+        LucideIcons and Quarkus as the backend.
       </p>
       <p className="text-white mt-12 font-medium text-xl">
         You can find devonfw here:
