@@ -4,7 +4,7 @@ export interface TaskItemTypeI {
   completed: any;
   starred: any;
   taskListId: number;
-  deadline?: string;
+  deadline: string | null;
 }
 
 export interface TaskListTypeI {

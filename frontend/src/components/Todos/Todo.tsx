@@ -1,11 +1,18 @@
 import { CalendarDays, Edit2, Star, StarOff, Trash } from "lucide-react";
-import { forwardRef, RefObject, useContext, useRef, useState } from "react";
+import {
+  forwardRef,
+  RefObject,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import useShowOnHover from "../../hooks/showOnHover";
 import { DeleteConfirmContext } from "../../provider/deleteConfirmProvider";
 import { TodoContext } from "../../provider/todoProvider";
 import { TaskItemTypeI } from "../../types/types";
-import { DeleteConfirm } from "../dialogs/deleteConfirm";
-import EditConfirm from "../dialogs/editConfirm";
+import { DeleteTodoConfirm } from "../dialogs/todo/deleteTodoConfirm";
+import EditTodoConfirm from "../dialogs/todo/editTodoConfirm";
 import Checkbox from "../utils/checkbox";
 
 interface TodoI {
@@ -23,7 +30,14 @@ const Todo = forwardRef(({ todo, onDelete, onEdit }: TodoI, ref: any) => {
 
   const todoContainerRef: RefObject<HTMLDivElement> = useRef(null);
   const todoOptionsRef: RefObject<HTMLDivElement> = useRef(null);
+
   useShowOnHover(todoContainerRef, todoOptionsRef);
+
+  useEffect(() => {
+    todoContainerRef.current!.onselectstart = () => {
+      return false;
+    };
+  }, []);
 
   const deleteTodo = (e: any) => {
     if (e.shiftKey || isDeleteConfirmation) {
@@ -79,7 +93,7 @@ const Todo = forwardRef(({ todo, onDelete, onEdit }: TodoI, ref: any) => {
           />
         </div>
       </div>
-      <DeleteConfirm
+      <DeleteTodoConfirm
         yes={() => {
           setDeleteOpen(false);
           setTimeout(() => {
@@ -90,8 +104,8 @@ const Todo = forwardRef(({ todo, onDelete, onEdit }: TodoI, ref: any) => {
         open={deleteOpen}
         close={() => setDeleteOpen(false)}
       />
-      <EditConfirm
-        yes={(newTitle: string, newDeadline?: string) => {
+      <EditTodoConfirm
+        yes={(newTitle: string, newDeadline: string | null) => {
           setEditOpen(false);
           setTimeout(() => {
             editTodo(todo.id, newTitle, newDeadline);
@@ -99,9 +113,11 @@ const Todo = forwardRef(({ todo, onDelete, onEdit }: TodoI, ref: any) => {
           }, 200);
         }}
         open={editOpen}
-        close={() => setEditOpen(false)}
+        close={() => {
+          setEditOpen(false);
+        }}
         title={todo.title}
-        deadline={todo.deadline?.substring(0, 16)}
+        deadline={todo.deadline?.substring(0, 16) ?? null}
       />
     </div>
   );

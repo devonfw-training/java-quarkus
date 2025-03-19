@@ -3,14 +3,14 @@ import { RefObject, useContext, useRef } from "react";
 import { Link, useRoute } from "wouter";
 import useShowOnHover from "../../hooks/showOnHover";
 import { MainContext } from "../../provider/mainProvider";
-import { TodoContext } from "../../provider/todoProvider";
+import { TodoListContext } from "../../provider/todoListProvider";
 import { TaskListTypeI } from "../../types/types";
 
 export default function Sidebar() {
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
   const { changeShowCalendar } = useContext(MainContext)!;
-  const { taskLists } = useContext(TodoContext)!;
+  const { taskLists } = useContext(TodoListContext)!;
 
   const map = taskLists.map((e, i) => {
     return <ListItem key={i} e={e} i={i} listId={listId} />;

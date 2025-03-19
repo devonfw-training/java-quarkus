@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRoute } from "wouter";
-import { TaskItemTypeI, TaskListTypeI } from "../types/types";
+import { TaskItemTypeI } from "../types/types";
 import { MainContext } from "./mainProvider";
 
 export const TodoContext = createContext<TodoInterfaceI | null>(null);
@@ -11,7 +11,6 @@ export const TodoProvider = ({ children }: PropsI) => {
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
   const [todos, setTodos] = useState<TaskItemTypeI[]>([]);
-  const [taskLists, setTaskLists] = useState<TaskListTypeI[]>([]);
 
   useEffect(() => {
     if (undefined !== listId) {
@@ -29,21 +28,6 @@ export const TodoProvider = ({ children }: PropsI) => {
         });
     }
   }, [listId, setErrorAlert]);
-
-  useEffect(() => {
-    fetch(`/api/task/lists`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => setTaskLists(json))
-      .catch((error) => {
-        console.error(error);
-        setErrorAlert("List could not be loaded!");
-      });
-  }, [setErrorAlert]);
 
   const saveTaskItem = (
     taskItem: TaskItemTypeI,
@@ -66,7 +50,7 @@ export const TodoProvider = ({ children }: PropsI) => {
       });
   };
 
-  const addTodo = (title: string) => {
+  const addTodo = (title: string, deadline: string | null) => {
     if (title.trim()) {
       const taskItem: TaskItemTypeI = {
         id: Number.NaN,
@@ -74,8 +58,9 @@ export const TodoProvider = ({ children }: PropsI) => {
         completed: false,
         starred: false,
         taskListId: +listId!,
+        deadline: 0 === (deadline?.length ?? 0) ? null : deadline,
       };
-      console.log(JSON.stringify(taskItem));
+
       saveTaskItem(taskItem, (newId) => {
         taskItem.id = newId;
         const orderTodos = [taskItem, ...todos];
@@ -85,11 +70,11 @@ export const TodoProvider = ({ children }: PropsI) => {
     }
   };
 
-  const editTodo: (id: number, text: string, deadline?: string) => void = (
+  const editTodo: (
     id: number,
     text: string,
-    deadline?: string
-  ) => {
+    deadline: string | null
+  ) => void = (id: number, text: string, deadline: string | null) => {
     if (!(text === null) && text.trim()) {
       const taskItem = todos.find((todo) => todo.id === id);
       if (taskItem) {
@@ -166,10 +151,8 @@ export const TodoProvider = ({ children }: PropsI) => {
     <TodoContext.Provider
       value={{
         todos,
-        taskLists,
 
         setTodos,
-        setTaskLists,
         markComplete,
         delTodo,
         deleteAll,

@@ -6,17 +6,22 @@ import FlipMove from "react-flip-move";
 import { useRoute } from "wouter";
 import useHasOverflow from "../../hooks/hasOverflow";
 import useScrollbarWidth from "../../hooks/scrollBarWidth";
+import { TodoListContext } from "../../provider/todoListProvider";
 import { TodoContext } from "../../provider/todoProvider";
 import { TaskItemTypeI } from "../../types/types";
+import AddTodo from "../dialogs/todo/addTodo";
 import Todo from "./todo";
 
 const Todos = () => {
-  const { todos, taskLists } = useContext(TodoContext)!;
+  const { taskLists } = useContext(TodoListContext)!;
+  const { todos } = useContext(TodoContext)!;
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
 
   const [deleteSnackOpen, setDeleteSnackOpen] = useState(false);
   const [editSnackOpen, setEditSnackOpen] = useState(false);
+
+  const [addTodoOpen, setAddTodoOpen] = useState(false);
 
   return (
     <div className="dark:bg-light-black w-full p-12 flex flex-col">
@@ -28,12 +33,17 @@ const Todos = () => {
           </h1>
           <Edit2 className="cursor-pointer dark:text-white" />
         </div>
-        <Plus className="cursor-pointer dark:text-light-primary text-primary w-10 h-10" />
+        <Plus
+          className="cursor-pointer dark:text-light-primary text-primary w-10 h-10"
+          onClick={() => setAddTodoOpen(true)}
+        />
       </div>
       <div className="mt-6 flex flex-row gap-6 w-full grow">
         <List title="Tasks" todos={todos.filter((e) => !e.completed)} />
         <List title="Done" todos={todos.filter((e) => e.completed)} />
       </div>
+
+      <AddTodo open={addTodoOpen} close={() => setAddTodoOpen(false)} />
 
       <Snackbar
         open={deleteSnackOpen}

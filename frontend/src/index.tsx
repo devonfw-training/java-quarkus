@@ -3,6 +3,7 @@ import App from "./app";
 import { DeleteConfirmProvider } from "./provider/deleteConfirmProvider";
 import { MainProvider } from "./provider/mainProvider";
 import { ThemeProvider } from "./provider/themeProvider";
+import { TodoListProvider } from "./provider/todoListProvider";
 import { TodoProvider } from "./provider/todoProvider";
 import "./styles/styles.css";
 import * as serviceWorkerRegistration from "./worker/serviceWorkerRegistration";
@@ -12,7 +13,9 @@ render(
     <ThemeProvider>
       <DeleteConfirmProvider>
         <TodoProvider>
-          <App />
+          <TodoListProvider>
+            <App />
+          </TodoListProvider>
         </TodoProvider>
       </DeleteConfirmProvider>
     </ThemeProvider>

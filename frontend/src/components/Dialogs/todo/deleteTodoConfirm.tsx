@@ -6,15 +6,15 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
-import DialogBase from "./dialogBase";
+import DialogBase from "../dialogBase";
 
-interface DeleteConfirmI {
+interface DeleteTodoConfirmI {
   open: boolean;
   close: () => void;
   yes: () => void;
 }
 
-export const DeleteConfirm = ({ open, close, yes }: DeleteConfirmI) => {
+export const DeleteTodoConfirm = ({ open, close, yes }: DeleteTodoConfirmI) => {
   return (
     <DialogBase show={open} close={close}>
       <div className="flex flex-col dark:bg-black bg-white border-primary border-2 rounded-lg p-6">
@@ -47,7 +47,7 @@ export const DeleteConfirm = ({ open, close, yes }: DeleteConfirmI) => {
   );
 };
 
-export const DeleteAllConfirm = ({ open, close, yes }: DeleteConfirmI) => {
+export const DeleteAllConfirm = ({ open, close, yes }: DeleteTodoConfirmI) => {
   return (
     <Dialog open={open} onClose={close}>
       <DialogTitle>DELETE ALL ITEMS?</DialogTitle>

@@ -1,21 +1,27 @@
 import { X } from "lucide-react";
 import { useState } from "react";
-import DialogBase from "./dialogBase";
+import DialogBase from "../dialogBase";
 
-interface EditConfirmI {
-  yes: (newTitle: string, newDeadline?: string) => void;
+interface EditTodoConfirmI {
+  yes: (newTitle: string, newDeadline: string | null) => void;
   open: boolean;
   close: () => void;
   title: string;
-  deadline?: string;
+  deadline: string | null;
 }
 
-const EditConfirm = ({ open, close, title, deadline, yes }: EditConfirmI) => {
+const EditTodoConfirm = ({
+  open,
+  close,
+  title,
+  deadline,
+  yes,
+}: EditTodoConfirmI) => {
   const [newTitle, setNewTitle] = useState(title);
-  const [newDeadline, setNewDeadline] = useState(deadline ?? "");
+  const [newDeadline, setNewDeadline] = useState(deadline);
   const onClose = () => {
     setNewTitle(title);
-    setNewDeadline(deadline ?? "");
+    setNewDeadline(deadline);
     close();
   };
 
@@ -42,9 +48,9 @@ const EditConfirm = ({ open, close, title, deadline, yes }: EditConfirmI) => {
         <input
           type="datetime-local"
           className="dark:text-white text-black border-2 dark:border-white border-black p-4 rounded-lg mt-1"
-          value={newDeadline}
+          value={newDeadline ?? ""}
           onChange={(e) => {
-            setNewDeadline(e.target.value);
+            setNewDeadline(0 === e.target.value.length ? null : e.target.value);
           }}
         />
         <button
@@ -58,4 +64,4 @@ const EditConfirm = ({ open, close, title, deadline, yes }: EditConfirmI) => {
   );
 };
 
-export default EditConfirm;
+export default EditTodoConfirm;
