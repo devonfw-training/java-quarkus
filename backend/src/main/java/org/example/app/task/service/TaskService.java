@@ -2,6 +2,7 @@ package org.example.app.task.service;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -25,6 +26,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.example.app.task.common.TaskItemEto;
 import org.example.app.task.common.TaskListCto;
 import org.example.app.task.common.TaskListEto;
+import org.example.app.task.dataaccess.TaskItemEntity;
+import org.example.app.task.dataaccess.TaskListEntity;
 import org.example.app.task.logic.UcAddRandomActivityTaskItem;
 import org.example.app.task.logic.UcDeleteTaskItem;
 import org.example.app.task.logic.UcDeleteTaskList;
@@ -74,11 +77,11 @@ public class TaskService {
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
   public Response saveTask(@Valid TaskListEto taskList) {
 
-    Long taskListId = this.ucSaveTaskList.save(taskList);
-    if (taskList.getId() == null || taskList.getId() != taskListId) {
-      return Response.created(URI.create("/task/list/" + taskListId)).entity(taskListId).build();
+    TaskListEntity savedTaskList = this.ucSaveTaskList.save(taskList);
+    if (taskList.getId() == null || !Objects.equals(taskList.getId(), savedTaskList.getId())) {
+      return Response.created(URI.create("/task/list/" + savedTaskList.getId())).entity(savedTaskList.getId()).build();
     }
-    return Response.ok(taskListId).build();
+    return Response.ok(savedTaskList.getVersion()).build();
   }
 
   /**
@@ -182,11 +185,11 @@ public class TaskService {
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
   public Response saveTaskItem(@Valid TaskItemEto item) {
 
-    Long taskItemId = this.ucSaveTaskItem.save(item);
-    if (item.getId() == null || item.getId() != taskItemId) {
-      return Response.created(URI.create("/task/item/" + taskItemId)).entity(taskItemId).build();
+    TaskItemEntity savedTaskItem = this.ucSaveTaskItem.save(item);
+    if (item.getId() == null || !Objects.equals(item.getId(), savedTaskItem.getId())) {
+      return Response.created(URI.create("/task/item/" + savedTaskItem.getId())).entity(savedTaskItem.getId()).build();
     }
-    return Response.ok(taskItemId).build();
+    return Response.ok(savedTaskItem.getVersion()).build();
   }
 
   /**

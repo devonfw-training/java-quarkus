@@ -46,7 +46,9 @@ export const TodoListProvider = ({ children }: PropsI) => {
         },
         body: JSON.stringify(taskList),
       })
-        .then(() => {
+        .then((response) => response.json())
+        .then((newVersion) => {
+          taskList.version = newVersion;
           setTaskLists(taskLists);
         })
         .catch((error) => {

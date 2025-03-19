@@ -88,7 +88,8 @@ export const TodoProvider = ({ children }: PropsI) => {
       if (taskItem) {
         taskItem.title = text;
         taskItem.deadline = deadline;
-        saveTaskItem(taskItem, () =>
+        saveTaskItem(taskItem, (newVersion) => {
+          taskItem.version = newVersion;
           setTodos(
             todos.map((todo) => {
               if (todo.id === id) {
@@ -96,8 +97,8 @@ export const TodoProvider = ({ children }: PropsI) => {
               }
               return todo;
             })
-          )
-        );
+          );
+        });
       }
     }
   };
@@ -106,7 +107,8 @@ export const TodoProvider = ({ children }: PropsI) => {
     const taskItem = todos.find((todo) => todo.id === id);
     if (taskItem) {
       taskItem.completed = !taskItem.completed;
-      saveTaskItem(taskItem, () => {
+      saveTaskItem(taskItem, (newVersion) => {
+        taskItem.version = newVersion;
         const orderTodos = todos.map((todo) =>
           todo.id === id ? taskItem : todo
         );
@@ -120,7 +122,8 @@ export const TodoProvider = ({ children }: PropsI) => {
     const taskItem = todos.find((todo) => todo.id === id);
     if (taskItem) {
       taskItem.starred = !taskItem.starred;
-      saveTaskItem(taskItem, () => {
+      saveTaskItem(taskItem, (newVersion) => {
+        taskItem.version = newVersion;
         const orderTodos = todos.map((todo) =>
           todo.id === id ? taskItem : todo
         );

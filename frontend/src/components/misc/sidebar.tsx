@@ -8,6 +8,7 @@ import { TodoListContext } from "../../provider/todoListProvider";
 import { TaskListTypeI } from "../../types/types";
 import AddTodoList from "../dialogs/todoList/addTodoList";
 import { DeleteTodoListConfirm } from "../dialogs/todoList/deleteTodoListConfirm";
+import useDisableSelect from "../../hooks/disableSelect";
 
 export default function Sidebar() {
   const [, params] = useRoute("/:listId");
@@ -69,11 +70,7 @@ const ListItem = (props: ListItemI) => {
     } else setShowTaskListDelete(true);
   };
 
-  useEffect(() => {
-    listItemRef.current!.onselectstart = () => {
-      return false;
-    };
-  }, []);
+  useDisableSelect(listItemRef);
 
   return (
     <div ref={listItemRef}>

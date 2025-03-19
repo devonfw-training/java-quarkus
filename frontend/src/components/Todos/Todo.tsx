@@ -1,12 +1,6 @@
 import { CalendarDays, Edit2, Star, StarOff, Trash } from "lucide-react";
-import {
-  forwardRef,
-  RefObject,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, RefObject, useContext, useRef, useState } from "react";
+import useDisableSelect from "../../hooks/disableSelect";
 import useShowOnHover from "../../hooks/showOnHover";
 import { DeleteConfirmContext } from "../../provider/deleteConfirmProvider";
 import { TodoContext } from "../../provider/todoProvider";
@@ -32,12 +26,7 @@ const Todo = forwardRef(({ todo, onDelete, onEdit }: TodoI, ref: any) => {
   const todoOptionsRef: RefObject<HTMLDivElement> = useRef(null);
 
   useShowOnHover(todoContainerRef, todoOptionsRef);
-
-  useEffect(() => {
-    todoContainerRef.current!.onselectstart = () => {
-      return false;
-    };
-  }, []);
+  useDisableSelect(todoContainerRef);
 
   const deleteTodo = (e: any) => {
     if (e.shiftKey || isDeleteConfirmation) {
