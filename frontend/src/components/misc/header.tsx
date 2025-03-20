@@ -2,7 +2,7 @@ import { InfoIcon, SettingsIcon } from "lucide-react";
 import { useContext, useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { MainContext } from "../../provider/mainProvider";
-import { Settings } from "../menus/settingsMenu";
+import { SettingsMenu } from "../menus/settingsMenu";
 import About from "../overlay/aboutOverlay";
 
 export default function Header() {
@@ -52,7 +52,7 @@ export default function Header() {
           </button>
         </div>
       </header>
-      <Settings ignoreClick={[settingsButtonRef]} />
+      <SettingsMenu ignoreClick={[settingsButtonRef]} />
       <About ref={aboutRef} ignoreClick={[aboutButtonRef]} />
     </div>
   );

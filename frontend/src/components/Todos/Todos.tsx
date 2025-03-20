@@ -1,7 +1,7 @@
 import { Snackbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { Edit2, Filter, ListFilter, Plus } from "lucide-react";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import FlipMove from "react-flip-move";
 import { useRoute } from "wouter";
 import useHasOverflow from "../../hooks/hasOverflow";
@@ -11,6 +11,8 @@ import { TodoContext } from "../../provider/todoProvider";
 import { TaskItemTypeI } from "../../types/types";
 import AddTodo from "../dialogs/todo/addTodo";
 import EditTodoList from "../dialogs/todoList/editTodoList";
+import { FilterMenu, SelectedFilterE } from "../menus/filterMenu";
+import { SelectedSortE, SelectedSortOrderE, SortMenu } from "../menus/sortMenu";
 import Todo from "./todo";
 
 const Todos = () => {
@@ -100,6 +102,7 @@ interface ListI {
 }
 
 function List({ title, todos }: ListI) {
+  const { applyFilter, applySort } = useContext(TodoContext)!;
   const scrollContainerRef = useRef(null);
   const scrollbarWidth = useScrollbarWidth();
   const hasOverflow = useHasOverflow(scrollContainerRef);
@@ -107,10 +110,45 @@ function List({ title, todos }: ListI) {
   const [, setDeleteSnackOpen] = useState(false);
   const [, setEditSnackOpen] = useState(false);
 
+  /**
+   *
+   * APPLY FILTER
+   *
+   */
+
+  const filterRef = useRef(null);
+  const [showFilter, setShowFilter] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState(SelectedFilterE.NONE);
+
+  const [filteredTodos, setFilteredTodos] = useState([] as TaskItemTypeI[]);
+
+  useEffect(() => {
+    setFilteredTodos(applyFilter(todos, selectedFilter));
+  }, [applyFilter, selectedFilter, todos]);
+
+  /**
+   *
+   * APPLY SORT ON FILTERED ITEMS
+   *
+   */
+
+  const sortRef = useRef(null);
+  const [showSort, setShowSort] = useState(false);
+  const [selectedSort, setSelectedSort] = useState({
+    selectedSort: SelectedSortE.NONE,
+    selectedSortOrder: SelectedSortOrderE.NOT_SELECTED,
+  });
+
+  const [sortedTodos, setSortedTodos] = useState([] as TaskItemTypeI[]);
+
+  useEffect(() => {
+    setSortedTodos(applySort(filteredTodos, selectedSort));
+  }, [applySort, selectedSort, filteredTodos]);
+
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-row justify-between items-center">
-        <p className="dark:text-white text-black">{`${title} - ${todos.length}`}</p>
+      <div className="flex flex-row justify-between items-center relative">
+        <p className="dark:text-white text-black">{`${title} - ${sortedTodos.length}`}</p>
         <div
           className={`flex flex-row gap-2.5 transition-all `}
           style={{
@@ -121,9 +159,39 @@ function List({ title, todos }: ListI) {
             }`,
           }}
         >
-          <Filter className="text-light-primary cursor-pointer" />
-          <ListFilter className="text-light-primary cursor-pointer" />
+          <Filter
+            ref={filterRef}
+            className={`cursor-pointer ${
+              selectedFilter !== SelectedFilterE.NONE
+                ? "text-primary"
+                : "text-light-primary"
+            }`}
+            onClick={() => setShowFilter(!showFilter)}
+          />
+          <ListFilter
+            ref={sortRef}
+            className={`cursor-pointer ${
+              selectedSort.selectedSort !== SelectedSortE.NONE
+                ? "text-primary"
+                : "text-light-primary"
+            }`}
+            onClick={() => setShowSort(!showSort)}
+          />
         </div>
+        <FilterMenu
+          ignoreClick={[filterRef]}
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+          setSelectedFilter={setSelectedFilter}
+          selectedFilter={selectedFilter}
+        />
+        <SortMenu
+          ignoreClick={[sortRef]}
+          showSort={showSort}
+          setShowSort={setShowSort}
+          setSelectedSort={setSelectedSort}
+          selectedSort={selectedSort}
+        />
       </div>
       <div
         ref={scrollContainerRef}
@@ -133,7 +201,7 @@ function List({ title, todos }: ListI) {
       >
         <div>
           <FlipMove className="gap-2.5 flex flex-col">
-            {todos.map((todo, i) => {
+            {sortedTodos.map((todo, i) => {
               return (
                 <Todo
                   todo={todo}

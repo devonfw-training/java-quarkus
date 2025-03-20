@@ -9,4 +9,15 @@ interface TodoInterfaceI {
   addTodo: (title: string, deadline: string | null) => void;
   moveTodo: (old: number, new_: number) => void;
   markStar: (id: number) => void;
+  applyFilter: (
+    todos: TaskItemTypeI[],
+    filter: SelectedFilterE
+  ) => TaskItemTypeI[];
+  applySort: (
+    todos: TaskItemTypeI[],
+    sort: {
+      selectedSort: SelectedSortE;
+      selectedSortOrder: SelectedSortOrderE;
+    }
+  ) => TaskItemTypeI[];
 }

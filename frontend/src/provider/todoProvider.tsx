@@ -1,5 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRoute } from "wouter";
+import { SelectedFilterE } from "../components/menus/filterMenu";
+import {
+  SelectedSortE,
+  SelectedSortOrderE,
+} from "../components/menus/sortMenu";
 import { TaskItemTypeI } from "../types/types";
 import { MainContext } from "./mainProvider";
 
@@ -72,7 +77,6 @@ export const TodoProvider = ({ children }: PropsI) => {
       saveTaskItem(taskItem, (newId) => {
         taskItem.id = newId;
         const orderTodos = [taskItem, ...todos];
-        orderStar(orderTodos);
         setTodos(orderTodos);
       });
     }
@@ -112,7 +116,6 @@ export const TodoProvider = ({ children }: PropsI) => {
         const orderTodos = todos.map((todo) =>
           todo.id === id ? taskItem : todo
         );
-        orderStar(orderTodos);
         setTodos(orderTodos);
       });
     }
@@ -127,14 +130,9 @@ export const TodoProvider = ({ children }: PropsI) => {
         const orderTodos = todos.map((todo) =>
           todo.id === id ? taskItem : todo
         );
-        orderStar(orderTodos);
         setTodos(orderTodos);
       });
     }
-  };
-
-  const orderStar = (todos: TaskItemTypeI[]) => {
-    todos.sort((x, y) => y.starred - x.starred);
   };
 
   const delTodo = (id: number) => {
@@ -158,6 +156,95 @@ export const TodoProvider = ({ children }: PropsI) => {
     setTodos(copy);
   };
 
+  const applyFilter = (todos: TaskItemTypeI[], filter: SelectedFilterE) => {
+    const sortedTodos = [...todos];
+
+    switch (filter) {
+      case SelectedFilterE.NONE:
+        return sortedTodos;
+      case SelectedFilterE.WITH_DUE_DATE:
+        return sortedTodos.filter((e) => e.deadline != null);
+      case SelectedFilterE.WITHOUT_DUE_DATE:
+        return sortedTodos.filter((e) => e.deadline == null);
+      case SelectedFilterE.ONLY_STARRED:
+        return sortedTodos.filter((e) => e.starred);
+      case SelectedFilterE.NOT_STARRED:
+        return sortedTodos.filter((e) => !e.starred);
+    }
+  };
+
+  const applySort = (
+    todos: TaskItemTypeI[],
+    sort: {
+      selectedSort: SelectedSortE;
+      selectedSortOrder: SelectedSortOrderE;
+    }
+  ) => {
+    const sortedTodos = [...todos];
+
+    if (
+      sort.selectedSort === SelectedSortE.NONE ||
+      sort.selectedSortOrder === SelectedSortOrderE.NOT_SELECTED
+    ) {
+      return todos;
+    }
+
+    switch (sort.selectedSort) {
+      case SelectedSortE.BY_CREATION_DATE:
+        if (sort.selectedSortOrder === SelectedSortOrderE.ASC) {
+          return sortedTodos.sort((a, b) => a.id - b.id);
+        } else {
+          return sortedTodos.sort((a, b) => b.id - a.id);
+        }
+      case SelectedSortE.ALPHABETICALLY:
+        if (sort.selectedSortOrder === SelectedSortOrderE.ASC) {
+          return sortedTodos.sort((a, b) => a.title.localeCompare(b.title));
+        } else {
+          return sortedTodos.sort((a, b) => b.title.localeCompare(a.title));
+        }
+      case SelectedSortE.BY_DUE_DATE:
+        const sortedDateTodos = [];
+        if (sort.selectedSortOrder === SelectedSortOrderE.ASC) {
+          sortedDateTodos.push(
+            ...sortedTodos
+              .filter((e) => null != e.deadline)
+              .sort((a, b) => {
+                console.log(a);
+                console.log(b);
+
+                return (
+                  new Date(a.deadline!).getTime() -
+                  new Date(b.deadline!).getTime()
+                );
+              })
+          );
+        } else {
+          sortedDateTodos.push(
+            ...sortedTodos
+              .filter((e) => null != e.deadline)
+              .sort((a, b) => {
+                return (
+                  new Date(b.deadline!).getTime() -
+                  new Date(a.deadline!).getTime()
+                );
+              })
+          );
+        }
+        sortedDateTodos.push(...sortedTodos.filter((e) => null == e.deadline));
+        return sortedDateTodos;
+      case SelectedSortE.STARRED:
+        if (sort.selectedSortOrder === SelectedSortOrderE.ASC) {
+          return sortedTodos.sort(
+            (a, b) => Number(b.starred) - Number(a.starred)
+          );
+        } else {
+          return sortedTodos.sort(
+            (a, b) => Number(a.starred) - Number(b.starred)
+          );
+        }
+    }
+  };
+
   return (
     <TodoContext.Provider
       value={{
@@ -171,6 +258,8 @@ export const TodoProvider = ({ children }: PropsI) => {
         addTodo,
         moveTodo,
         markStar,
+        applyFilter,
+        applySort,
       }}
     >
       {children}
