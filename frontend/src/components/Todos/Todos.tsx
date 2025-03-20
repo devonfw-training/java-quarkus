@@ -1,5 +1,3 @@
-import { Snackbar } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
 import { Edit2, Filter, ListFilter, Plus } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import FlipMove from "react-flip-move";
@@ -20,9 +18,6 @@ const Todos = () => {
   const { todos } = useContext(TodoContext)!;
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
-
-  const [deleteSnackOpen, setDeleteSnackOpen] = useState(false);
-  const [editSnackOpen, setEditSnackOpen] = useState(false);
 
   const [showAddTodoOpen, setShowAddTodoOpen] = useState(false);
   const [showEditTodoList, setShowEditTodoList] = useState(false);
@@ -61,37 +56,6 @@ const Todos = () => {
         }}
         title={taskListTitle}
       ></EditTodoList>
-
-      <Snackbar
-        open={deleteSnackOpen}
-        autoHideDuration={4000}
-        onClose={() => setDeleteSnackOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      >
-        <Alert
-          elevation={6}
-          variant="filled"
-          onClose={() => setDeleteSnackOpen(false)}
-          severity="success"
-        >
-          Successfully deleted item!
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={editSnackOpen}
-        autoHideDuration={4000}
-        onClose={() => setEditSnackOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      >
-        <Alert
-          elevation={6}
-          variant="filled"
-          onClose={() => setEditSnackOpen(false)}
-          severity="success"
-        >
-          Successfully edited item!
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

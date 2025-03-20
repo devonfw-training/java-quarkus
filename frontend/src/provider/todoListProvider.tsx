@@ -7,7 +7,7 @@ import { MainContext } from "./mainProvider";
 export const TodoListContext = createContext<TodoListInterfaceI | null>(null);
 
 export const TodoListProvider = ({ children }: PropsI) => {
-  const { setErrorAlert } = useContext(MainContext)!;
+  const { setErrorAlert, setSuccessAlert } = useContext(MainContext)!;
 
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
@@ -50,6 +50,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
         .then((newVersion) => {
           taskList.version = newVersion;
           setTaskLists(taskLists);
+          setSuccessAlert("Todo List edit!");
         })
         .catch((error) => {
           console.error(error);
@@ -79,6 +80,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
           taskList.id = newId;
           const newTaskLists = [taskList, ...taskLists];
           setTaskLists(newTaskLists);
+          setSuccessAlert("Todo List created!");
         })
         .catch((error) => {
           console.error(error);
@@ -96,6 +98,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
         if (undefined !== listId && id === +listId) {
           navigate("/");
         }
+        setSuccessAlert("Todo List deleted!");
       })
       .catch((error) => {
         console.error(error);

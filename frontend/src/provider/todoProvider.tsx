@@ -11,7 +11,7 @@ import { MainContext } from "./mainProvider";
 export const TodoContext = createContext<TodoInterfaceI | null>(null);
 
 export const TodoProvider = ({ children }: PropsI) => {
-  const { setErrorAlert } = useContext(MainContext)!;
+  const { setErrorAlert, setSuccessAlert } = useContext(MainContext)!;
 
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
@@ -78,6 +78,7 @@ export const TodoProvider = ({ children }: PropsI) => {
         taskItem.id = newId;
         const orderTodos = [taskItem, ...todos];
         setTodos(orderTodos);
+        setSuccessAlert("Item created!");
       });
     }
   };
@@ -102,6 +103,7 @@ export const TodoProvider = ({ children }: PropsI) => {
               return todo;
             })
           );
+          setSuccessAlert("Item edited!");
         });
       }
     }
@@ -117,6 +119,7 @@ export const TodoProvider = ({ children }: PropsI) => {
           todo.id === id ? taskItem : todo
         );
         setTodos(orderTodos);
+        setSuccessAlert("Item marked as completed!");
       });
     }
   };
@@ -131,6 +134,7 @@ export const TodoProvider = ({ children }: PropsI) => {
           todo.id === id ? taskItem : todo
         );
         setTodos(orderTodos);
+        setSuccessAlert(`Item ${taskItem.starred ? "" : "un"}starred!`);
       });
     }
   };
@@ -139,7 +143,10 @@ export const TodoProvider = ({ children }: PropsI) => {
     fetch(`/api/task/item/${encodeURIComponent(id)}`, {
       method: "DELETE",
     })
-      .then(() => setTodos(todos.filter((todo) => todo.id !== id)))
+      .then(() => {
+        setTodos(todos.filter((todo) => todo.id !== id));
+        setSuccessAlert("Item deleted!");
+      })
       .catch((error) => {
         console.error(error);
         setErrorAlert("Item could not be deleted!");

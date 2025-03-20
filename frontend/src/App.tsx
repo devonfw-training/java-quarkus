@@ -8,7 +8,8 @@ import Todos from "./components/todos/todos";
 import { MainContext } from "./provider/mainProvider";
 
 function App() {
-  const { errorAlert, setErrorAlert } = useContext(MainContext)!;
+  const { errorAlert, setErrorAlert, successAlert, setSuccessAlert } =
+    useContext(MainContext)!;
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
@@ -33,6 +34,24 @@ function App() {
           severity="error"
         >
           {errorAlert}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={successAlert !== ""}
+        autoHideDuration={4000}
+        onClose={() => {
+          setSuccessAlert("");
+        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          // icon={<Check fontSize="inherit" />}
+          elevation={6}
+          variant="filled"
+          //onClose={() => setSuccessAlert("")}
+          severity="success"
+        >
+          {successAlert}
         </Alert>
       </Snackbar>
     </div>
