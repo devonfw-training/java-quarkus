@@ -238,8 +238,10 @@ class TaskServiceTest extends Assertions {
 
       @Test
       void shouldCallSaveUseCaseAndReturn201WhenCreatingTaskItem() {
+        TaskItemEntity taskItemEntity = new TaskItemEntity();
+        taskItemEntity.setId(42L);
 
-        given(TaskServiceTest.this.saveTaskItem.save(Mockito.any())).willReturn(42L);
+        given(TaskServiceTest.this.saveTaskItem.save(Mockito.any())).willReturn(taskItemEntity);
 
         given().when().body("{ \"title\": \"Buy Milk\", \"taskListId\": 123 }").contentType(ContentType.JSON)
             .post("/task/item").then().statusCode(201).body(is("42"));
