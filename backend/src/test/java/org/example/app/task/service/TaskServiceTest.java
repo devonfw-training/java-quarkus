@@ -7,6 +7,8 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.BDDAssertions;
 import org.example.app.task.common.TaskItemEto;
 import org.example.app.task.common.TaskListCto;
+import org.example.app.task.dataaccess.TaskItemEntity;
+import org.example.app.task.dataaccess.TaskListEntity;
 import org.example.app.task.logic.UcAddRandomActivityTaskItem;
 import org.example.app.task.logic.UcDeleteTaskItem;
 import org.example.app.task.logic.UcDeleteTaskList;
@@ -68,8 +70,10 @@ class TaskServiceTest extends Assertions {
 
       @Test
       void shouldCallSaveUseCaseAndReturn204WhenCreatingTaskList() {
+        TaskListEntity taskListEntity = new TaskListEntity();
+        taskListEntity.setId(123L);
 
-        given(TaskServiceTest.this.saveTaskList.save(Mockito.any())).willReturn(123L);
+        given(TaskServiceTest.this.saveTaskList.save(Mockito.any())).willReturn(taskListEntity);
 
         given().when().body("{ \"title\": \"Shopping List\" }").contentType(ContentType.JSON).post("/task/list").then()
             .statusCode(201);
@@ -234,8 +238,10 @@ class TaskServiceTest extends Assertions {
 
       @Test
       void shouldCallSaveUseCaseAndReturn201WhenCreatingTaskItem() {
+        TaskItemEntity taskItemEntity = new TaskItemEntity();
+        taskItemEntity.setId(42L);
 
-        given(TaskServiceTest.this.saveTaskItem.save(Mockito.any())).willReturn(42L);
+        given(TaskServiceTest.this.saveTaskItem.save(Mockito.any())).willReturn(taskItemEntity);
 
         given().when().body("{ \"title\": \"Buy Milk\", \"taskListId\": 123 }").contentType(ContentType.JSON)
             .post("/task/item").then().statusCode(201).body(is("42"));
