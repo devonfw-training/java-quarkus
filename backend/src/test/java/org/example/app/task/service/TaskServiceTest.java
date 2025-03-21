@@ -166,7 +166,7 @@ class TaskServiceTest extends Assertions {
         void shouldCallSaveUseCaseAndReturn201WhenCreatingTaskItem() {
 
           TaskItemEntity taskItemEntity = new TaskItemEntity();
-          taskItemEntity.setId(421L);
+          taskItemEntity.setId(42L);
 
           given(TaskServiceTest.this.saveTaskItem.save(Mockito.any())).willReturn(taskItemEntity);
 
