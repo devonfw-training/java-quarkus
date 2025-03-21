@@ -17,12 +17,12 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 /**
- * E2E black-box test of the Todo service only via its public REST resource.
+ * E2E black-box test of the To-Do service only via its public REST resource.
  */
 @QuarkusIntegrationTest
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
-public class TaskServiceIT {
+class TaskServiceIT {
 
   private Integer taskListId;
 

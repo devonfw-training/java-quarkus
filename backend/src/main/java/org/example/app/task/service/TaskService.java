@@ -1,9 +1,8 @@
 package org.example.app.task.service;
 
-import java.net.URI;
-
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -14,7 +13,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -31,6 +29,9 @@ import org.example.app.task.logic.UcFindTaskItem;
 import org.example.app.task.logic.UcFindTaskList;
 import org.example.app.task.logic.UcSaveTaskItem;
 import org.example.app.task.logic.UcSaveTaskList;
+
+import java.net.URI;
+import java.util.Map;
 
 /**
  * Rest service for {@link org.example.app.task.common.TaskList}.
@@ -152,6 +153,54 @@ public class TaskService {
 
     Long taskItemId = this.ucAddRandomActivityTask.addRandom(id);
     return Response.created(URI.create("/task/item/" + taskItemId)).build();
+  }
+
+  @POST
+  @Path("/list/multiple-random-activities")
+  @Consumes(MediaType.TEXT_PLAIN)
+  @Operation(summary = "Create new task list with multiple items", description = "Create a new task list with the given name and add multiple random activities to the new list")
+  @APIResponse(responseCode = "201", description = "Task list with items successfully created")
+  @APIResponse(responseCode = "400", description = "Validation error")
+  @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
+  public Response addMultipleRandomActivities(@NotBlank @Schema(required = true, example = "Shopping list", description = "Title of the task list") String listTitle) {
+
+    TaskListEto taskList = new TaskListEto();
+    taskList.setTitle(listTitle);
+
+    Long taskListId = this.ucSaveTaskList.save(taskList);
+    this.ucAddRandomActivityTask.addMultipleRandom(taskListId, listTitle);
+
+    return Response.created(URI.create("/task/list/" + taskListId)).build();
+  }
+
+  @POST
+  @Path("/list/ingredient-list")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Operation(summary = "Add all ingredients from recipe to a new task list", description = "Extract all ingredients from the given recipe and add them to a newly created task list")
+  @APIResponse(responseCode = "201", description = "Task list with ingredients successfully created")
+  @APIResponse(responseCode = "400", description = "Validation error")
+  @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
+  public Response addExtractedIngredients(@Schema(required = true, example = """
+          {"listTitle": "Shopping list",
+           "recipe": "Take flour, sugar and chocolate and mix everything."}""",
+          description = "The JSON containing task list title and the recipe") Map<String, String> requestData) {
+
+    String listTitle = requestData.get("listTitle");
+    String recipe = requestData.get("recipe");
+
+    if (listTitle == null || listTitle.isBlank() || recipe == null || recipe.isBlank()) {
+      return Response.status(Response.Status.BAD_REQUEST)
+              .entity("Missing or empty required fields: listTitle, recipe")
+              .build();
+    }
+
+    TaskListEto taskList = new TaskListEto();
+    taskList.setTitle(listTitle);
+
+    Long taskListId = this.ucSaveTaskList.save(taskList);
+    this.ucAddRandomActivityTask.addExtractedIngredients(taskListId, recipe);
+
+    return Response.created(URI.create("/task/list/" + taskListId)).build();
   }
 
   /**

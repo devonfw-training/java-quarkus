@@ -1,0 +1,96 @@
+openapi: 3.1.0
+info:
+  title: Ollama LLM API
+  description: API specification for interacting with a locally hosted Ollama model
+  version: 1.0.0
+servers:
+  - url: http://localhost:11434
+paths:
+  /api/generate:
+    post:
+      summary: Generate a response for a given prompt
+      description: |
+        Generates a response using the specified model. This is a streaming endpoint, meaning multiple responses may be returned.
+      operationId: queryLlm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - prompt
+              properties:
+                model:
+                  type: string
+                  description: The model name to use for generating responses.
+                prompt:
+                  type: string
+                  description: The input text for the model.
+                suffix:
+                  type: string
+                  description: The text to append after the model's response.
+                  nullable: true
+                images:
+                  type: array
+                  description: List of base64-encoded images (for multimodal models).
+                  items:
+                    type: string
+                format:
+                  type: object
+                  additionalProperties: true
+                  description: The format of the response. Can be `json` or a JSON schema.
+                options:
+                  type: object
+                  description: Additional model parameters from the Modelfile (e.g., temperature).
+                system:
+                  type: string
+                  description: Overrides the system message defined in the Modelfile.
+                template:
+                  type: string
+                  description: Overrides the prompt template defined in the Modelfile.
+                stream:
+                  type: boolean
+                  description: If false, returns a single response instead of a stream.
+                  default: true
+                raw:
+                  type: boolean
+                  description: If true, disables prompt formatting.
+                  default: false
+                keep_alive:
+                  type: string
+                  description: Controls how long the model stays loaded in memory (default 5m).
+                  example: "5m"
+                context:
+                  type: string
+                  description: (Deprecated) Context from a previous request to maintain short-term memory.
+                  nullable: true
+      responses:
+        "200":
+          description: Successful response with generated text.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: The generated text response.
+                  model:
+                    type: string
+                    description: The model used for generation.
+                  usage:
+                    type: object
+                    description: Statistics on token usage.
+                    properties:
+                      prompt_tokens:
+                        type: integer
+                      completion_tokens:
+                        type: integer
+                      total_tokens:
+                        type: integer
+        "400":
+          description: Bad request due to invalid parameters.
+        "500":
+          description: Internal server error.
