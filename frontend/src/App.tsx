@@ -16,6 +16,26 @@ function App() {
     setSuccessAlert,
     showCalendar,
   } = useContext(MainContext)!;
+    const [authenticated, setAuthenticated] = useState(false);  // Track authentication status
+
+ // Function that is called once Keycloak is authenticated
+  const onAuthenticatedCallback = () => {
+    setAuthenticated(true);
+  };
+
+  // Initialize Keycloak when the app loads
+  useEffect(() => {
+    initKeycloak(onAuthenticatedCallback);
+  }, []);
+
+  // If not authenticated, show a loading message
+  if (!authenticated) {
+    return (
+      <div>
+        <h2>Loading...</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
