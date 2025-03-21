@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "react-big-calendar/lib/css/react-big-calendar.css";
+@import "./calendar.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

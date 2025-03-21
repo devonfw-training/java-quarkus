@@ -27,7 +27,7 @@ const Todos = () => {
     (undefined === listId ? "Please select a list" : "Loading...");
 
   return (
-    <div className="dark:bg-light-black w-full p-12 flex flex-col">
+    <div className="dark:bg-light-black w-full p-12 flex flex-1 flex-col">
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-row gap-2.5 items-baseline">
           <h1 className="text-3xl dark:text-white">{taskListTitle}</h1>

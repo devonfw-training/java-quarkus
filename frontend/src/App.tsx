@@ -2,14 +2,20 @@ import { Snackbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { useContext } from "react";
 import { Route } from "wouter";
+import CalendarView from "./components/calendar";
 import Header from "./components/misc/header";
 import Sidebar from "./components/misc/sidebar";
 import Todos from "./components/todos/todos";
 import { MainContext } from "./provider/mainProvider";
 
 function App() {
-  const { errorAlert, setErrorAlert, successAlert, setSuccessAlert } =
-    useContext(MainContext)!;
+  const {
+    errorAlert,
+    setErrorAlert,
+    successAlert,
+    setSuccessAlert,
+    showCalendar,
+  } = useContext(MainContext)!;
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
@@ -17,7 +23,7 @@ function App() {
       <div className="flex flex-1 basis-0">
         <Sidebar />
         <Route path="/:listId?">
-          <Todos />
+          {showCalendar ? <CalendarView /> : <Todos />}
         </Route>
       </div>
       <Snackbar

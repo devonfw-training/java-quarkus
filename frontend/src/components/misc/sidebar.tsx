@@ -1,6 +1,7 @@
-import { CalendarDays, PlusIcon, Trash } from "lucide-react";
-import { RefObject, useContext, useEffect, useRef, useState } from "react";
+import { CalendarDays, List, PlusIcon, Trash } from "lucide-react";
+import { RefObject, useContext, useRef, useState } from "react";
 import { Link, useRoute } from "wouter";
+import useDisableSelect from "../../hooks/disableSelect";
 import useShowOnHover from "../../hooks/showOnHover";
 import { DeleteConfirmContext } from "../../provider/deleteConfirmProvider";
 import { MainContext } from "../../provider/mainProvider";
@@ -8,12 +9,11 @@ import { TodoListContext } from "../../provider/todoListProvider";
 import { TaskListTypeI } from "../../types/types";
 import AddTodoList from "../dialogs/todoList/addTodoList";
 import { DeleteTodoListConfirm } from "../dialogs/todoList/deleteTodoListConfirm";
-import useDisableSelect from "../../hooks/disableSelect";
 
 export default function Sidebar() {
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
-  const { changeShowCalendar } = useContext(MainContext)!;
+  const { showCalendar, changeShowCalendar } = useContext(MainContext)!;
   const { taskLists } = useContext(TodoListContext)!;
   const [showTaskListAdd, setShowTaskListAdd] = useState(false);
 
@@ -39,8 +39,19 @@ export default function Sidebar() {
         className="flex flex-row gap-2.5 justify-center items-center dark:bg-primary bg-light-primary rounded-t-3xl py-8 cursor-pointer"
         onClick={changeShowCalendar}
       >
-        <CalendarDays className="dark:text-white text-black" />
-        <p className="dark:text-white text-black text-md">Switch to calendar</p>
+        {showCalendar ? (
+          <>
+            <List className="dark:text-white text-black" />
+            <p className="dark:text-white text-black text-md">Switch to list</p>
+          </>
+        ) : (
+          <>
+            <CalendarDays className="dark:text-white text-black" />
+            <p className="dark:text-white text-black text-md">
+              Switch to calendar
+            </p>
+          </>
+        )}
       </div>
       <AddTodoList
         open={showTaskListAdd}
