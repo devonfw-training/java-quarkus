@@ -7,6 +7,7 @@ import {
 } from "../components/menus/sortMenu";
 import { TaskItemTypeI } from "../types/types";
 import { MainContext } from "./mainProvider";
+import { addHeaders } from "../auth/authUtils";
 
 export const TodoContext = createContext<TodoInterfaceI | null>(null);
 
@@ -25,9 +26,7 @@ export const TodoProvider = ({ children }: PropsI) => {
 
     fetch(`/api/task/list-with-items/${encodeURIComponent(+listId!)}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+        headers: addHeaders(),
     })
       .then((response) => response.json())
       .then((json) => setTodos(json.items))
@@ -44,10 +43,7 @@ export const TodoProvider = ({ children }: PropsI) => {
     // Send data to the backend via POST
     fetch("/api/task/item", {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      headers: addHeaders(),
       body: JSON.stringify(taskItem), // body data type must match "Content-Type" header
     })
       .then((response) => response.json())
@@ -142,8 +138,13 @@ export const TodoProvider = ({ children }: PropsI) => {
   const delTodo = (id: number) => {
     fetch(`/api/task/item/${encodeURIComponent(id)}`, {
       method: "DELETE",
+      headers: addHeaders(),
     })
-      .then(() => {
+      .then((res) => {
+        if(res.status === 403){
+          setErrorAlert("Item could not be deleted (No permissions)!");
+          return;
+        }
         setTodos(todos.filter((todo) => todo.id !== id));
         setSuccessAlert("Item deleted!");
       })

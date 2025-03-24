@@ -35,6 +35,8 @@ import org.example.app.task.logic.UcSaveTaskItem;
 import org.example.app.task.logic.UcSaveTaskList;
 
 import static org.example.app.general.common.security.ApplicationAccessControlConfig.*;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,9 +85,29 @@ public class TaskService {
   public Response saveTask(@Valid TaskListEto taskList) {
     Long taskListId = this.ucSaveTaskList.save(taskList);
     if (taskList.getId() == null || taskList.getId() != taskListId) {
-      return Response.created(URI.create("/task/list/" + taskListId)).build();
+      return Response.created(URI.create("/task/list/" + taskListId)).entity(taskListId).build();
     }
-    return Response.ok().build();
+    return Response.ok(taskListId).build();
+  }
+
+  /**
+   * @return response
+   */
+  @GET
+  @Path("/lists")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Operation(summary = "Fetch task lists", description = "Fetch all task lists")
+  @APIResponse(responseCode = "200", description = "Task lists", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = TaskListEto.class)))
+  @APIResponse(responseCode = "404", description = "Task lists not found")
+  @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
+  public Response findTaskLists() {
+    Response permissionResponse = permissionService.checkPermission(PERMISSION_FIND_TASK_LIST);
+    if (permissionResponse != null) {
+      return permissionResponse;
+    }
+
+    List<TaskListEto> taskLists = this.ucFindTaskList.findAll();
+    return Response.ok(taskLists).build();
   }
 
   /**

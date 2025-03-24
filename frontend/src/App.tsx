@@ -1,12 +1,12 @@
 import { Snackbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Route } from "wouter";
 import CalendarView from "./components/calendar";
 import Header from "./components/misc/header";
 import Sidebar from "./components/misc/sidebar";
-import Todos from "./components/todos/todos";
 import { MainContext } from "./provider/mainProvider";
+import Todos from "./components/todos/Todos";
 
 function App() {
   const {
@@ -16,26 +16,6 @@ function App() {
     setSuccessAlert,
     showCalendar,
   } = useContext(MainContext)!;
-    const [authenticated, setAuthenticated] = useState(false);  // Track authentication status
-
- // Function that is called once Keycloak is authenticated
-  const onAuthenticatedCallback = () => {
-    setAuthenticated(true);
-  };
-
-  // Initialize Keycloak when the app loads
-  useEffect(() => {
-    initKeycloak(onAuthenticatedCallback);
-  }, []);
-
-  // If not authenticated, show a loading message
-  if (!authenticated) {
-    return (
-      <div>
-        <h2>Loading...</h2>
-      </div>
-    );
-  }
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
