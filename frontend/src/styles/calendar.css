@@ -1,0 +1,120 @@
+.dark .rbc-month-view {
+    border-color: var(--color-black);
+}
+
+.dark .rbc-header {
+    border-color: var(--color-black);
+    color: white
+}
+
+.dark .rbc-month-row {
+    border-color: var(--color-black);
+}
+
+.dark .rbc-day-bg {
+    background-color: var(--color-light-black);
+    border-color: var(--color-black);
+}
+
+.dark .rbc-time-view {
+    border-color: var(--color-black);
+}
+
+.dark .rbc-time-header-content {
+    border-color: var(--color-black);
+}
+
+.dark .rbc-time-content {
+    border-color: var(--color-black);
+}
+
+.dark .rbc-timeslot-group {
+    border-color: var(--color-black);
+}
+
+.dark .rbc-time-slot {
+    border-color: var(--color-black);
+}
+
+.dark .rbc-events-container {
+    border-color: var(--color-black);
+}
+
+.dark .rbc-label {
+    color: white !important
+}
+
+.dark .rbc-date-cell {
+    color: white;
+}
+
+.dark .rbc-off-range-bg {
+    background-color: var(--color-black);
+}
+
+.dark .rbc-off-range {
+    color: gray;
+}
+
+.dark .rbc-toolbar-label {
+    color: white;
+}
+
+.dark .rbc-btn-group button {
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.dark .rbc-toolbar button:hover {
+    background-color: var(--color-light-primary);
+    color: var(--color-black);
+}
+
+.dark .rbc-toolbar button:focus {
+    background-color: var(--color-light-primary);
+    color: var(--color-black);
+}
+
+.dark button.rbc-active {
+    background-color: var(--color-light-primary);
+    color: var(--color-black);
+}
+
+.dark .rbc-agenda-view {
+    color: white
+}
+
+.rbc-day-bg.rbc-today {
+    background-color: var(--color-primary);
+}
+
+.rbc-header.rbc-today {
+    color: white;
+    background-color: var(--color-primary);
+}
+
+.rbc-now {
+    color: white
+}
+
+.rbc-day-slot.rbc-today {
+    background-color: var(--color-light-primary);
+}
+
+.rbc-day-slot.rbc-today .rbc-current-time-indicator {
+    background-color: var(--color-primary);
+    height: 2px
+}
+
+.rbc-time-view {
+    flex-basis: 0;
+}
+
+.rbc-event {
+    background-color: var(--color-light-primary) !important;
+}
+
+.rbc-show-more {
+    background-color: var(--color-light-primary);
+    color: white;
+}
