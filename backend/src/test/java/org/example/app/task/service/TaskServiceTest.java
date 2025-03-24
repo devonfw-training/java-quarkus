@@ -183,6 +183,11 @@ class TaskServiceTest extends Assertions {
       class Post {
         @Test
         void shouldCallRandomActivitiesUseCaseAndReturn201() {
+          TaskListEntity taskListEntity = new TaskListEntity();
+          taskListEntity.setId(123L);
+          taskListEntity.setTitle("Shopping list");
+
+          given(TaskServiceTest.this.saveTaskList.save(Mockito.any())).willReturn(taskListEntity);
 
           given().when().body("Shopping list").contentType(ContentType.TEXT).post("/task/list/multiple-random-activities").then().statusCode(201);
           then(TaskServiceTest.this.addRandomActivityTaskItem).should().addMultipleRandom(anyLong(), anyString());
@@ -206,6 +211,11 @@ class TaskServiceTest extends Assertions {
       class Post {
         @Test
         void shouldCallRandomActivitiesUseCaseAndReturn201() {
+          TaskListEntity taskListEntity = new TaskListEntity();
+          taskListEntity.setId(123L);
+          taskListEntity.setTitle("Shopping list");
+
+          given(TaskServiceTest.this.saveTaskList.save(Mockito.any())).willReturn(taskListEntity);
 
           given().when().body("{\"listTitle\": \"Shopping list\", \"recipe\": \"Take flour, sugar and chocolate and mix everything.\"}")
                   .contentType(ContentType.JSON).post("/task/list/ingredient-list").then().statusCode(201);
