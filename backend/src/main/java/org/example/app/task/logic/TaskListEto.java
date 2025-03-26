@@ -10,21 +10,13 @@ public class TaskListEto extends AbstractEto implements TaskList {
 
     private String title;
 
-    List<TaskItemEntity> taskItemEntities;
-
+    @Override
     public String getTitle() {
         return title;
     }
-
+    @Override
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public List<TaskItemEntity> getTaskItemEntities() {
-        return taskItemEntities;
-    }
-
-    public void setTaskItemEntities(List<TaskItemEntity> taskItemEntities) {
-        this.taskItemEntities = taskItemEntities;
-    }
 }

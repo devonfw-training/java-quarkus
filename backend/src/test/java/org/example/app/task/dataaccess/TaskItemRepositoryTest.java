@@ -17,7 +17,7 @@ public class TaskItemRepositoryTest extends Assertions {
     public void testFindById() {
 
         // given
-        Long itemId = 111L;
+        Long itemId = 11L;
 
         // when
         TaskItemEntity item = this.taskItemRepository.findById(itemId).get();

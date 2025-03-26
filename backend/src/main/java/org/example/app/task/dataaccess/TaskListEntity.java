@@ -15,13 +15,29 @@ public class TaskListEntity extends ApplicationPersistenceEntity implements Task
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "taskListEntity")
     List<TaskItemEntity> taskItemEntities;
-
+    @Override
     public String getTitle() {
         return title;
     }
-
+    @Override
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    /**
+     * @return the {@link List} of {@link TaskItemEntity task-items} in this task-list.
+     */
+    public List<TaskItemEntity> getItems() {
+
+        return this.taskItemEntities;
+    }
+
+    /**
+     * @param taskItems the new value of {@link #getItems()}.
+     */
+    public void setItems(List<TaskItemEntity> taskItems) {
+
+        this.taskItemEntities = taskItems;
     }
 
     public List<TaskItemEntity> getTaskItemEntities() {

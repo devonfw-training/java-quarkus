@@ -25,37 +25,59 @@ public class TaskItemEntity extends ApplicationPersistenceEntity implements Task
 
     @Column
     private LocalDateTime deadline;
-
+    @Override
     public String getTitle() {
         return title;
     }
-
+    @Override
     public void setTitle(String title) {
         this.title = title;
     }
-
+    @Override
     public boolean isCompleted() {
         return completed;
     }
-
+    @Override
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
-
+    @Override
     public boolean isStarred() {
         return starred;
     }
-
+    @Override
     public void setStarred(boolean starred) {
         this.starred = starred;
     }
-
+    @Override
     public LocalDateTime getDeadline() {
         return deadline;
     }
-
+    @Override
     public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
+    }
+
+    @Override
+    public Long getTaskListId() {
+
+        if (this.taskListEntity == null) {
+            return null;
+        }
+        return this.taskListEntity.getId();
+    }
+
+    @Override
+    public void setTaskListId(Long taskListId) {
+
+        if (taskListId == null) {
+            this.taskListEntity = null;
+        } else {
+            TaskListEntity taskListEntity = new TaskListEntity();
+            taskListEntity.setId(taskListId);
+            taskListEntity.setVersion(Integer.valueOf(0));
+            this.taskListEntity = taskListEntity;
+        }
     }
 
     public TaskListEntity getTaskListEntity() {
