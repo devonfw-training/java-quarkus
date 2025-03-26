@@ -1,19 +1,15 @@
-package org.example.app.task.dataaccess;
+package org.example.app.task.logic;
 
-import jakarta.persistence.*;
-import org.example.app.general.dataaccess.ApplicationPersistenceEntity;
+import org.example.app.general.common.AbstractEto;
 import org.example.app.task.common.TaskList;
+import org.example.app.task.dataaccess.TaskItemEntity;
 
 import java.util.List;
 
-@Entity
-@Table(name = "task_list")
-public class TaskListEntity extends ApplicationPersistenceEntity implements TaskList {
+public class TaskListEto extends AbstractEto implements TaskList {
 
-    @Column
     private String title;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "taskListEntity")
     List<TaskItemEntity> taskItemEntities;
 
     public String getTitle() {

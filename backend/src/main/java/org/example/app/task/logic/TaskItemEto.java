@@ -1,29 +1,21 @@
-package org.example.app.task.dataaccess;
+package org.example.app.task.logic;
 
-import jakarta.persistence.*;
-import org.example.app.general.dataaccess.ApplicationPersistenceEntity;
+import org.example.app.general.common.AbstractEto;
 import org.example.app.task.common.TaskItem;
+import org.example.app.task.dataaccess.TaskListEntity;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "task_item")
-public class TaskItemEntity extends ApplicationPersistenceEntity implements TaskItem {
+public class TaskItemEto extends AbstractEto implements TaskItem {
 
-    @Column
     private String title;
 
-    @Column
     private boolean completed;
 
-    @Column
     private boolean starred;
 
-    @JoinColumn(name = "LIST_ID")
-    @ManyToOne(fetch = FetchType.LAZY)
     private TaskListEntity taskListEntity;
 
-    @Column
     private LocalDateTime deadline;
 
     public String getTitle() {
