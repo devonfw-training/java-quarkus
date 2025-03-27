@@ -28,11 +28,11 @@ public class UcSaveTaskList {
    * @return the {@link TaskListEntity#getId() primary key} of the saved {@link TaskListEntity}.
    */
   // @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_LIST)
-  public Long save(TaskListEto list) {
+  public TaskListEntity save(TaskListEto list) {
 
     TaskListEntity entity = this.taskListMapper.toEntity(list);
     entity = this.taskListRepository.save(entity);
-    return entity.getId();
+    return entity;
   }
 
 }

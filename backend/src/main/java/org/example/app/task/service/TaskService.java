@@ -22,6 +22,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.example.app.task.common.TaskItemEto;
 import org.example.app.task.common.TaskListCto;
 import org.example.app.task.common.TaskListEto;
+import org.example.app.task.dataaccess.TaskItemEntity;
+import org.example.app.task.dataaccess.TaskListEntity;
 import org.example.app.task.logic.UcAddRandomActivityTaskItem;
 import org.example.app.task.logic.UcDeleteTaskItem;
 import org.example.app.task.logic.UcDeleteTaskList;
@@ -31,7 +33,9 @@ import org.example.app.task.logic.UcSaveTaskItem;
 import org.example.app.task.logic.UcSaveTaskList;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Rest service for {@link org.example.app.task.common.TaskList}.
@@ -74,11 +78,11 @@ public class TaskService {
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
   public Response saveTask(@Valid TaskListEto taskList) {
 
-    Long taskListId = this.ucSaveTaskList.save(taskList);
-    if (taskList.getId() == null || taskList.getId() != taskListId) {
-      return Response.created(URI.create("/task/list/" + taskListId)).build();
+    TaskListEntity savedTaskList = this.ucSaveTaskList.save(taskList);
+    if (taskList.getId() == null || !Objects.equals(taskList.getId(), savedTaskList.getId())) {
+      return Response.created(URI.create("/task/list/" + savedTaskList.getId())).entity(savedTaskList.getId()).build();
     }
-    return Response.ok().build();
+    return Response.ok(savedTaskList.getVersion()).build();
   }
 
   /**
@@ -100,6 +104,19 @@ public class TaskService {
       throw new NotFoundException("TaskList with id " + id + " does not exist.");
     }
     return task;
+  }
+
+  /**
+   * @return all {@link TaskListEto}.
+   */
+  @GET
+  @Path("/lists")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Operation(summary = "Fetch task lists", description = "Fetch all task list")
+  @APIResponse(responseCode = "200", description = "Task lists", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = TaskListEto[].class)))
+  @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
+  public List<TaskListEto> findTaskLists() {
+    return this.ucFindTaskList.findAll();
   }
 
   /**
@@ -167,10 +184,10 @@ public class TaskService {
     TaskListEto taskList = new TaskListEto();
     taskList.setTitle(listTitle);
 
-    Long taskListId = this.ucSaveTaskList.save(taskList);
-    this.ucAddRandomActivityTask.addMultipleRandom(taskListId, listTitle);
+    TaskListEntity taskListEntity = this.ucSaveTaskList.save(taskList);
+    this.ucAddRandomActivityTask.addMultipleRandom(taskListEntity.getId(), listTitle);
 
-    return Response.created(URI.create("/task/list/" + taskListId)).build();
+    return Response.created(URI.create("/task/list/" + taskListEntity.getId())).build();
   }
 
   @POST
@@ -197,10 +214,10 @@ public class TaskService {
     TaskListEto taskList = new TaskListEto();
     taskList.setTitle(listTitle);
 
-    Long taskListId = this.ucSaveTaskList.save(taskList);
-    this.ucAddRandomActivityTask.addExtractedIngredients(taskListId, recipe);
+    TaskListEntity taskListEntity = this.ucSaveTaskList.save(taskList);
+    this.ucAddRandomActivityTask.addExtractedIngredients(taskListEntity.getId(), recipe);
 
-    return Response.created(URI.create("/task/list/" + taskListId)).build();
+    return Response.created(URI.create("/task/list/" + taskListEntity.getId())).build();
   }
 
   /**
@@ -217,11 +234,11 @@ public class TaskService {
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
   public Response saveTaskItem(@Valid TaskItemEto item) {
 
-    Long taskItemId = this.ucSaveTaskItem.save(item);
-    if (item.getId() == null || item.getId() != taskItemId) {
-      return Response.created(URI.create("/task/item/" + taskItemId)).entity(taskItemId).build();
+    TaskItemEntity savedTaskItem = this.ucSaveTaskItem.save(item);
+    if (item.getId() == null || !Objects.equals(item.getId(), savedTaskItem.getId())) {
+      return Response.created(URI.create("/task/item/" + savedTaskItem.getId())).entity(savedTaskItem.getId()).build();
     }
-    return Response.ok(taskItemId).build();
+    return Response.ok(savedTaskItem.getVersion()).build();
   }
 
   /**
