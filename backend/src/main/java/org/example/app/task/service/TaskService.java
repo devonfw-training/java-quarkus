@@ -13,6 +13,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.example.app.task.logic.*;
 
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Path("/task")
@@ -57,6 +58,16 @@ public class TaskService {
     @Path("/list/{id}")
     public TaskListEto fetchTaskList(@PathParam("id") Long id) {
         TaskListEto eto = this.ucFindTaskList.findById(id);
+        if(eto==null) {
+            throw new NoSuchElementException();
+        }
+        return eto;
+    }
+
+    @GET
+    @Path("/lists")
+    public List<TaskListEto> allLists() {
+        List<TaskListEto> eto = this.ucFindTaskList.findAll();
         if(eto==null) {
             throw new NoSuchElementException();
         }

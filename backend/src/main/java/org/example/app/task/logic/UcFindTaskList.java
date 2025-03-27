@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.example.app.task.dataaccess.TaskListEntity;
 import org.example.app.task.dataaccess.TaskListRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -27,6 +28,12 @@ public class UcFindTaskList {
         Optional<TaskListEntity> item = this.taskListRepository.findById(itemId);
         return item.map(ety -> this.taskListMapper.toEto(ety)).orElse(null);
     }
+
+    public List<TaskListEto> findAll() {
+        List<TaskListEntity> item = this.taskListRepository.findAll();
+        return this.taskListMapper.toEtos(item);
+    }
+
 
 
     public TaskListCto findTaskListWithItems(Long listId) {
