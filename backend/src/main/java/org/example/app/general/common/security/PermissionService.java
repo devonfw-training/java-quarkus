@@ -1,10 +1,12 @@
 package org.example.app.general.common.security;
 
+import io.quarkus.runtime.configuration.ConfigUtils;
 import io.smallrye.jwt.auth.principal.ParseException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +29,14 @@ public class PermissionService {
 
     private List<String> getPermissions() throws ParseException {
         List<String> permissions = new ArrayList<>();
-        String sessionId = requestContext.getCookies().get("SESSION_ID").getValue();
-        List<String> roles = jwtService.getRoles(sessionService.getSession(sessionId).get().getJwt());
+        String jwt;
+        if (ConfigUtils.getProfiles().contains("test")) {
+            jwt = requestContext.getHeaders().get("Authorization").getFirst();
+        }else {
+            String sessionId = requestContext.getCookies().get("SESSION_ID").getValue();
+            jwt = sessionService.getSession(sessionId).get().getJwt();
+        }
+        List<String> roles = jwtService.getRoles(jwt);
         roles.forEach(role->{
                 Roles userRole = Roles.valueOf(role.toUpperCase());
                 switch (userRole) {
