@@ -1,4 +1,4 @@
-import { Edit2, Filter, ListFilter, Plus } from "lucide-react";
+import { Edit2, Filter, ListFilter, Plus, Sparkles } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import FlipMove from "react-flip-move";
 import { useRoute } from "wouter";
@@ -15,7 +15,7 @@ import Todo from "./todo";
 
 const Todos = () => {
   const { taskLists, editTodoList } = useContext(TodoListContext)!;
-  const { todos } = useContext(TodoContext)!;
+  const { todos, addRandomTodo } = useContext(TodoContext)!;
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
 
@@ -36,10 +36,16 @@ const Todos = () => {
             onClick={() => setShowEditTodoList(true)}
           />
         </div>
-        <Plus
-          className="cursor-pointer dark:text-light-primary text-primary w-10 h-10"
-          onClick={() => setShowAddTodoOpen(true)}
-        />
+        <div className="flex flex-row gap-2.5 items-center">
+          <Sparkles
+            className="cursor-pointer dark:text-light-primary text-primary w-8 h-8"
+            onClick={() => addRandomTodo()}
+          />
+          <Plus
+            className="cursor-pointer dark:text-light-primary text-primary w-10 h-10"
+            onClick={() => setShowAddTodoOpen(true)}
+          />
+        </div>
       </div>
       <div className="mt-6 flex flex-row gap-6 w-full grow">
         <List title="Tasks" todos={todos.filter((e) => !e.completed)} />

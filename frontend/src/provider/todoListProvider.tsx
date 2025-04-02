@@ -28,6 +28,37 @@ export const TodoListProvider = ({ children }: PropsI) => {
       });
   }, [setErrorAlert]);
 
+  function loadLists() {
+    fetch(`/api/task/lists`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => setTaskLists(json))
+      .catch((error) => {
+        console.error(error);
+        setErrorAlert("List could not be loaded!");
+      });
+  }
+
+  function generateRandomList(title: string) {
+    fetch(`/api/task/list/multiple-random-activities`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "text/plain",
+      },
+      body: title, // body data type must match "Content-Type" header
+    })
+      .then((response) => loadLists())
+      .catch((error) => {
+        console.error(error);
+        setErrorAlert("List could not be loaded!");
+      });
+  }
+
   function editTodoList(newTitle: string) {
     if (undefined === listId) {
       return;
@@ -115,6 +146,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
         editTodoList,
         addTaskList,
         delTaskList,
+        generateRandomList,
       }}
     >
       {children}
