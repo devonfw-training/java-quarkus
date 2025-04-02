@@ -19,6 +19,9 @@ We will learn how to run docker compose with postgres, our application and keycl
 
 ==== Running with docker
 
+NOTE: The following `docker` commands need to be executed inside the `backend` sub-folder of your `java-quarkus` project.
+However, the `docker-compose` commands need to be run directly in the top-level `java-quarkus` project folder.
+
 Familiarize yourself with the structure of `Dockerfile.jvm` and `docker-compose.yaml`
 
 First create a separate network for the database and app by running: :
@@ -47,16 +50,26 @@ To run the containers you had to execute many commands.
 It would be easier if we only had to execute one command. We can achieve this by using Docker Compose.
 
 ===== Running Docker compose
-Docker Compose works by applying many rules declared within a single docker-compose.yml configuration file.
+Docker Compose works by applying many rules declared within the `docker-compose.yml` configuration file.
+Further, a file named `.env` is used to configure environment variables for a docker container managed by docker compose.
+See `backend/.env` for an example.
 
-* Start application by running `docker-compose up`
+* Start application by running `docker compose up -d`
 +
-With this command we started container for our backend app, database and keycloak.
-This images are defined as services in docker compose. A volume is a shared directory in the host, visible from some or all containers.
+With this command we started container for our backend app, database, keycloak and ollama.
+These images are defined as services in docker compose.
+A volume is a shared directory in the host, visible from some or all containers.
 Similarly, networks define the communication rules between containers, and between a container and the host.
+The option `-d` starts the containers in the background (as daemon).
+Otherwise (without `-d`) your terminal will get blocked and if your enter `[Ctrl][c]` the containers will be terminated.
++
+_Note:_ It will take some minutes until the Ollama AI model is downloaded and finishes to start up.
 * To list all build images run `docker-compose images`
 * Run this command to see that the containers arte up and running `docker-compose ps`
 
+NOTE: If you want to stop what you have started with `docker-compose`, you can run `docker-compose down`.
+In case you use `docker-compose down -v` then all volumes will be discarded (so your state with database, etc is thrown away).
+That can be helpful, if you changed flyway SQL scripts during development and DDL migration will fail otherwise.
 
 ===== Access the database
 Now we will access Postgres using psql.

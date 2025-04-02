@@ -24,6 +24,7 @@
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.version>3.6.3</quarkus.platform.version>
     <querydsl.version>5.0.0</querydsl.version>
+    <openapi.generator.version>2.8.1</openapi.generator.version>
     <!-- Run integration tests by default -->
     <skipITs>false</skipITs>
     <surefire-plugin.version>3.0.0</surefire-plugin.version>
