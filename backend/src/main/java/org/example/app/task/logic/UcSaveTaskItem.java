@@ -32,11 +32,11 @@ public class UcSaveTaskItem {
    * @return the {@link TaskItemEntity#getId() primary key} of the saved {@link TaskItemEntity}.
    */
   // @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM)
-  public Long save(TaskItemEto item) {
+  public TaskItemEto save(TaskItemEto item) {
 
     TaskItemEntity entity = this.taskItemMapper.toEntity(item);
     entity = this.taskItemRepository.save(entity);
-    return entity.getId();
+    return this.taskItemMapper.toEto(entity);
   }
 
 }
