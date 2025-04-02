@@ -33,10 +33,10 @@ public class AuthCookieFilter implements ContainerRequestFilter {
 
         if (!isValidSession(sessionCookie.getValue())) {
             sessionService.storeSession(sessionCookie.getValue(), "", originalUrl);
-            // Redirect to Keycloak if no valid session found
             requestContext.abortWith(
-                    Response.status(Response.Status.FOUND)
-                            .header("Location", authRedirectUrl)
+                    Response.status(Response.Status.UNAUTHORIZED)
+                            .entity("{\"redirectUrl\": \"" + authRedirectUrl + "\"}")
+                            .type(MediaType.APPLICATION_JSON)
                             .build()
             );
         }
