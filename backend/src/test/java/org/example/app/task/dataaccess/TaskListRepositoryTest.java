@@ -6,6 +6,10 @@ import static org.assertj.core.api.BDDAssertions.then;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+
+import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,8 +17,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 
 /**
  * Test of {@link TaskListRepository}
@@ -26,6 +28,7 @@ import jakarta.persistence.EntityManager;
  * relevant section in the CDI spec</a> .
  */
 @QuarkusTest
+@DisplayNameGeneration(ReplaceUnderscoresAndCamelCase.class)
 @TestMethodOrder(MethodOrderer.MethodName.class) // only used for easier to rest test output
 class TaskListRepositoryTest {
 
