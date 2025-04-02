@@ -1,0 +1,23 @@
+name: Build Frontend
+
+# We want this workflow to be only triggered for changes to the frontend
+on:
+  push:
+    paths:
+      - './frontend/**'
+  pull_request:
+    paths:
+      - './frontend/**'
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+    - uses: actions/checkout@v3
+    - run: yarn install
+   # Requires lockfile to be updated first
+   # - run: yarn install --frozen-lockfile
+    - run: yarn build
