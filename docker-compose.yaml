@@ -18,7 +18,7 @@ services:
       - quarkus
 
   quarkus-db:
-    image: "postgres:15.1"
+    image: postgres:15.1
     restart: always
     volumes:
       - db-data:/var/lib/postgresql/data
@@ -35,28 +35,21 @@ services:
     networks:
       - quarkus
 
-  keycloak:
-    image: jboss/keycloak:16.1.1
-    container_name: local_keycloak
+  ollama:
+    image: ollama/ollama:0.5.13
+    container_name: ollama
     restart: unless-stopped
-    environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: quarkus-db
-      DB_DATABASE: quarkus
-      DB_USER: quarkus
-      DB_SCHEMA: public
-      DB_PASSWORD: quarkus
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: quarkus
-      # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
-      #JDBC_PARAMS: "ssl=true"
+    pull_policy: always
+    tty: true
+    volumes:
+      - ollama:/root/.ollama
+      - ./entrypoint.sh:/entrypoint.sh
     ports:
-      - "28080:8080"
+      - 11434:11434
     networks:
       - quarkus
-    depends_on:
-      - quarkus-db
-      - quarkus-app
+    entrypoint: [ "/usr/bin/bash", "/entrypoint.sh" ]
+    env_file: "./backend/.env"
 
   ollama:
     image: ollama/ollama:0.5.13
