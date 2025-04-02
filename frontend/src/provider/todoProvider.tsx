@@ -37,6 +37,21 @@ export const TodoProvider = ({ children }: PropsI) => {
       });
   }, [listId, setErrorAlert]);
 
+  const loadItems = () => {
+    fetch(`/api/task/list-with-items/${encodeURIComponent(+listId!)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => setTodos(json.items))
+      .catch((error) => {
+        console.error(error);
+        setErrorAlert("Items could not be loaded!");
+      });
+  };
+
   const saveTaskItem = (
     taskItem: TaskItemTypeI,
     onSuccess: (value: number) => any
@@ -52,6 +67,28 @@ export const TodoProvider = ({ children }: PropsI) => {
     })
       .then((response) => response.json())
       .then(onSuccess)
+      .catch((error) => {
+        console.error(error);
+        setErrorAlert("Item could not be saved!");
+      });
+  };
+
+  const addRandomTodo = () => {
+    if (undefined === listId) {
+      return;
+    }
+
+    // Send data to the backend via POST
+    fetch(`/api/task/list/${encodeURIComponent(+listId!)}/random-activity`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        loadItems();
+      })
       .catch((error) => {
         console.error(error);
         setErrorAlert("Item could not be saved!");
@@ -263,6 +300,7 @@ export const TodoProvider = ({ children }: PropsI) => {
         deleteAll,
         editTodo,
         addTodo,
+        addRandomTodo,
         moveTodo,
         markStar,
         applyFilter,

@@ -5,4 +5,5 @@ interface TodoListInterfaceI {
   editTodoList: (newTitle: string) => void;
   addTaskList: (title: string) => void;
   delTaskList: (id: number) => void;
+  generateRandomList: (title: string) => void;
 }
