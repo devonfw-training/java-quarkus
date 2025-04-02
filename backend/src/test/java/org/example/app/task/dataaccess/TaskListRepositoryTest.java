@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 
+import org.example.app.task.ReplaceUnderscoresAndCamelCase;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
