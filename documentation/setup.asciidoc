@@ -14,7 +14,7 @@ Install https://github.com/devonfw/ide[devonfw-ide]:
 * Read and confirm the terms-of-use.
 * wait until the setup process has completed.
 * Select `workspaces` folder of your installation in windows explorer and chose `Git Bash here` from the context menu.
-* In `git-bash` run this command: `devon docker setup` (you need to have a working docker environment available)
+* If you do not have already Docker Desktop or Rancher Desktop installed, you should do so by running in Git-Bash the command: `devon docker setup`
 
 === Build Backend
 
@@ -29,7 +29,10 @@ Now we build our application `backend`:
 mvn clean install -DskipTests
 ----
 
-==== Import into Eclipse
+==== Import into an IDE
+Please choose your favorite IDE:
+
+===== Eclipse
 
 Next, we import the new `backend` project into our Eclipse IDE:
 
@@ -42,6 +45,19 @@ Next, we import the new `backend` project into our Eclipse IDE:
 * Change the `Name` to `app` and ensure the `Project` is set to `app`.
 * Click on `Debug` to start your app in debug mode.
 * Open http://localhost:8080/ in your browser and you should see the quarkus welcome page of the app.
+
+===== Import into IntelliJ
+
+* Open IntelliJ `File` menu and select `Project structure`
+* In the `Project structure` Popup select `Modules`, click on `+` and `Import Module`
+
+image::images/Intellij-import-module.png[]
+* Select the `java-quarkus` project and confirm with `OK`
+
+image::images/Intellij-select-project.png[]
+* Select to import using `Maven` and confirm with `Create`
+
+image::images/Intellij-import-with-maven.png[]
 
 === Build Frontend
 The frontend is written in react and can be build with yarn. Please go into `frontend` and run `yarn install` on a command line. Please do not use npm.

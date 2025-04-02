@@ -1,19 +1,22 @@
 import { render } from "react-dom";
-import { MainProvider } from "./context/MainContext";
-import { ThemeProvider } from "./context/ThemeContext";
-import { DeleteConfirmProvider } from "./context/DeleteConfirmContext";
-import { SmallTextProvider } from "./context/SmallTextContext";
-import App from "./App";
-import "./styles.css";
-import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import App from "./app";
+import { DeleteConfirmProvider } from "./provider/deleteConfirmProvider";
+import { MainProvider } from "./provider/mainProvider";
+import { ThemeProvider } from "./provider/themeProvider";
+import { TodoListProvider } from "./provider/todoListProvider";
+import { TodoProvider } from "./provider/todoProvider";
+import "./styles/styles.css";
+import * as serviceWorkerRegistration from "./worker/serviceWorkerRegistration";
 
 render(
   <MainProvider>
     <ThemeProvider>
       <DeleteConfirmProvider>
-        <SmallTextProvider>
+        <TodoProvider>
+          <TodoListProvider>
             <App />
-        </SmallTextProvider>
+          </TodoListProvider>
+        </TodoProvider>
       </DeleteConfirmProvider>
     </ThemeProvider>
   </MainProvider>,
