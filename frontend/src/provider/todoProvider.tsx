@@ -143,7 +143,11 @@ export const TodoProvider = ({ children }: PropsI) => {
     fetch(`/api/task/item/${encodeURIComponent(id)}`, {
       method: "DELETE",
     })
-      .then(() => {
+      .then((res) => {
+        if(res.status === 403){
+          setErrorAlert("Item could not be deleted (No permissions)!");
+          return;
+        }
         setTodos(todos.filter((todo) => todo.id !== id));
         setSuccessAlert("Item deleted!");
       })
