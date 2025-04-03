@@ -3,6 +3,7 @@ import { useRoute } from "wouter";
 import { navigate } from "wouter/use-location";
 import { TaskListTypeI } from "../types/types";
 import { MainContext } from "./mainProvider";
+import { addHeaders } from "../auth/authUtils";
 
 export const TodoListContext = createContext<TodoListInterfaceI | null>(null);
 
@@ -16,9 +17,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
   useEffect(() => {
     fetch(`/api/task/lists`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: addHeaders(),
     })
       .then((response) => response.json())
       .then((json) => setTaskLists(json))
@@ -40,10 +39,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
 
       fetch("/api/task/list", {
         method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers: addHeaders(),
         body: JSON.stringify(taskList),
       })
         .then((response) => response.json())
@@ -69,10 +65,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
 
       fetch("/api/task/list", {
         method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers: addHeaders(),
         body: JSON.stringify(taskList), // body data type must match "Content-Type" header
       })
         .then((response) => response.json())
@@ -92,8 +85,13 @@ export const TodoListProvider = ({ children }: PropsI) => {
   const delTaskList = (id: number) => {
     fetch(`/api/task/list/${encodeURIComponent(id)}`, {
       method: "DELETE",
+      headers: addHeaders(),
     })
-      .then(() => {
+      .then((res) => {
+        if(res.status === 403){
+          setErrorAlert("List could not be deleted (No permissions)!");
+          return;
+        }
         setTaskLists(taskLists.filter((taskList) => taskList.id !== id));
         if (undefined !== listId && id === +listId) {
           navigate("/");
