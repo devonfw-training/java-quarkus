@@ -1,5 +1,6 @@
 package org.example.app.task.logic;
 
+import java.util.List;
 import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -38,6 +39,16 @@ public class UcFindTaskList {
 
     Optional<TaskListEntity> taskList = this.taskListRepository.findById(listId);
     return taskList.map(taskListEntity -> this.taskListMapper.toEto(taskListEntity)).orElse(null);
+  }
+
+  /**
+   * @return all {@link TaskListEto} or {@code []} if not found.
+   */
+  // @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_FIND_TASK_LIST)
+  public List<TaskListEto> findAll() {
+
+    List<TaskListEntity> taskList = this.taskListRepository.findAll();
+    return taskList.stream().map(taskListEntity -> this.taskListMapper.toEto(taskListEntity)).toList();
   }
 
   /**
