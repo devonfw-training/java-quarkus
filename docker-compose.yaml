@@ -52,22 +52,6 @@ services:
     entrypoint: [ "/usr/bin/bash", "/entrypoint.sh" ]
     env_file: "./backend/.env"
 
-  ollama:
-    image: ollama/ollama:0.5.13
-    container_name: ollama
-    restart: unless-stopped
-    pull_policy: always
-    tty: true
-    volumes:
-      - ollama:/root/.ollama
-      - ./entrypoint.sh:/entrypoint.sh
-    ports:
-      - 11434:11434
-    networks:
-      - quarkus
-    entrypoint: [ "/usr/bin/bash", "/entrypoint.sh" ]
-    env_file: "./backend/.env"
-
 networks:
   quarkus:
     driver: bridge
