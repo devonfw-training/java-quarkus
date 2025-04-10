@@ -14,18 +14,25 @@ export const TodoListProvider = ({ children }: PropsI) => {
   const [taskLists, setTaskLists] = useState<TaskListTypeI[]>([]);
 
   useEffect(() => {
-    fetch(`/api/task/lists`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => setTaskLists(json))
-      .catch((error) => {
-        console.error(error);
-        setErrorAlert("List could not be loaded!");
-      });
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/task/lists`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+        if (response.status === 401) {
+          const data = await response.json();
+          window.location.href = data.redirectUrl;  // Redirect to Keycloak
+        } else {
+          const json = await response.json();
+          setTaskLists(json);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setErrorAlert("List could not be loaded!"); // Set error alert in case of failure
+      }
+    };
+    fetchData();
   }, [setErrorAlert]);
 
   function editTodoList(newTitle: string) {
@@ -41,8 +48,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
       fetch("/api/task/list", {
         method: "POST",
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json', // Ensure that the correct content type is set
         },
         body: JSON.stringify(taskList),
       })
@@ -70,8 +76,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
       fetch("/api/task/list", {
         method: "POST",
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json', // Ensure that the correct content type is set
         },
         body: JSON.stringify(taskList), // body data type must match "Content-Type" header
       })
@@ -93,7 +98,11 @@ export const TodoListProvider = ({ children }: PropsI) => {
     fetch(`/api/task/list/${encodeURIComponent(id)}`, {
       method: "DELETE",
     })
-      .then(() => {
+      .then((res) => {
+        if(res.status === 403){
+          setErrorAlert("List could not be deleted (No permissions)!");
+          return;
+        }
         setTaskLists(taskLists.filter((taskList) => taskList.id !== id));
         if (undefined !== listId && id === +listId) {
           navigate("/");
