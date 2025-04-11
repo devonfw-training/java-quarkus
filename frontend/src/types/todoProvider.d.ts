@@ -7,6 +7,7 @@ interface TodoInterfaceI {
   deleteAll: () => void;
   editTodo: (id: number, text: string, deadline: string | null) => void;
   addTodo: (title: string, deadline: string | null) => void;
+  addRandomTodo: () => void;
   moveTodo: (old: number, new_: number) => void;
   markStar: (id: number) => void;
   applyFilter: (
