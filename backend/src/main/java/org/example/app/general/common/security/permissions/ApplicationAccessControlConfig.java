@@ -1,4 +1,4 @@
-package org.example.app.general.common.security;
+package org.example.app.general.common.security.permissions;
 
 /**
  * Constants for permissions of this application.

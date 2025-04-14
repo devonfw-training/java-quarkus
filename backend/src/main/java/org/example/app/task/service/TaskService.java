@@ -10,9 +10,9 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import org.example.app.general.common.security.PermissionService;
+import org.example.app.general.common.security.permissions.PermissionService;
 
-import static org.example.app.general.common.security.ApplicationAccessControlConfig.*;
+import static org.example.app.general.common.security.permissions.ApplicationAccessControlConfig.*;
 
 
 @Path("/task")
