@@ -18,7 +18,9 @@ import org.slf4j.LoggerFactory;
 @Transactional
 public class UcDeleteTaskItem {
 
-  private static final Logger LOG = LoggerFactory.getLogger(UcDeleteTaskItem.class);
+  private static final Logger STATIC_LOG = LoggerFactory.getLogger(UcDeleteTaskItem.class);
+
+  Logger log = STATIC_LOG;
 
   @Inject
   TaskItemRepository taskItemRepository;
@@ -41,7 +43,7 @@ public class UcDeleteTaskItem {
 
     Long id = item.getId();
     if (id == null) {
-      LOG.info("TaskItem {} ist transient und kann nicht gelöscht werden", item.getTitle());
+      log.info("TaskItem {} ist transient und kann nicht gelöscht werden", item.getTitle());
     }
     this.taskItemRepository.deleteById(id);
   }

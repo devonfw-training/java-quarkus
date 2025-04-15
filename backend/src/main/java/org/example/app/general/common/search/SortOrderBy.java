@@ -79,7 +79,7 @@ public class SortOrderBy {
     if (this == obj) {
       return true;
     }
-    if (!super.equals(obj)) {
+    if (obj == null || getClass() != obj.getClass()) {
       return false;
     }
     SortOrderBy other = (SortOrderBy) obj;

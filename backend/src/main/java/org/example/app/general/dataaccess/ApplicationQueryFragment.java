@@ -282,7 +282,7 @@ public abstract class ApplicationQueryFragment {
    * @param expression the {@link SimpleExpression} to build the IN-expression from.
    * @param values the {@link List} of values for the IN-expression.
    */
-  protected <V> void whereIn(FilteredClause<?> statement, SimpleExpression<V> expression, List<V> values) {
+  public <V> void whereIn(FilteredClause<?> statement, SimpleExpression<V> expression, List<V> values) {
 
     BooleanExpression inExpression = null;
     int size = 0;
@@ -305,8 +305,10 @@ public abstract class ApplicationQueryFragment {
           int end = start + MAX_IN_EXPRESSIONS;
           partition = values.subList(start, end);
           start = end;
+          rest -= MAX_IN_EXPRESSIONS;
         } else {
           partition = padList(values.subList(start, size));
+          rest = 0;
         }
         BooleanExpression newInExpr = expression.in(partition);
         if (inExpression == null) {
