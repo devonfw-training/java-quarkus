@@ -129,7 +129,7 @@ class TaskListRepositoryTest {
 
   @Test
   @TestTransaction
-  void GivenAnExistingTaskListWithItems_WhenDeleted_TthenItsItemsShouldBeDeletedAsWell() {
+  void GivenAnExistingTaskListWithItems_WhenDeleted_ThenItsItemsShouldBeDeletedAsWell() {
 
     var idsOfTaskItems = TaskListRepositoryTest.this.classUnderTest.findById(EXISTING_TASK_LIST_ID).get().getItems()
         .stream().map(TaskItemEntity::getId).collect(Collectors.toList());
