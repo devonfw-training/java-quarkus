@@ -1,28 +1,65 @@
-import {useContext} from "react";
-import {Route} from "wouter";
-import AddTodo from "./components/Todos/AddTodo";
-import PersistentDrawerLeft from "./components/PersistentDrawerLeft";
-import Todos from "./components/Todos/Todos";
-import {MainContext} from "./context/MainContext";
-import About from "./pages/About";
-import Settings from "./pages/Settings";
+import { Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import { useContext } from "react";
+import { Route } from "wouter";
+import CalendarView from "./components/calendar";
+import Header from "./components/misc/header";
+import Sidebar from "./components/misc/sidebar";
+import Todos from "./components/todos/todos";
+import { MainContext } from "./provider/mainProvider";
 
 function App() {
-  const { addTodo } = useContext(MainContext)!;
+  const {
+    errorAlert,
+    setErrorAlert,
+    successAlert,
+    setSuccessAlert,
+    showCalendar,
+  } = useContext(MainContext)!;
 
   return (
-    <div style={{ height: "100vh" }}>
-      <PersistentDrawerLeft />
-      <Route path="/:listId?">
-        <AddTodo addTodo={addTodo} />
-        <Todos />
-      </Route>
-      <Route path="/settings">
-        <Settings />
-      </Route>
-      <Route path="/about">
-        <About />
-      </Route>
+    <div className="h-screen flex flex-col overflow-hidden">
+      <Header />
+      <div className="flex flex-1 basis-0">
+        <Sidebar />
+        <Route path="/:listId?">
+          {showCalendar ? <CalendarView /> : <Todos />}
+        </Route>
+      </div>
+      <Snackbar
+        open={errorAlert !== ""}
+        autoHideDuration={4000}
+        onClose={() => setErrorAlert("")}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          // icon={<Check fontSize="inherit" />}
+          elevation={6}
+          variant="filled"
+          onClose={() => setErrorAlert("")}
+          severity="error"
+        >
+          {errorAlert}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={successAlert !== ""}
+        autoHideDuration={4000}
+        onClose={() => {
+          setSuccessAlert("");
+        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          // icon={<Check fontSize="inherit" />}
+          elevation={6}
+          variant="filled"
+          //onClose={() => setSuccessAlert("")}
+          severity="success"
+        >
+          {successAlert}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
