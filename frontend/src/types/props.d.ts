@@ -1,0 +1,3 @@
+interface PropsI {
+  children: ReactNode;
+}

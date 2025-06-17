@@ -11,7 +11,7 @@ final class TaskListMother {
   public static TaskListEto complete() {
 
     TaskListEto taskList = new TaskListEto();
-    taskList.setId(123l);
+    taskList.setId(123L);
     taskList.setVersion(1);
     taskList.setTitle("Shopping List");
 

@@ -11,12 +11,12 @@ final class TaskItemMother {
   public static TaskItemEto complete() {
 
     TaskItemEto taskItem = new TaskItemEto();
-    taskItem.setId(42l);
+    taskItem.setId(42L);
     taskItem.setVersion(1);
     taskItem.setTitle("Buy Eggs");
     taskItem.setCompleted(false);
     taskItem.setStarred(false);
-    taskItem.setTaskListId(123l);
+    taskItem.setTaskListId(123L);
 
     return taskItem;
   }
@@ -25,7 +25,7 @@ final class TaskItemMother {
 
     TaskItemEto taskItem = new TaskItemEto();
     taskItem.setTitle("Buy Milk");
-    taskItem.setTaskListId(123l);
+    taskItem.setTaskListId(123L);
 
     return taskItem;
   }
