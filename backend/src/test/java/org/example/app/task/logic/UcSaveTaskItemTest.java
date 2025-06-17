@@ -11,19 +11,19 @@ import jakarta.inject.Inject;
  * Test of {@link UcSaveTaskItem}.
  */
 @QuarkusTest
-public class UcSaveTaskItemTest extends Assertions {
+class UcSaveTaskItemTest extends Assertions {
 
   @Inject
-  private UcFindTaskItem ucFindTaskItem;
+  UcFindTaskItem ucFindTaskItem;
 
   @Inject
-  private UcSaveTaskItem ucSaveTaskItem;
+  UcSaveTaskItem ucSaveTaskItem;
 
   @Test
-  public void saveTaskItem() {
+  void saveTaskItem() {
 
     TaskItemEto item = this.ucFindTaskItem.findById(11L);
-    int version = item.getVersion().intValue();
+    int version = item.getVersion();
     // save without any change
     this.ucSaveTaskItem.save(item);
     TaskItemEto item2 = this.ucFindTaskItem.findById(11L);

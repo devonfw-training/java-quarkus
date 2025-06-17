@@ -1,0 +1,41 @@
+name: Build Backend
+
+# We want this workflow to be only triggered for changes to the backend
+on:
+  push:
+    paths:
+      - './backend/**'
+  pull_request:
+    paths:
+      - './backend/**'
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v4.5
+      with:
+        maven-version: 3.8.6
+    # Compile and run unit and integration tests
+    - name: Build
+      run: mvn -B verify --file pom.xml
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+
