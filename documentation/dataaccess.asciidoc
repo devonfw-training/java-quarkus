@@ -33,7 +33,7 @@ We have already created SQLs for you with DDL and testdata so you do not have to
 You can find this in `src/main/resources/db/migration`
 
 === Create JUnits
-Now you can create JUnit tests (based on assertJ using `Assertions` class to allow `assertThat` usage).
+Now you can create JUnit tests (based on assertJ using `Assertions` class to allow `assertThat` usage). An example is the following code.
 
 [source,java]
 ----
@@ -58,6 +58,14 @@ public class TaskItemRepositoryTest extends Assertions {
 
 }
 ----
+
+Here are some ideas, what you can test:
+
+* Give me all TaskLists without the TaskItems
+* Add an TaskItem to an existing nonempty TaskList
+* Find all TaskLists, with TaskItems having a due date that expires in the next week
+* Find all TaskLists, that have open TaskItems
+* Delete all TaskItems that are completed
 
 === Links
 

@@ -7,6 +7,7 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.BDDAssertions;
 import org.example.app.task.common.TaskItemEto;
 import org.example.app.task.common.TaskListCto;
+import org.example.app.task.common.TaskListEto;
 import org.example.app.task.logic.UcAddRandomActivityTaskItem;
 import org.example.app.task.logic.UcDeleteTaskItem;
 import org.example.app.task.logic.UcDeleteTaskList;
@@ -68,11 +69,14 @@ class TaskServiceTest extends Assertions {
 
       @Test
       void shouldCallSaveUseCaseAndReturn204WhenCreatingTaskList() {
+        TaskListEto taskListEto = new TaskListEto();
+        taskListEto.setId(123L);
+        taskListEto.setTitle("Shopping list");
 
-        given(TaskServiceTest.this.saveTaskList.save(Mockito.any())).willReturn(123L);
+        given(TaskServiceTest.this.saveTaskList.save(Mockito.any())).willReturn(taskListEto);
 
         given().when().body("{ \"title\": \"Shopping List\" }").contentType(ContentType.JSON).post("/task/list").then()
-            .statusCode(201);
+                .statusCode(201);
       }
 
       @Test
@@ -179,6 +183,11 @@ class TaskServiceTest extends Assertions {
       class Post {
         @Test
         void shouldCallRandomActivitiesUseCaseAndReturn201() {
+          TaskListEto taskListEto = new TaskListEto();
+          taskListEto.setId(123L);
+          taskListEto.setTitle("Shopping list");
+
+          given(TaskServiceTest.this.saveTaskList.save(Mockito.any())).willReturn(taskListEto);
 
           given().when().body("Shopping list").contentType(ContentType.TEXT).post("/task/list/multiple-random-activities").then().statusCode(201);
           then(TaskServiceTest.this.addRandomActivityTaskItem).should().addMultipleRandom(anyLong(), anyString());
@@ -202,6 +211,11 @@ class TaskServiceTest extends Assertions {
       class Post {
         @Test
         void shouldCallRandomActivitiesUseCaseAndReturn201() {
+          TaskListEto taskListEto = new TaskListEto();
+          taskListEto.setId(123L);
+          taskListEto.setTitle("Shopping list");
+
+          given(TaskServiceTest.this.saveTaskList.save(Mockito.any())).willReturn(taskListEto);
 
           given().when().body("{\"listTitle\": \"Shopping list\", \"recipe\": \"Take flour, sugar and chocolate and mix everything.\"}")
                   .contentType(ContentType.JSON).post("/task/list/ingredient-list").then().statusCode(201);
@@ -234,16 +248,18 @@ class TaskServiceTest extends Assertions {
 
       @Test
       void shouldCallSaveUseCaseAndReturn201WhenCreatingTaskItem() {
+        TaskItemEto taskItemEto = new TaskItemEto();
+        taskItemEto.setId(42L);
 
-        given(TaskServiceTest.this.saveTaskItem.save(Mockito.any())).willReturn(42L);
+        given(TaskServiceTest.this.saveTaskItem.save(Mockito.any())).willReturn(taskItemEto);
 
         given().when().body("{ \"title\": \"Buy Milk\", \"taskListId\": 123 }").contentType(ContentType.JSON)
-            .post("/task/item").then().statusCode(201).body(is("42"));
+                .post("/task/item").then().statusCode(201).body(is("42"));
 
         ArgumentCaptor<TaskItemEto> taskItemCaptor = ArgumentCaptor.forClass(TaskItemEto.class);
         then(TaskServiceTest.this.saveTaskItem).should().save(taskItemCaptor.capture());
         BDDAssertions.then(taskItemCaptor.getValue()).usingRecursiveComparison()
-            .isEqualTo(TaskItemMother.notYetSaved());
+                .isEqualTo(TaskItemMother.notYetSaved());
       }
 
       @Test
