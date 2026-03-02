@@ -65,7 +65,7 @@ Otherwise (without `-d`) your terminal will get blocked and if your enter `[Ctrl
 +
 _Note:_ It will take some minutes until the Ollama AI model is downloaded and finishes to start up.
 * To list all build images run `docker-compose images`
-* Run this command to see that the containers arte up and running `docker-compose ps`
+* Run this command to see that the containers are up and running `docker-compose ps`
 
 NOTE: If you want to stop what you have started with `docker-compose`, you can run `docker-compose down`.
 In case you use `docker-compose down -v` then all volumes will be discarded (so your state with database, etc is thrown away).
