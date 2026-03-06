@@ -6,37 +6,46 @@ toc::[]
 Install https://github.com/devonfw/ide[devonfw-ide]:
 
 * Install https://git-scm.com/downloads[git] if not already installed (download and run installer or run `winget install Git.Git` in PowerShell or CMD)
-* Create the folder `C:\Projects\devonfw-training` (if you do not have Windows, use `projects/devonfw-training` in root or if not permitted in home).
-* Download `devonfw-ide-scripts` package from https://github.com/devonfw/ide/releases[here]
-* Extract the contents of `devonfw-ide-scripts` package into the above created folder `devonfw-training`. The contents of the package shall be directly in the folder `devonfw-training` without any sub-folder such as `devonfw-ide-scripts`. If you have no idea how to do this, install https://www.7-zip.org/download.html[7-Zip] (`winget install 7zip.7zip`) and use it to extract.
-* Run the `setup` script (on Windows `setup.bat`) from `devonfw-training` folder.
-* Enter this settings-URL: https://github.com/devonfw-training/java-quarkus-settings.git
-* Read and confirm the terms-of-use.
+* Install https://github.com/devonfw/IDEasy/releases[IDEasy] (see https://github.com/devonfw/IDEasy/issues/1102[#1102] for Windows and https://github.com/devonfw/IDEasy/issues/451[#451] for Mac)
+* Run the following command in your terminal (git-bash):
++
+```
+ide create java-quarkus https://github.com/devonfw-training/java-quarkus-settings.git#main
+```
 * wait until the setup process has completed.
-* Select `workspaces` folder of your installation in windows explorer and chose `Git Bash here` from the context menu.
-* If you do not have already Docker Desktop or Rancher Desktop installed, you should do so by running in Git-Bash the command: `devon docker setup`
+* If you do not have already Docker Desktop or Rancher Desktop installed, you should do so by running in Git-Bash the command:
++
+```
+icd -p java-quarkus
+ide install docker
+```
 
 === Build Backend
 
 Now we build our application `backend`:
 
-* Go to folder `workspaces/main/java-quarkus/` in `devonfw-training`.
-* In Windows-Explorer right-click it and select `Git Bash Here`.
-* In the git-bash at this folder run the following command:
+* Run the following command in your termianl (git-bash):
 +
-[source,commandline]
-----
+```
+icd -p java-quarkus -w main
+cd java-quarkus
 mvn clean install -DskipTests
-----
+```
 
 ==== Import into an IDE
 Please choose your favorite IDE:
+
+===== Import into IntelliJ
+
+* `ide intellij`
+* In your Intellij `Project` view open `java-quarkus` folder and select `pom.xml`.
+* Right-click on it and select `+ Add as maven project`
 
 ===== Eclipse
 
 Next, we import the new `backend` project into our Eclipse IDE:
 
-* `devon eclipse`
+* `ide eclipse`
 * In Eclipse `Import` as `Existing Maven Project`, there click `Browse` and choose your `backend` folder in `workspaces/main/java-quarkus`.
 * Now find the green bug icon in the Eclipse toolbar and click on the down-arrow right to it.
 * Click `Debug Configuration` from the menu
@@ -46,19 +55,6 @@ Next, we import the new `backend` project into our Eclipse IDE:
 * Click on `Debug` to start your app in debug mode.
 * Open http://localhost:8080/ in your browser and you should see the quarkus welcome page of the app.
 
-===== Import into IntelliJ
-
-* Open IntelliJ `File` menu and select `Project structure`
-* In the `Project structure` Popup select `Modules`, click on `+` and `Import Module`
-
-image::images/Intellij-import-module.png[]
-* Select the `java-quarkus` project and confirm with `OK`
-
-image::images/Intellij-select-project.png[]
-* Select to import using `Maven` and confirm with `Create`
-
-image::images/Intellij-import-with-maven.png[]
-
 === Build Frontend
 The frontend is written in react and can be build with yarn. Please go into `frontend` and run `yarn install` on a command line. Please do not use npm.
 
@@ -67,4 +63,5 @@ When the build was successful and the backend is running, too, you can start the
 The frontend is reachable under http://localhost:3000/. You can append the id of the list you want to load, default is 1: http://localhost:3000/1.
 
 === Links
-* https://github.com/devonfw/ide/[devonfw-ide]
+
+* https://github.com/devonfw/IDEasy[IDEasy]
