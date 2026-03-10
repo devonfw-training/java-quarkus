@@ -32,7 +32,7 @@ public class WireMockTestResource implements QuarkusTestResourceLifecycleManager
     setupStubForMultipleRandomItems();
     setupStubForRecipeIngredients();
 
-    return Collections.singletonMap("quarkus.rest-client.ollama_api_yaml.url", this.wireMockServer.baseUrl());
+    return Collections.singletonMap("quarkus.rest-client.openai.json.url", this.wireMockServer.baseUrl());
   }
 
   private void setupStubForSingleRandomItem() {

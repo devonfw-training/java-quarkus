@@ -1,0 +1,194 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "LiteLLM API",
+    "description": "Enterprise Edition \n\nProxy Server to call 100+ LLMs in the OpenAI format. [**Customize Swagger Docs**](https://docs.litellm.ai/docs/proxy/enterprise#swagger-docs---custom-routes--branding)\n\n👉 [```LiteLLM Admin Panel on /ui```](/ui). Create, Edit Keys with SSO. Having issues? Try [```Fallback Login```](/fallback/login)\n\n💸 [```LiteLLM Model Cost Map```](https://models.litellm.ai/).\n\n🔎 [```LiteLLM Model Hub```](/ui/model_hub_table). See available models on the proxy. [**Docs**](https://docs.litellm.ai/docs/proxy/ai_hub)",
+    "version": "1.81.9"
+  },
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "tags": [
+          "chat/completions"
+        ],
+        "summary": "Chat Completion",
+        "description": "Follows the exact same API spec as `OpenAI's Chat API https://platform.openai.com/docs/api-reference/chat`\n\n```bash\ncurl -X POST http://localhost:4000/v1/chat/completions \n-H \"Content-Type: application/json\" \n-H \"Authorization: Bearer sk-1234\" \n-d '{\n    \"model\": \"gpt-4o\",\n    \"messages\": [\n        {\n            \"role\": \"user\",\n            \"content\": \"Hello!\"\n        }\n    ]\n}'\n```",
+        "operationId": "chat_completion_v1_chat_completions_post",
+        "security": [
+          {
+            "APIKeyHeader": []
+          },
+          {
+            "APIKeyHeader": []
+          },
+          {
+            "APIKeyHeader": []
+          },
+          {
+            "APIKeyHeader": []
+          },
+          {
+            "APIKeyHeader": []
+          },
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "model",
+                  "messages"
+                ],
+                "properties": {
+                  "model": {
+                    "title": "Model",
+                    "type": "string"
+                  },
+                  "messages": {
+                    "items": {
+                      "$ref": "#/components/schemas/ChatCompletionUserMessage"
+                    },
+                    "title": "Messages",
+                    "type": "array",
+                    "example": [
+                      {
+                        "role": "user",
+                        "content": "Hello, how are you?"
+                      }
+                    ]
+                  },
+                  "response_format": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": true,
+                        "type": "object"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Response Format"
+                  },
+                  "stream": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Stream"
+                  },
+                  "temperature": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Temperature"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "APIKeySecurityScheme": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "type": {
+            "type": "string",
+            "const": "apiKey",
+            "title": "Type"
+          },
+          "in_": {
+            "type": "string",
+            "enum": [
+              "query",
+              "header",
+              "cookie"
+            ],
+            "title": "In"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "in_",
+          "name"
+        ],
+        "title": "APIKeySecurityScheme",
+        "description": "Defines a security scheme using an API key."
+      },
+      "ChatCompletionUserMessage": {
+        "properties": {
+          "role": {
+            "const": "user",
+            "title": "Role",
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "required": [
+          "role",
+          "content"
+        ],
+        "title": "ChatCompletionUserMessage",
+        "type": "object"
+      }
+    }
+  }
+}

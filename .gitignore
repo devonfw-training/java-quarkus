@@ -11,3 +11,6 @@
 target
 eclipse-target
 war
+.env
+backend/.env
+backend/truststore.jks
