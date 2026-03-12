@@ -15,7 +15,7 @@ In this exercise we will launch our application in a container. For this we have
 === Docker Compose
 
 Now, we will containerize our application.
-We will learn how to run docker compose with postgres, our application and keycloak as well how to navigate inside of a container.
+We will learn how to run docker compose with postgres, our application and keycloak as well how to navigate inside a container.
 
 ==== Running with docker
 
