@@ -37,7 +37,7 @@ Please choose your favorite IDE:
 
 Next, we import the new `backend` project into our Eclipse IDE:
 
-* `devon eclipse`
+* `ide eclipse`
 * In Eclipse `Import` as `Existing Maven Project`, there click `Browse` and choose your `backend` folder in `workspaces/main/java-quarkus`.
 * Now find the green bug icon in the Eclipse toolbar and click on the down-arrow right to it.
 * Click `Debug Configuration` from the menu
