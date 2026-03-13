@@ -3,8 +3,6 @@ info:
   title: Ollama LLM API
   description: API specification for interacting with a locally hosted Ollama model
   version: 1.0.0
-servers:
-  - url: http://localhost:11434
 paths:
   /api/generate:
     post:

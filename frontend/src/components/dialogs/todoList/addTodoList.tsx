@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { Sparkles, X } from "lucide-react";
 import { useContext, useState } from "react";
 import { TodoListContext } from "../../../provider/todoListProvider";
 import DialogBase from "../dialogBase";
@@ -9,7 +9,7 @@ interface AddTodoListI {
 }
 
 const AddTodoList = ({ open, close }: AddTodoListI) => {
-  const { addTaskList } = useContext(TodoListContext)!;
+  const { addTaskList, generateRandomList } = useContext(TodoListContext)!;
   const [title, setTitle] = useState("New List");
   const onClose = () => {
     setTitle("New List");
@@ -35,15 +35,24 @@ const AddTodoList = ({ open, close }: AddTodoListI) => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <button
-          className="mt-12 text-white bg-primary rounded-lg py-4 cursor-pointer"
-          onClick={() => {
-            addTaskList(title);
-            onClose();
-          }}
-        >
-          Create Todo List
-        </button>
+        <div className="flex flex-row gap-4">
+          <button className="mt-12 text-white bg-primary rounded-lg py-4 cursor-pointer flex flex-row gap-2.5 flex-1 justify-center"  onClick={() => {
+              generateRandomList(title);
+              onClose();
+            }}>
+            <Sparkles />
+            Generate Todo List
+          </button>
+          <button
+            className="mt-12 text-white bg-primary rounded-lg py-4 cursor-pointer flex-1"
+            onClick={() => {
+              addTaskList(title);
+              onClose();
+            }}
+          >
+            Create Todo List
+          </button>
+        </div>
       </div>
     </DialogBase>
   );

@@ -21,7 +21,13 @@ Verify that the Ollama container which you started with `docker-compose up` is s
 * `ollama list` -> shows a list of available models (i.e. `llama3.2:latest`)
 * `ollama ps` -> shows the currently running models (i.e. `llama3.2:latest`)
 
-In case the model is not running anymore, you can start it by
+You might notice, that there are no models available or the container is not even running. Look at the logs from
+`docker compose up` - can you spot the issue?
+
+You can provide a model by placing it under `~/root/.ollama/models` on your host, that is then mapped into the
+container.
+
+In case the model is still not running anymore, you can start it by
 [source, bash]
 ----
 ollama run llama3.2 --keepalive 30m
@@ -36,7 +42,7 @@ curl -X POST http://localhost:11434/api/generate -d '{
 	"model": "llama3.2",
 	"prompt":"Give me a random item (containing maximal 5-6 words) which I can add to my To-Do list.",
 	"stream":false,
-	"keep_alive":1200,
+	"keep_alive":1200
 }'
 ----
 If everything is running correctly, you will receive an answer from the AI after a short time.

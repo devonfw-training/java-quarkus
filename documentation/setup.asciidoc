@@ -3,24 +3,29 @@ toc::[]
 
 == Setup
 
-Install https://github.com/devonfw/ide[devonfw-ide]:
+Install https://github.com/devonfw/IDEasy[IDEasy]:
 
 * Install https://git-scm.com/downloads[git] if not already installed (download and run installer or run `winget install Git.Git` in PowerShell or CMD)
-* Create the folder `C:\Projects\devonfw-training` (if you do not have Windows, use `projects/devonfw-training` in root or if not permitted in home).
-* Download `devonfw-ide-scripts` package from https://github.com/devonfw/ide/releases[here]
-* Extract the contents of `devonfw-ide-scripts` package into the above created folder `devonfw-training`. The contents of the package shall be directly in the folder `devonfw-training` without any sub-folder such as `devonfw-ide-scripts`. If you have no idea how to do this, install https://www.7-zip.org/download.html[7-Zip] (`winget install 7zip.7zip`) and use it to extract.
-* Run the `setup` script (on Windows `setup.bat`) from `devonfw-training` folder.
-* Enter this settings-URL: https://github.com/devonfw-training/java-quarkus-settings.git
-* Read and confirm the terms-of-use.
-* wait until the setup process has completed.
-* Select `workspaces` folder of your installation in windows explorer and chose `Git Bash here` from the context menu.
-* If you do not have already Docker Desktop or Rancher Desktop installed, you should do so by running in Git-Bash the command: `devon docker setup`
+* *If you use Windows, please download Windows MSI for IDEasy installation.*
++
+Download and install IDEasy from https://github.com/devonfw/IDEasy/releases[here]. The Windows MSI file is not yet signed so you have to select `More info` (see bug https://github.com/devonfw/IDEasy/issues/1102[#1102]).
+* Open git-bash and run the following command:
++
+```
+ide create java-quarkus https://github.com/devonfw-training/java-quarkus-settings.git
+```
+* Wait until the setup process has completed.
+* If you do not have already Docker Desktop or Rancher Desktop installed, you should do so by running in Git-Bash the command:
++
+```
+ide install docker
+```
 
 === Build Backend
 
 Now we build our application `backend`:
 
-* Go to folder `workspaces/main/java-quarkus/` in `devonfw-training`.
+* Go to folder `workspaces/main/java-quarkus/` in `java-quarkus`.
 * In Windows-Explorer right-click it and select `Git Bash Here`.
 * In the git-bash at this folder run the following command:
 +
@@ -36,7 +41,7 @@ Please choose your favorite IDE:
 
 Next, we import the new `backend` project into our Eclipse IDE:
 
-* `devon eclipse`
+* `ide eclipse`
 * In Eclipse `Import` as `Existing Maven Project`, there click `Browse` and choose your `backend` folder in `workspaces/main/java-quarkus`.
 * Now find the green bug icon in the Eclipse toolbar and click on the down-arrow right to it.
 * Click `Debug Configuration` from the menu
@@ -62,9 +67,9 @@ image::images/Intellij-import-with-maven.png[]
 === Build Frontend
 The frontend is written in react and can be build with yarn. Please go into `frontend` and run `yarn install` on a command line. Please do not use npm.
 
-When the build was successful and the backand is running, too, you can start the frontend by running `yarn start` in the same directory.
+When the build was successful and the backend is running, too, you can start the frontend by running `yarn start` in the same directory.
 
 The frontend is reachable under http://localhost:3000/. You can append the id of the list you want to load, default is 1: http://localhost:3000/1.
 
 === Links
-* https://github.com/devonfw/ide/[devonfw-ide]
+* https://github.com/devonfw/IDEasy[IDEasy]
