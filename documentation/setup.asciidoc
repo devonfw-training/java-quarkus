@@ -6,13 +6,17 @@ toc::[]
 Install https://github.com/devonfw/IDEasy[IDEasy]:
 
 * Install https://git-scm.com/downloads[git] if not already installed (download and run installer or run `winget install Git.Git` in PowerShell or CMD)
-* If you use Windows, please download Windows MSI for IDEasy installation. Download and install IDEasy from https://github.com/devonfw/IDEasy/releases[here]. The Windows MSI file is not yet signed so you have to select `More info` (see bug https://github.com/devonfw/IDEasy/issues/1102[#1102]).
+* *If you use Windows, please download Windows MSI for IDEasy installation.*
++
+Download and install IDEasy from https://github.com/devonfw/IDEasy/releases[here]. The Windows MSI file is not yet signed so you have to select `More info` (see bug https://github.com/devonfw/IDEasy/issues/1102[#1102]).
 * Open git-bash and run the following command:
++
 ```
 ide create java-quarkus https://github.com/devonfw-training/java-quarkus-settings.git
 ```
 * Wait until the setup process has completed.
-* If you do not have already Docker Desktop or Rancher Desktop installed, you should do so by running in Git-Bash the command: 
+* If you do not have already Docker Desktop or Rancher Desktop installed, you should do so by running in Git-Bash the command:
++
 ```
 ide install docker
 ```
