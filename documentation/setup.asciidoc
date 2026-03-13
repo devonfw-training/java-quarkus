@@ -3,24 +3,25 @@ toc::[]
 
 == Setup
 
-Install https://github.com/devonfw/ide[devonfw-ide]:
+Install https://github.com/devonfw/IDEasy[IDEasy]:
 
 * Install https://git-scm.com/downloads[git] if not already installed (download and run installer or run `winget install Git.Git` in PowerShell or CMD)
-* Create the folder `C:\Projects\devonfw-training` (if you do not have Windows, use `projects/devonfw-training` in root or if not permitted in home).
-* Download `devonfw-ide-scripts` package from https://github.com/devonfw/ide/releases[here]
-* Extract the contents of `devonfw-ide-scripts` package into the above created folder `devonfw-training`. The contents of the package shall be directly in the folder `devonfw-training` without any sub-folder such as `devonfw-ide-scripts`. If you have no idea how to do this, install https://www.7-zip.org/download.html[7-Zip] (`winget install 7zip.7zip`) and use it to extract.
-* Run the `setup` script (on Windows `setup.bat`) from `devonfw-training` folder.
-* Enter this settings-URL: https://github.com/devonfw-training/java-quarkus-settings.git
-* Read and confirm the terms-of-use.
-* wait until the setup process has completed.
-* Select `workspaces` folder of your installation in windows explorer and chose `Git Bash here` from the context menu.
-* If you do not have already Docker Desktop or Rancher Desktop installed, you should do so by running in Git-Bash the command: `devon docker setup`
+* Download and install IDEasy from here https://github.com/devonfw/IDEasy/releases[here]. The Windows MSI file is not yet signed so you have to select `More info` (see bug https://github.com/devonfw/IDEasy/issues/1102[#1102]).
+* Open git-bash and run the following command:
+```
+ide create java-quarkus https://github.com/devonfw-training/java-quarkus-settings.git
+```
+* Wait until the setup process has completed.
+* If you do not have already Docker Desktop or Rancher Desktop installed, you should do so by running in Git-Bash the command: 
+```
+ide install docker
+```
 
 === Build Backend
 
 Now we build our application `backend`:
 
-* Go to folder `workspaces/main/java-quarkus/` in `devonfw-training`.
+* Go to folder `workspaces/main/java-quarkus/` in `java-quarkus`.
 * In Windows-Explorer right-click it and select `Git Bash Here`.
 * In the git-bash at this folder run the following command:
 +
@@ -67,4 +68,4 @@ When the build was successful and the backend is running, too, you can start the
 The frontend is reachable under http://localhost:3000/. You can append the id of the list you want to load, default is 1: http://localhost:3000/1.
 
 === Links
-* https://github.com/devonfw/ide/[devonfw-ide]
+* https://github.com/devonfw/IDEasy[IDEasy]
