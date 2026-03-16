@@ -1,22 +1,13 @@
 package org.example.app.general.common.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.logging.Log;
 import io.quarkus.redis.datasource.RedisDataSource;
-import io.quarkus.redis.datasource.keys.KeyCommands;
 import io.quarkus.redis.datasource.value.SetArgs;
 import io.quarkus.redis.datasource.value.ValueCommands;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.Form;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 
-import java.io.StringReader;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -45,7 +36,7 @@ public class SessionService {
             SetArgs setArgs = new SetArgs().ex(SESSION_EXPIRY_SECONDS);
             redis.set(sessionId, sessionJson, setArgs); // Store serialized session JSON in Redis
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(e);
         }
     }
 
@@ -61,7 +52,7 @@ public class SessionService {
                 return Optional.empty();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(e);
             return Optional.empty();
         }
     }

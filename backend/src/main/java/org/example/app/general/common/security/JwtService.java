@@ -1,7 +1,6 @@
 package org.example.app.general.common.security;
 
 import io.quarkus.runtime.configuration.ConfigUtils;
-import io.smallrye.jwt.auth.principal.ParseException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -17,7 +16,6 @@ import org.json.JSONObject;
 import java.io.StringReader;
 import java.util.Base64;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @ApplicationScoped
@@ -30,7 +28,7 @@ public class JwtService {
     private static final String RESPONSE_TYPE = "code";
     private static final String SCOPE = "openid";
 
-    public List<String> getRoles(String jwtString) throws ParseException {
+    public List<String> getRoles(String jwtString) {
         // Split JWT into its parts: header, payload, and signature
         String[] chunks = jwtString.split("\\.");
 
@@ -44,17 +42,15 @@ public class JwtService {
         if (ConfigUtils.getProfiles().contains("test")) {
             return jsonPayload.optJSONArray("groups").toList().stream()
                     .map(role -> role.toString().trim().toUpperCase())  // Convert each role to uppercase
-                    .collect(Collectors.toList());
+                    .toList();
         }
         JSONObject realmAccess = jsonPayload.optJSONObject("realm_access");
 
         // Check if the realm_access is found and contains the "roles" array
         if (realmAccess != null) {
-            List<String> roles = realmAccess.optJSONArray("roles").toList().stream()
+            return realmAccess.optJSONArray("roles").toList().stream()
                     .map(role -> role.toString().trim().toUpperCase())  // Convert each role to uppercase
-                    .collect(Collectors.toList());
-
-            return roles;
+                    .toList();
         } else {
             // If realm_access or roles are not found, return an empty list or handle the case
             return List.of();

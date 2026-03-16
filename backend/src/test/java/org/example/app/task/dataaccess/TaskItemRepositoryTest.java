@@ -46,7 +46,7 @@ class TaskItemRepositoryTest extends Assertions {
     // when
     List<TaskItemEntity> hits = this.taskItemRepository.findByFlags(completed, starred);
 
-    assertThat(hits.stream().map(i -> i.getTitle())).contains("Milk", "Butter", "Bread", "Jigsaw", "Sunscreen",
+    assertThat(hits.stream().map(TaskItemEntity::getTitle)).contains("Milk", "Butter", "Bread", "Jigsaw", "Sunscreen",
         "Wetsuit", "Swimsuit", "Surfboard", "Flip-flops", "Diamond ring");
   }
 
@@ -60,7 +60,7 @@ class TaskItemRepositoryTest extends Assertions {
     List<TaskItemEntity> hits = this.taskItemRepository.findByDeadline(deadline);
 
     // then
-    assertThat(hits.stream().map(i -> i.getTitle())).contains("Diamond ring", "Lingerie");
+    assertThat(hits.stream().map(TaskItemEntity::getTitle)).contains("Diamond ring", "Lingerie");
   }
 
   @Test
@@ -78,7 +78,7 @@ class TaskItemRepositoryTest extends Assertions {
 
     // then
     assertThat(page).isNotNull();
-    assertThat(page.getContent().stream().map(i -> i.getTitle())).containsExactly("Lingerie", "Super-Glue");
+    assertThat(page.getContent().stream().map(TaskItemEntity::getTitle)).containsExactly("Lingerie", "Super-Glue");
   }
 
 }

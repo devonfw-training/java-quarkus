@@ -1,7 +1,8 @@
 package org.example.app.task.service;
 
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectMock;
+import io.quarkus.test.junit.mockito.*;
 import io.restassured.http.ContentType;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.BDDAssertions;

@@ -1,16 +1,14 @@
 package org.example.app.general.common.security;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.container.ContainerRequestContext;
-import jakarta.ws.rs.core.*;
-
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import java.util.HashMap;
-import java.util.Map;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Response;
 
 @Path("/auth/callback")
 public class AuthCallbackResource {
@@ -36,7 +34,7 @@ public class AuthCallbackResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Missing session ID cookie").build();
         }
         String sessionId = sessionCookie.getValue();
-        String originalUrl = sessionService.getSession(sessionId).get().getOriginalUrl();
+        String originalUrl = sessionService.getSession(sessionId).orElseThrow().originalUrl();
 
         String jwt = jwtService.exchangeCodeForToken(code);
         sessionService.storeSession(sessionId, jwt, "");
