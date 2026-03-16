@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   quarkus-app:
     build:
@@ -43,7 +41,7 @@ services:
     pull_policy: always
     tty: true
     volumes:
-      - ollama:/root/.ollama
+      - ~/root/.ollama:/root/.ollama
       - ./entrypoint.sh:/entrypoint.sh
     ports:
       - 11434:11434
@@ -57,6 +55,5 @@ networks:
     driver: bridge
 
 volumes:
-  ollama: {}
   db-data:
     driver: local
