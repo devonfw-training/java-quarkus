@@ -4,15 +4,19 @@ import io.quarkus.runtime.configuration.ConfigUtils;
 import io.smallrye.jwt.auth.principal.ParseException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.app.general.common.security.ApplicationAccessControlConfig.*;
-
+import static org.example.app.general.common.security.ApplicationAccessControlConfig.PERMISSION_DELETE_TASK_ITEM;
+import static org.example.app.general.common.security.ApplicationAccessControlConfig.PERMISSION_DELETE_TASK_LIST;
+import static org.example.app.general.common.security.ApplicationAccessControlConfig.PERMISSION_FIND_TASK_ITEM;
+import static org.example.app.general.common.security.ApplicationAccessControlConfig.PERMISSION_FIND_TASK_LIST;
+import static org.example.app.general.common.security.ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM;
+import static org.example.app.general.common.security.ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_LIST;
 
 
 @ApplicationScoped
@@ -34,7 +38,7 @@ public class PermissionService {
             jwt = requestContext.getHeaders().get("Authorization").getFirst();
         }else {
             String sessionId = requestContext.getCookies().get("SESSION_ID").getValue();
-            jwt = sessionService.getSession(sessionId).get().getJwt();
+            jwt = sessionService.getSession(sessionId).orElseThrow().jwt();
         }
         List<String> roles = jwtService.getRoles(jwt);
         roles.forEach(role->{
@@ -68,7 +72,7 @@ public class PermissionService {
                         .build();
             }
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new NotAuthorizedException(e);
         }
         return null;  // Return null if the user has permission
     }

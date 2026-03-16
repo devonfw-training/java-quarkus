@@ -4,10 +4,11 @@ import io.quarkus.runtime.configuration.ConfigUtils;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
-import jakarta.ws.rs.core.*;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 
-import java.io.IOException;
 import java.util.Optional;
 
 @Provider
@@ -20,7 +21,7 @@ public class AuthCookieFilter implements ContainerRequestFilter {
     JwtService jwtService;
 
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
+    public void filter(ContainerRequestContext requestContext) {
         if (requestContext.getUriInfo().getPath().equals("/auth/callback") || ConfigUtils.getProfiles().contains("test")) {
             return; // Skip filter for the callback or test mode
         }
@@ -44,6 +45,6 @@ public class AuthCookieFilter implements ContainerRequestFilter {
 
     private boolean isValidSession(String sessionId) {
         Optional<Session> session = sessionService.getSession(sessionId);
-        return session.isPresent() && !session.get().getJwt().isEmpty();
+        return session.isPresent() && !session.get().jwt().isEmpty();
     }
 }
