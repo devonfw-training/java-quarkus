@@ -60,9 +60,9 @@ image::images/Intellij-select-project.png[]
 image::images/Intellij-import-with-maven.png[]
 
 === Build Frontend
-The frontend is written in react and can be build with yarn. Please go into `frontend` and run `yarn install` on a command line. Please do not use npm.
+The frontend is written in react and can be build with npm. Please go into `frontend` and run `npm install` on a command line. Please do not use npm.
 
-When the build was successful and the backend is running, too, you can start the frontend by running `yarn start` in the same directory.
+When the build was successful and the backend is running, too, you can start the frontend by running `npm start` in the same directory.
 
 The frontend is reachable under http://localhost:3000/. You can append the id of the list you want to load, default is 1: http://localhost:3000/1.
 
