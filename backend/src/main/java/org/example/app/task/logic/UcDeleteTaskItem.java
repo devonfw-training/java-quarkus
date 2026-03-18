@@ -1,10 +1,12 @@
 package org.example.app.task.logic;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.transaction.Transactional;
 
+import org.example.app.general.common.security.ApplicationAccessControlConfig;
 import org.example.app.task.common.TaskItemEto;
 import org.example.app.task.dataaccess.TaskItemRepository;
 import org.slf4j.Logger;
@@ -24,10 +26,10 @@ public class UcDeleteTaskItem {
   TaskItemRepository taskItemRepository;
 
   /**
-   * @param id the {@link org.example.app.task.dataaccess.TaskListEntity#getId() primary key} of the
-   *        {@link org.example.app.task.dataaccess.TaskListEntity} to delete.
+   * @param id the {@link org.example.app.task.dataaccess.TaskListEntity#getId() primary key} of the {@link org.example.app.task.dataaccess.TaskListEntity}
+   *     to delete.
    */
-  // @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_DELETE_TASK_ITEM)
+  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_DELETE_TASK_ITEM)
   public void delete(Long id) {
 
     this.taskItemRepository.deleteById(id);
@@ -36,7 +38,7 @@ public class UcDeleteTaskItem {
   /**
    * @param item the {@link TaskItemEto} to delete.
    */
-  // @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_DELETE_TASK_ITEM)
+  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_DELETE_TASK_ITEM)
   public void delete(TaskItemEto item) {
 
     Long id = item.getId();

@@ -1,4 +1,3 @@
-
 {
   "realm": "quarkus",
   "enabled": true,
@@ -13,57 +12,117 @@
       "redirectUris": [
         "http://localhost:8080/*"
       ],
-      "publicClient": true,
-      "implicitFlowEnabled": true,
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "0239ZYwgcE6Z85xRbczhXFnGbuPZyf8x",
+      "directAccessGrantsEnabled": true,
+      "implicitFlowEnabled": false,
       "webOrigins": [
         "*"
+      ],
+      "standardFlowEnabled": true,
+      "protocolMappers": [
+        {
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "roles",
+            "jsonType.label": "String"
+          }
+        }
       ]
     }
   ],
   "roles": {
     "realm": [
       {
-        "name": "admin",
-        "description": "Administrator role"
+        "name": "app.FindTaskList",
+        "description": "Find and read task lists"
       },
       {
-        "name": "user",
-        "description": "User role"
+        "name": "app.FindTaskItem",
+        "description": "Find and read task items"
+      },
+      {
+        "name": "app.SaveTaskList",
+        "description": "Create and update task lists"
+      },
+      {
+        "name": "app.SaveTaskItem",
+        "description": "Create and update task items"
+      },
+      {
+        "name": "app.DeleteTaskList",
+        "description": "Delete task lists"
+      },
+      {
+        "name": "app.DeleteTaskItem",
+        "description": "Delete task items"
       }
     ]
   },
   "users": [
     {
-      "username": "alice",
+      "username": "reader",
       "enabled": true,
-      "firstName": "Alice",
-      "lastName": "Smith",
-      "email": "alice@example.com",
+      "firstName": "Rodger",
+      "lastName": "Reader",
+      "email": "reader@java-backend-foundations.com",
       "credentials": [
         {
           "type": "password",
-          "value": "alice"
+          "value": "reader"
         }
       ],
       "realmRoles": [
-        "admin",
-        "user"
+        "app.FindTaskList",
+        "app.FindTaskItem"
       ]
     },
     {
-      "username": "bob",
+      "username": "writer",
       "enabled": true,
-      "firstName": "Bob",
-      "lastName": "Johnson",
-      "email": "bob@example.com",
+      "firstName": "Wendy",
+      "lastName": "Writer",
+      "email": "writer@java-backend-foundations.com",
       "credentials": [
         {
           "type": "password",
-          "value": "bob"
+          "value": "writer"
         }
       ],
       "realmRoles": [
-        "user"
+        "app.FindTaskList",
+        "app.FindTaskItem",
+        "app.SaveTaskList",
+        "app.SaveTaskItem"
+      ]
+    },
+    {
+      "username": "manager",
+      "enabled": true,
+      "firstName": "Mia",
+      "lastName": "Manager",
+      "email": "manager@java-backend-foundations.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "manager"
+        }
+      ],
+      "realmRoles": [
+        "app.FindTaskList",
+        "app.FindTaskItem",
+        "app.SaveTaskList",
+        "app.SaveTaskItem",
+        "app.DeleteTaskList",
+        "app.DeleteTaskItem"
       ]
     }
   ]

@@ -1,5 +1,10 @@
 package org.example.app.task.service;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -13,13 +18,13 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import org.example.app.general.common.security.PermissionService;
 import org.example.app.task.common.TaskItemEto;
 import org.example.app.task.common.TaskListCto;
 import org.example.app.task.common.TaskListEto;
@@ -31,19 +36,11 @@ import org.example.app.task.logic.UcFindTaskList;
 import org.example.app.task.logic.UcSaveTaskItem;
 import org.example.app.task.logic.UcSaveTaskList;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 /**
  * Rest service for {@link org.example.app.task.common.TaskList}.
  */
 @Path("/task")
 public class TaskService {
-
-  @Inject
-  private PermissionService permissionService;
 
   @Inject
   private UcFindTaskList ucFindTaskList;
@@ -99,7 +96,7 @@ public class TaskService {
   @APIResponse(responseCode = "404", description = "Task list not found")
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
   public TaskListEto findTaskList(
-          @Parameter(description = "The id of the task list to retrieve", required = true, example = "1", schema = @Schema(type = SchemaType.INTEGER)) @PathParam("id") Long id) {
+      @Parameter(description = "The id of the task list to retrieve", required = true, example = "1", schema = @Schema(type = SchemaType.INTEGER)) @PathParam("id") Long id) {
 
     TaskListEto task = this.ucFindTaskList.findById(id);
     if (task == null) {
@@ -133,7 +130,7 @@ public class TaskService {
   @APIResponse(responseCode = "404", description = "Task list not found")
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
   public TaskListCto findTaskListWithItems(
-          @Parameter(description = "The id of the task list to retrieve", required = true, example = "1", schema = @Schema(type = SchemaType.INTEGER)) @PathParam("id") Long id) {
+      @Parameter(description = "The id of the task list to retrieve", required = true, example = "1", schema = @Schema(type = SchemaType.INTEGER)) @PathParam("id") Long id) {
 
     TaskListCto task = this.ucFindTaskList.findWithItems(id);
     if (task == null) {
@@ -152,14 +149,13 @@ public class TaskService {
   @APIResponse(responseCode = "201", description = "Task list successfully created")
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
   public void deleteTaskList(
-          @Parameter(description = "The id of the task list to delete", required = true, example = "1", schema = @Schema(type = SchemaType.INTEGER)) @PathParam("id") Long id) {
+      @Parameter(description = "The id of the task list to delete", required = true, example = "1", schema = @Schema(type = SchemaType.INTEGER)) @PathParam("id") Long id) {
 
     this.ucDeleteTaskList.delete(id);
   }
 
   /**
-   * @param id the {@link TaskListEto#getId() primary key} of the {@link TaskListEto} for which to add a random activity
-   *        as a task.
+   * @param id the {@link TaskListEto#getId() primary key} of the {@link TaskListEto} for which to add a random activity as a task.
    * @return response
    */
   @POST
@@ -168,7 +164,7 @@ public class TaskService {
   @APIResponse(responseCode = "201", description = "Task item successfully added")
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
   public Response addRandomActivity(
-          @Parameter(description = "The id of the task list for which to add the task", required = true, example = "1", schema = @Schema(type = SchemaType.INTEGER)) @PathParam("id") Long id) {
+      @Parameter(description = "The id of the task list for which to add the task", required = true, example = "1", schema = @Schema(type = SchemaType.INTEGER)) @PathParam("id") Long id) {
 
     Long taskItemId = this.ucAddRandomActivityTask.addRandom(id);
     return Response.created(URI.create("/task/item/" + taskItemId)).build();
@@ -181,7 +177,8 @@ public class TaskService {
   @APIResponse(responseCode = "201", description = "Task list with items successfully created")
   @APIResponse(responseCode = "400", description = "Validation error")
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
-  public Response addMultipleRandomActivities(@NotBlank @Schema(required = true, example = "Shopping list", description = "Title of the task list") String listTitle) {
+  public Response addMultipleRandomActivities(
+      @NotBlank @Schema(required = true, example = "Shopping list", description = "Title of the task list") String listTitle) {
 
     TaskListEto taskList = new TaskListEto();
     taskList.setTitle(listTitle);
@@ -200,17 +197,17 @@ public class TaskService {
   @APIResponse(responseCode = "400", description = "Validation error")
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
   public Response addExtractedIngredients(@Schema(required = true, example = """
-          {"listTitle": "Shopping list",
-           "recipe": "Take flour, sugar and chocolate and mix everything."}""",
-          description = "The JSON containing task list title and the recipe") Map<String, String> requestData) {
+      {"listTitle": "Shopping list",
+       "recipe": "Take flour, sugar and chocolate and mix everything."}""",
+      description = "The JSON containing task list title and the recipe") Map<String, String> requestData) {
 
     String listTitle = requestData.get("listTitle");
     String recipe = requestData.get("recipe");
 
     if (listTitle == null || listTitle.isBlank() || recipe == null || recipe.isBlank()) {
       return Response.status(Response.Status.BAD_REQUEST)
-              .entity("Missing or empty required fields: listTitle, recipe")
-              .build();
+          .entity("Missing or empty required fields: listTitle, recipe")
+          .build();
     }
 
     TaskListEto taskList = new TaskListEto();
@@ -255,7 +252,7 @@ public class TaskService {
   @APIResponse(responseCode = "404", description = "Task item not found")
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
   public TaskItemEto findTaskItem(
-          @Parameter(description = "The id of the task item to retrieve", required = true, example = "1", schema = @Schema(type = SchemaType.INTEGER)) @PathParam("id") Long id) {
+      @Parameter(description = "The id of the task item to retrieve", required = true, example = "1", schema = @Schema(type = SchemaType.INTEGER)) @PathParam("id") Long id) {
 
     TaskItemEto item = this.ucFindTaskItem.findById(id);
     if (item == null) {
@@ -273,7 +270,7 @@ public class TaskService {
   @APIResponse(responseCode = "204", description = "Task list deleted")
   @APIResponse(responseCode = "500", description = "Server unavailable or a server-side error occurred")
   public void deleteTaskItem(
-          @Parameter(description = "The id of the task item to delete", required = true, example = "1", schema = @Schema(type = SchemaType.INTEGER)) @PathParam("id") Long id) {
+      @Parameter(description = "The id of the task item to delete", required = true, example = "1", schema = @Schema(type = SchemaType.INTEGER)) @PathParam("id") Long id) {
 
     this.ucDeleteTaskItem.delete(id);
   }

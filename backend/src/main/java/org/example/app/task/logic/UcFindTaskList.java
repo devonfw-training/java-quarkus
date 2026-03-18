@@ -2,12 +2,13 @@ package org.example.app.task.logic;
 
 import java.util.List;
 import java.util.Optional;
-
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.transaction.Transactional;
 
+import org.example.app.general.common.security.ApplicationAccessControlConfig;
 import org.example.app.task.common.TaskListCto;
 import org.example.app.task.common.TaskListEto;
 import org.example.app.task.dataaccess.TaskListEntity;
@@ -34,7 +35,7 @@ public class UcFindTaskList {
    * @param listId the {@link TaskListEntity#getId() primary key} of the {@link TaskListEntity} to find.
    * @return the {@link TaskListEto} for the given {@link TaskListEto#getId() primary key} or {@code null} if not found.
    */
-  // @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_FIND_TASK_LIST)
+  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_FIND_TASK_LIST)
   public TaskListEto findById(Long listId) {
 
     Optional<TaskListEntity> taskList = this.taskListRepository.findById(listId);
@@ -44,7 +45,7 @@ public class UcFindTaskList {
   /**
    * @return all {@link TaskListEto} or {@code []} if not found.
    */
-  // @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_FIND_TASK_LIST)
+  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_FIND_TASK_LIST)
   public List<TaskListEto> findAll() {
 
     List<TaskListEntity> taskList = this.taskListRepository.findAll();

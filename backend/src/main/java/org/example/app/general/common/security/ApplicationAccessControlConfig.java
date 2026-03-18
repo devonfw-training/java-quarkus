@@ -6,11 +6,11 @@ package org.example.app.general.common.security;
 public class ApplicationAccessControlConfig {
 
   /** Unique identifier of this application used as namespace prefix. */
-  public static final String APP_ID = "demo";
+  public static final String APP_ID = "app";
 
   /**
-   * The namespace prefix build from {@link #APP_ID} and prepended to every permission to avoid name-clashing of
-   * permissions with other applications within the same application landscape in identity & access management (IAM).
+   * The namespace prefix build from {@link #APP_ID} and prepended to every permission to avoid name-clashing of permissions with other applications within the
+   * same application landscape in identity & access management (IAM).
    */
   private static final String PREFIX = APP_ID + ".";
 
