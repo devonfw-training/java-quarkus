@@ -1,5 +1,5 @@
 services:
-  quarkus-app:
+  backend:
     build:
       context: ./backend
       dockerfile: src/main/docker/Dockerfile.jvm
@@ -8,10 +8,6 @@ services:
       - QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://host.docker.internal:5432/quarkus
       - QUARKUS_FLYWAY_SCHEMAS=quarkus
       #- OLLAMA_HOST=http://host.docker.internal:11434
-    ports:
-      - "8080:8080"
-    networks:
-      - app
 
   frontend:
     build:
@@ -19,10 +15,4 @@ services:
       dockerfile: Dockerfile
     image: vite-frontend
     ports:
-      - "5173:5173"
-    networks:
-      - app
-
-networks:
-  app:
-    driver: bridge
+      - "8080:80"
