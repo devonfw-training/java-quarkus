@@ -15,4 +15,4 @@ services:
       dockerfile: Dockerfile
     image: vite-frontend
     ports:
-      - "8080:80"
+      - "8082:80"
