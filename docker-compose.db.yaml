@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:15.1
+    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=quarkus
+      - POSTGRES_PASSWORD=quarkus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U quarkus"]
+      interval: 5s
+      timeout: 5s
+      retries: 6
+    ports:
+      - "5432:5432"
+
+volumes:
+  db-data:
+    driver: local

@@ -11,7 +11,7 @@ import AddTodo from "../dialogs/todo/addTodo";
 import EditTodoList from "../dialogs/todoList/editTodoList";
 import { FilterMenu, SelectedFilterE } from "../menus/filterMenu";
 import { SelectedSortE, SelectedSortOrderE, SortMenu } from "../menus/sortMenu";
-import Todo from "./todo";
+import Todo from "./Todo";
 
 const Todos = () => {
   const { taskLists, editTodoList } = useContext(TodoListContext)!;
