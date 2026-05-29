@@ -26,9 +26,14 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_LOG_LEVEL: info
-    command: start-dev
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 80
+      KC_HOSTNAME_STRICT: false
+      KC_PROXY: edge
+
+    command: start-dev --http-port=8083
     ports:
-      - "8081:8080"
+      - "8083:8083"
     networks:
       - app-network
 
