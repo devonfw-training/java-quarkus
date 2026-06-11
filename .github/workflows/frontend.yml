@@ -17,7 +17,7 @@ jobs:
         working-directory: ./frontend
     steps:
     - uses: actions/checkout@v3
-    - run: yarn install
+    - run: npm install
    # Requires lockfile to be updated first
    # - run: yarn install --frozen-lockfile
-    - run: yarn build
+    - run: npm run build
