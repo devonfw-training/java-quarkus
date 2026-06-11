@@ -1,6 +1,6 @@
-import { Snackbar } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
-import { useContext, useEffect } from "react";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import { useContext } from "react";
 import { Route } from "wouter";
 import CalendarView from "./components/calendar";
 import Header from "./components/misc/header";
