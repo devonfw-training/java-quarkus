@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRoute } from "wouter";
-import { useLocation } from "wouter";
+import { navigate } from "wouter/use-location";
 import { TaskListTypeI } from "../types/types";
 import { MainContext } from "./mainProvider";
 import { keycloak } from "../auth/keycloak";
@@ -13,7 +13,6 @@ export const TodoListProvider = ({ children }: PropsI) => {
   const [, params] = useRoute("/:listId");
   const listId = params?.listId;
   const [taskLists, setTaskLists] = useState<TaskListTypeI[]>([]);
-  const [, navigate] = useLocation();
 
     const authHeaders = () => ({
         Authorization: `Bearer ${keycloak.token}`,
