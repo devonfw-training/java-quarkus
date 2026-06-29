@@ -5,7 +5,7 @@ import { Route } from "wouter";
 import CalendarView from "./components/calendar";
 import Header from "./components/misc/header";
 import Sidebar from "./components/misc/sidebar";
-import Todos from "./components/todos/todos";
+import Todos from "./components/Todos/Todos";
 import { MainContext } from "./provider/mainProvider";
 
 function App() {

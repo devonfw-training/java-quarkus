@@ -1,5 +1,5 @@
 import { render } from "react-dom";
-import App from "./app";
+import App from "./App";
 import { DeleteConfirmProvider } from "./provider/deleteConfirmProvider";
 import { MainProvider } from "./provider/mainProvider";
 import { ThemeProvider } from "./provider/themeProvider";
