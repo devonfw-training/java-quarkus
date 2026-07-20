@@ -1,9 +1,10 @@
-import { InfoIcon, SettingsIcon } from "lucide-react";
+import { InfoIcon, SettingsIcon, LogOut} from "lucide-react";
 import { useContext, useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { MainContext } from "../../provider/mainProvider";
 import { SettingsMenu } from "../menus/settingsMenu";
 import About from "../overlay/aboutOverlay";
+import { logout } from "../../provider/authProvider";
 
 export default function Header() {
   const { showSettings, setShowAbout, setShowSettings } =
@@ -12,6 +13,7 @@ export default function Header() {
   const aboutRef = useRef(null);
   const settingsButtonRef = useRef(null);
   const aboutButtonRef = useRef(null);
+  const logoutButtonRef = useRef(null);
 
   useEffect(() => {
     const header: any = headerRef.current;
@@ -49,6 +51,14 @@ export default function Header() {
           >
             <InfoIcon className="h-4 w-4 text-white" />
             <h1 className="text-base font-semibold text-white">ABOUT</h1>
+          </button>
+          <button
+            className="flex gap-2 items-center cursor-pointer"
+            onClick={() => logout()}
+            ref={logoutButtonRef}
+          >
+            <LogOut className="h-4 w-4 text-white"/>
+            <h1 className="text-base font-semibold text-white">LOGOUT</h1>
           </button>
         </div>
       </header>

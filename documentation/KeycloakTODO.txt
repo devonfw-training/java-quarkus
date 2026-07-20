@@ -1,0 +1,4 @@
+npm install keycloak-js@25
+
+
+Keycloak frontend
