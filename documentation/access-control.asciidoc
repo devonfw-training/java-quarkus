@@ -45,7 +45,7 @@ public class UcDeleteTaskItem {
   // ...
 ----
 
-==== Test
+==== Unit Testing
 
 Now, we want to test our authorization via JUnit.
 All we need to do is add the following annotation to our use-case test methods as in the following example:
@@ -60,6 +60,12 @@ public void testDeleteTaskItem() {
 ----
 
 If have not yet created tests for use-cases, create them now.
+
+==== Manual Testing
+
+Test users with different roles (e.g. reader, writer, and manager) are available for manual testing.
+User credentials and role assignments are defined in keycloak/quarkus-realm.json.
+Verify that each user can access only the functionality assigned to their role and that unauthorized actions are denied.
 
 ==== Links
 
