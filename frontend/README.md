@@ -22,7 +22,7 @@ It uses [TypeScript](https://www.typescriptlang.org/), [Context API](https://rea
 ## To build it
 
 1. Clone this repo by running `git clone https://github.com/devonfw-training/java-quarkus.git`.
-2. `cd` into the `frontend` folder and run `npm i` OR `yarn install`.
-3. Run `npm start` OR `yarn start` to start the development server.
+2. `cd` into the `frontend` folder and run `npm i`.
+3. Run `npm start` to start the development server.
 
 
