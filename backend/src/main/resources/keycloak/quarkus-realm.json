@@ -8,7 +8,8 @@
       "enabled": true,
       "protocol": "openid-connect",
       "publicClient": true,
-      "clientAuthenticatorType": "client-secret",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
       "redirectUris": [
         "http://localhost:5173/*"
       ],
