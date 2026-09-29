@@ -1,0 +1,155 @@
+{
+  "realm": "quarkus",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "frontend",
+      "name": "frontend",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [
+        "http://localhost:5173/*",
+        "http://localhost:5174/*"
+      ],
+      "webOrigins": [
+        "http://localhost:5173",
+        "http://localhost:5174"
+      ],
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost:5173/*",
+        "pkce.code.challenge.method": "S256"
+      },
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "frontchannelLogout": true
+    },
+    {
+      "clientId": "backend-service",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "rootUrl": "http://localhost:8080",
+      "adminUrl": "http://localhost:8080",
+      "baseUrl": "http://localhost:8080",
+      "redirectUris": [
+        "http://localhost:8080/*"
+      ],
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "0239ZYwgcE6Z85xRbczhXFnGbuPZyf8x",
+      "directAccessGrantsEnabled": true,
+      "implicitFlowEnabled": false,
+      "webOrigins": [
+        "*"
+      ],
+      "standardFlowEnabled": true,
+      "protocolMappers": [
+        {
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "roles",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "app.FindTaskList",
+        "description": "Find and read task lists"
+      },
+      {
+        "name": "app.FindTaskItem",
+        "description": "Find and read task items"
+      },
+      {
+        "name": "app.SaveTaskList",
+        "description": "Create and update task lists"
+      },
+      {
+        "name": "app.SaveTaskItem",
+        "description": "Create and update task items"
+      },
+      {
+        "name": "app.DeleteTaskList",
+        "description": "Delete task lists"
+      },
+      {
+        "name": "app.DeleteTaskItem",
+        "description": "Delete task items"
+      }
+    ]
+  },
+  "users": [
+    {
+      "username": "reader",
+      "enabled": true,
+      "firstName": "Rodger",
+      "lastName": "Reader",
+      "email": "reader@java-backend-foundations.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "reader"
+        }
+      ],
+      "realmRoles": [
+        "app.FindTaskList",
+        "app.FindTaskItem"
+      ]
+    },
+    {
+      "username": "writer",
+      "enabled": true,
+      "firstName": "Wendy",
+      "lastName": "Writer",
+      "email": "writer@java-backend-foundations.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "writer"
+        }
+      ],
+      "realmRoles": [
+        "app.FindTaskList",
+        "app.FindTaskItem",
+        "app.SaveTaskList",
+        "app.SaveTaskItem"
+      ]
+    },
+    {
+      "username": "manager",
+      "enabled": true,
+      "firstName": "Mia",
+      "lastName": "Manager",
+      "email": "manager@java-backend-foundations.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "manager"
+        }
+      ],
+      "realmRoles": [
+        "app.FindTaskList",
+        "app.FindTaskItem",
+        "app.SaveTaskList",
+        "app.SaveTaskItem",
+        "app.DeleteTaskList",
+        "app.DeleteTaskItem"
+      ]
+    }
+  ]
+}
