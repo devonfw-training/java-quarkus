@@ -1,13 +1,14 @@
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:26.0
+    image: quay.io/keycloak/keycloak:26.1.4
+    ports:
+      - "8180:8080"
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-      KC_LOG_LEVEL: info
-    command: start-dev
-    ports:
-      - "8081:8080"
+    volumes:
+      - ./backend/src/main/resources/keycloak/quarkus-realm.json:/opt/keycloak/data/import/realm-config.json  # Mount realm config
+    command: -v start-dev --import-realm
     networks:
       - quarkus-net
 
