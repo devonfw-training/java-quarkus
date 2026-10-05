@@ -8,9 +8,6 @@ services:
       - QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://postgres:5432/quarkus
       - QUARKUS_FLYWAY_SCHEMAS=quarkus
       - OLLAMA_HOST=http://ollama:11434
-    depends_on:
-      postgres:
-        condition: service_healthy
     networks:
       - quarkus-net
 
