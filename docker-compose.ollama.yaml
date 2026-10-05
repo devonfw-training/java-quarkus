@@ -6,7 +6,13 @@ services:
       - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
+    networks:
+      - quarkus-net
 
 volumes:
   ollama_data:
     name: ollama_data
+
+networks:
+  quarkus-net:
+    name: quarkus-net

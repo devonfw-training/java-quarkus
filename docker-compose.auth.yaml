@@ -7,4 +7,10 @@ services:
       KC_LOG_LEVEL: info
     command: start-dev
     ports:
-      - "8083:8083"
+      - "8081:8080"
+    networks:
+      - quarkus-net
+
+networks:
+  quarkus-net:
+    name: quarkus-net

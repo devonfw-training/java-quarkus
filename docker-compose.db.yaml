@@ -14,7 +14,13 @@ services:
       retries: 6
     ports:
       - "5432:5432"
+    networks:
+      - quarkus-net
 
 volumes:
   db-data:
     driver: local
+
+networks:
+  quarkus-net:
+    name: quarkus-net
