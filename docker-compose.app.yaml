@@ -8,6 +8,12 @@ services:
       - QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://postgres:5432/quarkus
       - QUARKUS_FLYWAY_SCHEMAS=quarkus
       - OLLAMA_HOST=http://ollama:11434
+      - QUARKUS_OIDC_AUTH_SERVER_URL=http://keycloak:8080/realms/quarkus
+      - QUARKUS_OIDC_CLIENT_ID=backend-service
+      - QUARKUS_OIDC_APPLICATION_TYPE=service
+      - QUARKUS_OIDC_TOKEN_ISSUER=http://localhost:8180/realms/quarkus
+      - APP_FRONTEND_CLIENT_ID=frontend
+      - APP_LOGOUT_REDIRECT=http://localhost:8082/login
     networks:
       - quarkus-net
 
