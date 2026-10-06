@@ -1,42 +1,4 @@
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: src/main/docker/Dockerfile.jvm
-    image: quarkus-backend
-    environment:
-      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://postgres:5432/quarkus
-      - QUARKUS_FLYWAY_SCHEMAS=quarkus
-    networks:
-      - app-network
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image: vite-frontend
-    ports:
-      - "8082:80"
-    networks:
-      - app-network
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.0
-    environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-      KC_LOG_LEVEL: info
-      KC_HOSTNAME: localhost
-      KC_HOSTNAME_PORT: 80
-      KC_HOSTNAME_STRICT: false
-      KC_PROXY: edge
-
-    command: start-dev --http-port=8083
-    ports:
-      - "8083:8083"
-    networks:
-      - app-network
-
   postgres:
     image: postgres:15.1
     restart: always
@@ -46,31 +8,81 @@ services:
       - POSTGRES_USER=quarkus
       - POSTGRES_PASSWORD=quarkus
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U quarkus"]
+      test: [ "CMD-SHELL", "pg_isready -U quarkus" ]
       interval: 5s
       timeout: 5s
       retries: 6
     ports:
       - "5432:5432"
     networks:
-      - app-network
+      - quarkus-net
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.4
+    ports:
+      - "8180:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    volumes:
+      - ./backend/src/main/resources/keycloak/quarkus-realm.json:/opt/keycloak/data/import/realm-config.json  # Mount realm config
+    command: -v start-dev --import-realm
+    networks:
+      - quarkus-net
 
   ollama:
     image: ollama/ollama:0.30.0-rc28-rocm
     container_name: ollama
-    ports:
-      - "11434:11434"
+    restart: unless-stopped
+    pull_policy: always
+    tty: true
     volumes:
       - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
     networks:
-      - app-network
+      - quarkus-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: src/main/docker/Dockerfile.jvm
+    image: quarkus-backend
+    environment:
+      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://postgres:5432/quarkus
+      - QUARKUS_FLYWAY_SCHEMAS=quarkus
+      - OLLAMA_HOST=http://ollama:11434
+      - QUARKUS_OIDC_AUTH_SERVER_URL=http://keycloak:8080/realms/quarkus
+      - QUARKUS_OIDC_CLIENT_ID=backend-service
+      - QUARKUS_OIDC_APPLICATION_TYPE=service
+      - QUARKUS_OIDC_TOKEN_ISSUER=http://localhost:8180/realms/quarkus
+      - APP_FRONTEND_CLIENT_ID=frontend
+      - APP_LOGOUT_REDIRECT=http://localhost:8082/login
+    depends_on:
+      - postgres
+      - keycloak
+      - ollama
+    networks:
+      - quarkus-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: vite-frontend
+    ports:
+      - "8082:80"
+    depends_on:
+      - backend
+    networks:
+      - quarkus-net
+
+networks:
+  quarkus-net:
+    name: quarkus-net
 
 volumes:
   db-data:
     driver: local
   ollama_data:
     name: ollama_data
-
-networks:
-  app-network:
-    driver: bridge
