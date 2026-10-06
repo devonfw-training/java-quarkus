@@ -2,12 +2,18 @@ services:
   ollama:
     image: ollama/ollama:0.30.0-rc28-rocm
     container_name: ollama
+    restart: unless-stopped
+    pull_policy: always
+    tty: true
     ports:
       - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
+      - ./entrypoint.sh:/entrypoint.sh
     networks:
       - quarkus-net
+    entrypoint: [ "/usr/bin/bash", "/entrypoint.sh" ]
+    env_file: "./backend/.env"
 
 volumes:
   ollama_data:

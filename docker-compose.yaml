@@ -36,12 +36,15 @@ services:
     restart: unless-stopped
     pull_policy: always
     tty: true
-    volumes:
-      - ollama_data:/root/.ollama
     ports:
       - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./entrypoint.sh:/entrypoint.sh
     networks:
       - quarkus-net
+    entrypoint: [ "/usr/bin/bash", "/entrypoint.sh" ]
+    env_file: "./backend/.env"
 
   backend:
     build:
