@@ -3,26 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.11.2",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.57",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@hello-pangea/dnd": "^18.0.1",
+    "@mui/icons-material": "^9.1.1",
+    "@mui/lab": "^9.0.0-beta.5",
+    "@mui/material": "^9.1.1",
     "@tailwindcss/vite": "^4.0.14",
     "@types/react-big-calendar": "^1.16.1",
     "darkreader": "^4.9.26",
-    "http-proxy-middleware": "^2.0.6",
+    "http-proxy-middleware": "^4.1.0",
+    "lucide-react": "^1.17.0",
     "keycloak-js": "^25.0.6",
-    "lucide-react": "^0.479.0",
     "moment": "^2.30.1",
-    "react": "^17.0.1",
-    "react-beautiful-dnd": "^13.0.0",
+    "react": "^19.2.7",
     "react-big-calendar": "^1.18.0",
-    "react-dom": "^17.0.1",
+    "react-dom": "^19.2.7",
     "react-flip-move": "^3.0.4",
-    "react-scripts": "^5.0.1",
     "tailwindcss": "^4.0.14",
-    "typescript": "^4.1.3",
-    "uuid": "^7.0.3",
-    "wouter": "^2.7.0"
+    "typescript": "^6.0.3",
+    "uuid": "^14.0.0",
+    "wouter": "^3.10.0"
   },
   "scripts": {
     "start": "vite",
@@ -46,10 +47,9 @@
   },
   "devDependencies": {
     "@types/material-ui": "^0.21.8",
-    "@types/react": "^17.0.1",
-    "@types/react-beautiful-dnd": "^13.0.0",
-    "@types/react-dom": "^17.0.1",
-    "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^6.2.1"
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "vite": "^8.0.16"
   }
 }
