@@ -1,0 +1,4 @@
+# Shell-Skripte und Env-Dateien immer mit LF — sonst brechen
+# entrypoint.sh und Ollama (env_file) durch CRLF-Zeilenenden.
+*.sh text eol=lf
+.env text eol=lf
