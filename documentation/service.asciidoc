@@ -33,6 +33,7 @@ public class TaskService {
 ----
 
 Now create all endpoints required for implementing the todo list application as expected by the frontend. As we're following a design-first approach you must implement the REST endpoints as defined in the OpenAPI specification, which is available in the backend at `+src/main/resources/META-INF/openapi.yaml+`.
+The frontend code is located in ../frontend. The REST calls issued by the frontend are defined in the files todoListProvider.tsx and todoProvider.tsx, which map directly to the backend endpoints described in the OpenAPI specification.
 
 You can view the documentation of our pre-defined API using Swagger UI reachable at http://localhost:8080/q/swagger-ui and use it for testing it manually.
 

@@ -3,7 +3,7 @@ toc::[]
 
 == Setup
 
-Install https://github.com/devonfw/ide[devonfw-ide]:
+Install https://github.com/devonfw/IDEasy[IDEasy]:
 
 * Install https://git-scm.com/downloads[git] if not already installed (download and run installer or run `winget install Git.Git` in PowerShell or CMD)
 * Install https://github.com/devonfw/IDEasy/releases[IDEasy] (see https://github.com/devonfw/IDEasy/issues/1102[#1102] for Windows and https://github.com/devonfw/IDEasy/issues/451[#451] for Mac)
@@ -33,7 +33,15 @@ mvn clean install -DskipTests
 ```
 
 ==== Import into an IDE
-Please choose your favorite IDE:
+
+Please choose your favorite IDE.
+For best support from the trainers we recommend to use IntelliJ.
+
+===== IntelliJ
+
+* Launch IntelliJ via `ide intellij`
+* In your Intellij `Project` view open `java-quarkus` folder and select `pom.xml`.
+* Right-click on it and select `+ Add as maven project`
 
 ===== Import into IntelliJ
 
@@ -56,9 +64,9 @@ Next, we import the new `backend` project into our Eclipse IDE:
 * Open http://localhost:8080/ in your browser and you should see the quarkus welcome page of the app.
 
 === Build Frontend
-The frontend is written in react and can be build with yarn. Please go into `frontend` and run `yarn install` on a command line. Please do not use npm.
+The frontend is written in react and can be build with npm. Please go into `frontend` and run `npm install` on a command line.
 
-When the build was successful and the backand is running, too, you can start the frontend by running `yarn start` in the same directory.
+When the build was successful and the backend is running, too, you can start the frontend by running `npm start` in the same directory.
 
 The frontend is reachable under http://localhost:3000/. You can append the id of the list you want to load, default is 1: http://localhost:3000/1.
 
