@@ -6,18 +6,17 @@ toc::[]
 Install https://github.com/devonfw/IDEasy[IDEasy]:
 
 * Install https://git-scm.com/downloads[git] if not already installed (download and run installer or run `winget install Git.Git` in PowerShell or CMD)
-* *If you use Windows, please download Windows MSI for IDEasy installation.*
-+
-Download and install IDEasy from https://github.com/devonfw/IDEasy/releases[here]. The Windows MSI file is not yet signed so you have to select `More info` (see bug https://github.com/devonfw/IDEasy/issues/1102[#1102]).
-* Open git-bash and run the following command:
+* Install https://github.com/devonfw/IDEasy/releases[IDEasy] (see https://github.com/devonfw/IDEasy/issues/1102[#1102] for Windows and https://github.com/devonfw/IDEasy/issues/451[#451] for Mac)
+* Run the following command in your terminal (git-bash):
 +
 ```
-ide create java-quarkus https://github.com/devonfw-training/java-quarkus-settings.git
+ide create java-quarkus https://github.com/devonfw-training/java-quarkus-settings.git#main
 ```
 * Wait until the setup process has completed.
 * If you do not have already Docker Desktop or Rancher Desktop installed, you should do so by running in Git-Bash the command:
 +
 ```
+icd -p java-quarkus
 ide install docker
 ```
 
@@ -25,14 +24,13 @@ ide install docker
 
 Now we build our application `backend`:
 
-* Go to folder `workspaces/main/java-quarkus/` in `java-quarkus`.
-* In Windows-Explorer right-click it and select `Git Bash Here`.
-* In the git-bash at this folder run the following command:
+* Run the following command in your termianl (git-bash):
 +
-[source,commandline]
-----
+```
+icd -p java-quarkus -w main
+cd java-quarkus
 mvn clean install -DskipTests
-----
+```
 
 ==== Import into an IDE
 
@@ -42,6 +40,12 @@ For best support from the trainers we recommend to use IntelliJ.
 ===== IntelliJ
 
 * Launch IntelliJ via `ide intellij`
+* In your Intellij `Project` view open `java-quarkus` folder and select `pom.xml`.
+* Right-click on it and select `+ Add as maven project`
+
+===== Import into IntelliJ
+
+* `ide intellij`
 * In your Intellij `Project` view open `java-quarkus` folder and select `pom.xml`.
 * Right-click on it and select `+ Add as maven project`
 
@@ -67,4 +71,5 @@ When the build was successful and the backend is running, too, you can start the
 The frontend is reachable under http://localhost:3000/. You can append the id of the list you want to load, default is 1: http://localhost:3000/1.
 
 === Links
+
 * https://github.com/devonfw/IDEasy[IDEasy]
