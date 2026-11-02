@@ -12,7 +12,7 @@ Install https://github.com/devonfw/IDEasy[IDEasy]:
 ```
 ide create java-quarkus https://github.com/devonfw-training/java-quarkus-settings.git#main
 ```
-* wait until the setup process has completed.
+* Wait until the setup process has completed.
 * If you do not have already Docker Desktop or Rancher Desktop installed, you should do so by running in Git-Bash the command:
 +
 ```
