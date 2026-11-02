@@ -12,4 +12,5 @@ Agenda for exercises:
 * link:documentation/docker-compose.asciidoc[docker-compose]
 * link:documentation/inter-service-communication.adoc[inter-service communication]
 * link:documentation/fault-tolerance.adoc[fault tolerance]
+* link:documentation/access-control.adoc[access-control]
 * link:documentation/openapi.adoc[OpenAPI]
