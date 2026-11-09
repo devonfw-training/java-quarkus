@@ -8,6 +8,7 @@ import io.quarkus.test.InjectMock;
 import jakarta.inject.Inject;
 
 import org.assertj.core.api.BDDAssertions;
+import org.example.app.general.common.security.ApplicationAccessControlConfig;
 import org.example.app.task.common.TaskItemEto;
 import org.example.app.task.dataaccess.TaskItemEntity;
 import org.example.app.task.dataaccess.TaskItemRepository;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 
 import java.util.List;
 
@@ -22,6 +24,7 @@ import java.util.List;
  * Test of {@link UcAddRandomActivityTaskItem}
  */
 @QuarkusTest
+@TestSecurity(user = "writer", roles = { ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM })
 class UcAddRandomTaskItemTest {
 
   @Inject

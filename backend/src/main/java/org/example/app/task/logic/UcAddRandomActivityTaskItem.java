@@ -1,11 +1,13 @@
 package org.example.app.task.logic;
 
 import java.util.List;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.transaction.Transactional;
 
+import org.example.app.general.common.security.ApplicationAccessControlConfig;
 import org.example.app.task.common.TaskItemEto;
 import org.example.app.task.dataaccess.TaskItemEntity;
 import org.example.app.task.dataaccess.TaskItemRepository;
@@ -35,6 +37,7 @@ public class UcAddRandomActivityTaskItem {
    *     {@link org.example.app.task.dataaccess.TaskListEntity} for which to add a random task.
    * @return the {@link TaskItemEntity#getId() primary key} of the newly added {@link TaskItemEntity}.
    */
+  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM)
   public Long addRandom(Long taskListId) {
 
     TaskItemEntity entity = new TaskItemEntity();
@@ -52,6 +55,7 @@ public class UcAddRandomActivityTaskItem {
    *     {@link org.example.app.task.dataaccess.TaskListEntity} to which random tasks will be added.
    * @param listTitle the title of the task list
    */
+  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM)
   public void addMultipleRandom(Long taskListId, String listTitle) {
     List<TaskItemEto> taskItems = this.activityService.getMultipleRandomActivities(listTitle);
 
@@ -72,6 +76,7 @@ public class UcAddRandomActivityTaskItem {
    *     {@link org.example.app.task.dataaccess.TaskListEntity} to which the extracted ingredients will be added as tasks.
    * @param recipe the recipe from which to extract ingredients.
    */
+  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM)
   public void addExtractedIngredients(Long taskListId, String recipe) {
     List<TaskItemEto> ingredients = this.activityService.getExtractedIngredients(recipe);
 

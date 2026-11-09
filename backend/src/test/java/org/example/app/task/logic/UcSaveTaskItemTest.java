@@ -5,10 +5,14 @@ import java.time.LocalDateTime;
 import jakarta.inject.Inject;
 
 import org.assertj.core.api.Assertions;
+import org.example.app.general.common.security.ApplicationAccessControlConfig;
 import org.example.app.task.common.TaskItemEto;
 import org.junit.jupiter.api.Test;
 
+import io.quarkus.security.ForbiddenException;
+import io.quarkus.security.UnauthorizedException;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 
 /**
  * Test of {@link UcSaveTaskItem}.
@@ -23,6 +27,7 @@ class UcSaveTaskItemTest extends Assertions {
   UcSaveTaskItem ucSaveTaskItem;
 
   @Test
+  @TestSecurity(user = "writer", roles = { ApplicationAccessControlConfig.PERMISSION_FIND_TASK_ITEM, ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM })
   void saveTaskItem() {
 
     TaskItemEto item = this.ucFindTaskItem.findById(11L);
@@ -46,6 +51,7 @@ class UcSaveTaskItemTest extends Assertions {
    * again fails with an optimistic locking exception.
    */
   @Test
+  @TestSecurity(user = "writer", roles = { ApplicationAccessControlConfig.PERMISSION_FIND_TASK_ITEM, ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM })
   void saveTaskItemReturnsNewVersionAndCanBeSavedAgain() {
 
     TaskItemEto item = this.ucFindTaskItem.findById(12L);
@@ -67,6 +73,7 @@ class UcSaveTaskItemTest extends Assertions {
    * survive the database, and it has to be different from a real time at midnight.
    */
   @Test
+  @TestSecurity(user = "writer", roles = { ApplicationAccessControlConfig.PERMISSION_FIND_TASK_ITEM, ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM })
   void saveTaskItemKeepsMillisecondOfDeadline() {
 
     LocalDateTime dateWithoutTime = LocalDateTime.of(2026, 11, 23, 0, 0, 0, 1_000_000);
@@ -87,6 +94,21 @@ class UcSaveTaskItemTest extends Assertions {
     // restore the original state for the other tests
     item3.setDeadline(null);
     this.ucSaveTaskItem.save(item3);
+  }
+
+  @Test
+  @TestSecurity(user = "reader", roles = { ApplicationAccessControlConfig.PERMISSION_FIND_TASK_ITEM })
+  void saveTaskItemIsForbiddenWithoutSavePermission() {
+
+    TaskItemEto item = this.ucFindTaskItem.findById(11L);
+
+    assertThatThrownBy(() -> this.ucSaveTaskItem.save(item)).isInstanceOf(ForbiddenException.class);
+  }
+
+  @Test
+  void saveTaskItemIsRejectedForAnonymousUser() {
+
+    assertThatThrownBy(() -> this.ucSaveTaskItem.save(new TaskItemEto())).isInstanceOf(UnauthorizedException.class);
   }
 
 }
