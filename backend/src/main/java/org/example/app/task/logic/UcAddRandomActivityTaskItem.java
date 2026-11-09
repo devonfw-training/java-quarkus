@@ -1,13 +1,11 @@
 package org.example.app.task.logic;
 
 import java.util.List;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.transaction.Transactional;
 
-import org.example.app.general.common.security.ApplicationAccessControlConfig;
 import org.example.app.task.common.TaskItemEto;
 import org.example.app.task.dataaccess.TaskItemEntity;
 import org.example.app.task.dataaccess.TaskItemRepository;
@@ -37,7 +35,6 @@ public class UcAddRandomActivityTaskItem {
    *     {@link org.example.app.task.dataaccess.TaskListEntity} for which to add a random task.
    * @return the {@link TaskItemEntity#getId() primary key} of the newly added {@link TaskItemEntity}.
    */
-  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM)
   public Long addRandom(Long taskListId) {
 
     TaskItemEntity entity = new TaskItemEntity();

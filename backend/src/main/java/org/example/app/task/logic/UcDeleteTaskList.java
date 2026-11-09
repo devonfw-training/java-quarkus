@@ -1,12 +1,10 @@
 package org.example.app.task.logic;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.transaction.Transactional;
 
-import org.example.app.general.common.security.ApplicationAccessControlConfig;
 import org.example.app.task.common.TaskListEto;
 import org.example.app.task.dataaccess.TaskListRepository;
 import org.slf4j.Logger;
@@ -29,7 +27,6 @@ public class UcDeleteTaskList {
    * @param id the {@link org.example.app.task.dataaccess.TaskListEntity#getId() primary key} of the {@link org.example.app.task.dataaccess.TaskListEntity}
    *     to delete.
    */
-  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_DELETE_TASK_ITEM)
   public void delete(Long id) {
 
     this.taskListRepository.deleteById(id);
@@ -38,7 +35,6 @@ public class UcDeleteTaskList {
   /**
    * @param list the {@link TaskListEto} to delete.
    */
-  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_DELETE_TASK_ITEM)
   public void delete(TaskListEto list) {
 
     Long id = list.getId();

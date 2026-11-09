@@ -3,12 +3,10 @@ package org.example.app.task.logic;
 import jakarta.inject.Inject;
 
 import org.assertj.core.api.Assertions;
-import org.example.app.general.common.security.ApplicationAccessControlConfig;
 import org.example.app.task.common.TaskItemEto;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.security.TestSecurity;
 
 /**
  * Test of {@link UcSaveTaskItem}.
@@ -23,7 +21,6 @@ class UcSaveTaskItemTest extends Assertions {
   UcSaveTaskItem ucSaveTaskItem;
 
   @Test
-  @TestSecurity(user = "writer", roles = { ApplicationAccessControlConfig.PERMISSION_FIND_TASK_ITEM, ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM })
   void saveTaskItem() {
 
     TaskItemEto item = this.ucFindTaskItem.findById(11L);

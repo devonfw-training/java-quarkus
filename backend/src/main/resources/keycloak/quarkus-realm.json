@@ -1,6 +1,7 @@
 {
   "realm": "quarkus",
   "enabled": true,
+  "accessTokenLifespan": 120,
   "clients": [
     {
       "clientId": "frontend",
@@ -24,9 +25,7 @@
         "post.logout.redirect.uris": "http://localhost:5173/*,http://localhost:8082/*",
         "pkce.code.challenge.method": "S256"
       },
-      "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
-      "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": false,
       "frontchannelLogout": true
     },
@@ -42,7 +41,7 @@
       ],
       "publicClient": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "0239ZYwgcE6Z85xRbczhXFnGbuPZyf8x",
+      "secret": "secret",
       "directAccessGrantsEnabled": true,
       "implicitFlowEnabled": false,
       "webOrigins": [

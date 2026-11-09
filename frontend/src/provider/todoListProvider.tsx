@@ -4,6 +4,7 @@ import { useLocation } from "wouter";
 import { TaskListTypeI } from "../types/types";
 import { MainContext } from "./mainProvider";
 import { keycloak } from "../auth/keycloak";
+import { errorAlertMessage } from "../auth/httpErrors";
 
 export const TodoListContext = createContext<TodoListInterfaceI | null>(null);
 
@@ -50,7 +51,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
 
                 if (!response.ok) {
                     console.error("Fehler beim Laden der Listen:", response.status);
-                    setErrorAlert("List could not be loaded!");
+                    setErrorAlert(errorAlertMessage(response.status, "List could not be loaded!"));
                     return;
                 }
 
@@ -80,7 +81,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
 
             if (!response.ok) {
                 console.error("Fehler beim Laden der Listen:", response.status);
-                setErrorAlert("List could not be loaded!");
+                setErrorAlert(errorAlertMessage(response.status, "List could not be loaded!"));
                 return;
             }
 
@@ -112,7 +113,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
 
             if (!response.ok) {
                 console.error("Fehler beim Erzeugen der zufälligen Liste:", response.status);
-                setErrorAlert("List could not be loaded!");
+                setErrorAlert(errorAlertMessage(response.status, "List could not be loaded!"));
                 return;
             }
 
@@ -154,7 +155,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
 
             if (!response.ok) {
                 console.error("Fehler beim Bearbeiten der Todo-Liste:", response.status);
-                setErrorAlert("Todo List could not be saved!");
+                setErrorAlert(errorAlertMessage(response.status, "Todo List could not be saved!"));
                 return;
             }
 
@@ -203,7 +204,7 @@ export const TodoListProvider = ({ children }: PropsI) => {
 
             if (!response.ok) {
                 console.error("Fehler beim Erstellen der Liste:", response.status);
-                setErrorAlert("List could not be created!");
+                setErrorAlert(errorAlertMessage(response.status, "List could not be created!"));
                 return;
             }
 
@@ -233,14 +234,9 @@ export const TodoListProvider = ({ children }: PropsI) => {
                 headers: authHeaders(),
             });
 
-            if (response.status === 403) {
-                setErrorAlert("List could not be deleted (No permissions)!");
-                return;
-            }
-
             if (!response.ok) {
                 console.error("Fehler beim Löschen der Liste:", response.status);
-                setErrorAlert("List could not be deleted!");
+                setErrorAlert(errorAlertMessage(response.status, "List could not be deleted!"));
                 return;
             }
 

@@ -33,11 +33,19 @@ class TaskServiceIT {
 
     private Integer taskItemId;
 
+    /** Access token of a user that is allowed to do everything (user "manager" of the Keycloak test realm). */
+    private String token;
+
+    @BeforeAll
+    void fetchAccessToken() {
+        this.token = KeycloakTokenProvider.getAccessTokenOfManager();
+    }
+
     @Test
     @Order(1)
     void shouldAllowCreatingANewTaskList() {
 
-        Response response = given().when()
+        Response response = given().auth().oauth2(this.token).when()
                 .body("{ \"title\": \"Shopping List\" }").contentType(ContentType.JSON)
                 .post("/task/list");
         response.then().statusCode(201).header("Location", not(emptyString()));
@@ -49,7 +57,7 @@ class TaskServiceIT {
     @Order(2)
     void shouldAllowAddingATaskToATaskList() {
 
-        Response response = given().when().body("{ \"title\": \"Buy Milk\", \"taskListId\": " + this.taskListId + " }")
+        Response response = given().auth().oauth2(this.token).when().body("{ \"title\": \"Buy Milk\", \"taskListId\": " + this.taskListId + " }")
                 .contentType(ContentType.JSON).post("/task/item");
 
         response.then().statusCode(201).header("Location", not(emptyString()));
@@ -61,7 +69,7 @@ class TaskServiceIT {
     @Order(3)
     void shouldAllowRetrievingATaskListWithTaskItems() {
 
-        given().when().get("/task/list-with-items/{taskListId}", this.taskListId).then().statusCode(200)
+        given().auth().oauth2(this.token).when().get("/task/list-with-items/{taskListId}", this.taskListId).then().statusCode(200)
                 .body("list.title", Matchers.equalTo("Shopping List")).and().body("list.id",
                         Matchers.equalTo(this.taskListId))
                 .and().body("items[0].title", Matchers.equalTo("Buy Milk"));
@@ -71,9 +79,9 @@ class TaskServiceIT {
     @Order(4)
     void shouldAllowDeletingATaskListCompletely() {
 
-        given().when().delete("/task/list/{taskListId}", this.taskListId).then().statusCode(204);
-        given().when().get("/task/list/{taskListId}", this.taskListId).then().statusCode(404);
-        given().when().get("/task/item/{itemId}", this.taskItemId).then().statusCode(404);
+        given().auth().oauth2(this.token).when().delete("/task/list/{taskListId}", this.taskListId).then().statusCode(204);
+        given().auth().oauth2(this.token).when().get("/task/list/{taskListId}", this.taskListId).then().statusCode(404);
+        given().auth().oauth2(this.token).when().get("/task/item/{itemId}", this.taskItemId).then().statusCode(404);
 
     }
 }

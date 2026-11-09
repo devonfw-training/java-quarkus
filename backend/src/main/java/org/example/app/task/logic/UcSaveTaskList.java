@@ -1,12 +1,10 @@
 package org.example.app.task.logic;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.transaction.Transactional;
 
-import org.example.app.general.common.security.ApplicationAccessControlConfig;
 import org.example.app.task.common.TaskListEto;
 import org.example.app.task.dataaccess.TaskListEntity;
 import org.example.app.task.dataaccess.TaskListRepository;
@@ -29,7 +27,6 @@ public class UcSaveTaskList {
    * @param list the {@link TaskListEto} to save.
    * @return the {@link TaskListEntity#getId() primary key} of the saved {@link TaskListEntity}.
    */
-  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_LIST)
   public TaskListEto save(TaskListEto list) {
 
     TaskListEntity entity = this.taskListMapper.toEntity(list);
