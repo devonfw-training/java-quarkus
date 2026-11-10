@@ -85,7 +85,8 @@ Also test that a user without the required permission is rejected (`io.quarkus.s
 
 ==== Manual Testing
 
-Start the application and the frontend and log in with the different test users from above.
+Start the application in dev mode as described in the link:setup.asciidoc[setup] (database and Keycloak containers running; the frontend is delivered by the backend), open http://localhost:8080/ and log in with the different test users from above.
+To log in as another user, log out first with the `LOGOUT` button.
 Verify that each user can access only the functionality assigned to their role and that unauthorized actions are denied.
 The web application shows a message if the backend refuses an action because of missing permissions.
 

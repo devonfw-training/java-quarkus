@@ -16,16 +16,25 @@ You can test this now with the Swagger UI. After calling the endpoint for a give
 See the code snippets below for suggestions on how to implement the new REST API and use case.
 
 === Interaction with Ollama
-Verify that the Ollama container which you started with `docker-compose up` is still running. Connect to its terminal and verify with the following commands that everything is running fine:
+Start the Ollama container in the top-level folder of the project (see link:setup.asciidoc[setup]; database and Keycloak should be running, too):
+
+[source, bash]
+----
+docker compose -f docker-compose.ollama.yaml up -d
+docker compose -f docker-compose.ollama.yaml logs -f ollama
+----
+
+The container downloads the AI model on its first start, which can take several minutes (leave the log with `[Ctrl][c]`, the container keeps running).
+The model and its keep-alive time are configured in `backend/.env`; the models are stored in the Docker volume `ollama_data`.
+
+Open a terminal in the container (`docker exec -it ollama bash`) and verify with the following commands that everything is running fine:
 
 * `ollama list` -> shows a list of available models (i.e. `llama3.2:latest`)
 * `ollama ps` -> shows the currently running models (i.e. `llama3.2:latest`)
 
-You might notice, that there are no models available or the container is not even running. Look at the logs from
-`docker compose up` - can you spot the issue?
+You might notice, that there are no models available or the container is not even running. Look at the logs of the container - can you spot the issue?
 
-You can provide a model by placing it under `~/root/.ollama/models` on your host, that is then mapped into the
-container.
+You can download a model manually inside the container with `ollama pull llama3.2`.
 
 In case the model is still not running anymore, you can start it by
 [source, bash]
@@ -74,7 +83,9 @@ Implement two types of tests for the use case:
 1. Add a test for the use case which mocks the REST client and checks the use case logic. You may want to use `+InjectMock+`.
 2. Add a test which tests the integration with the REST API. For this stub the Ollama API with WireMock on network level. The communication should be transparently handled by WireMock and the test must not talk to the real service. Refer to the relevant Quarkus guide linked below.
 +
-_Note:_ The port for WireMock needs to be set to `11343` since this is the port which is otherwise used by the Ollama container and the generated REST client.
+_Note:_ The port for WireMock needs to be set to `11434` since this is the port which the generated REST client calls (`quarkus.rest-client.ollama_api_yaml.uri` in `application.properties`) and which is otherwise used by the Ollama container.
+Therefore, *stop the Ollama container* before you run this test (`docker compose -f docker-compose.ollama.yaml stop`), otherwise the port is occupied.
+For running tests in general see the link:setup.asciidoc#_run_the_tests[setup].
 
 === Code Snippets (hints)
 

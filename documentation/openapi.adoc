@@ -5,14 +5,15 @@ toc::[]
 
 In this chapter we are going to generate a OpenAPI specification for our REST API using a code-first approach.
 
-When running the application in dev mode you can reach the Swagger UI at http://localhost:8080/q/swagger-ui which allows you to browse and interact with the REST API.
+When running the application in dev mode (see link:setup.asciidoc[setup]) you can reach the Swagger UI at http://localhost:8080/q/swagger-ui which allows you to browse and interact with the REST API.
 The descriptions are automatically generated based on a OpenAPI specification of the service which we have pre-defined and added to the service (design-first).
+The paths in it start with `/api`, as the whole REST API is served below this path (`quarkus.rest.path=/api` in `application.properties`).
 
 === Remove existing OpenAPI specification
 
-Delete the existing openapi.yml file in your backend service at `+/src/main/resources+`. You may also want to keep a backup for later review. 
+Delete the existing `openapi.yaml` file in your backend service at `+src/main/resources/META-INF+`. You may also want to keep a backup for later review (outside of the `src` folder).
 
-Restart the application and check the Swagger UI. What do you see?
+The running application picks up the change automatically (dev mode); reload the Swagger UI. What do you see?
 
 === Add basic information
 
