@@ -89,7 +89,7 @@ class TaskServiceIT {
     @Order(5)
     void shouldAllowReaderToFindTaskLists() {
 
-        given().auth().oauth2(KeycloakTokenProvider.getAccessTokenOfReader()).when().get("/task/lists").then()
+        given().auth().oauth2(KeycloakTokenProvider.getAccessTokenOfReader()).when().get("/api/task/lists").then()
                 .statusCode(200);
     }
 
@@ -98,7 +98,7 @@ class TaskServiceIT {
     void shouldForbidReaderToCreateTaskList() {
 
         given().auth().oauth2(KeycloakTokenProvider.getAccessTokenOfReader()).when()
-                .body("{ \"title\": \"Not allowed\" }").contentType(ContentType.JSON).post("/task/list").then()
+                .body("{ \"title\": \"Not allowed\" }").contentType(ContentType.JSON).post("/api/task/list").then()
                 .statusCode(403);
     }
 
@@ -108,26 +108,26 @@ class TaskServiceIT {
 
         String writerToken = KeycloakTokenProvider.getAccessTokenOfWriter();
         Response response = given().auth().oauth2(writerToken).when().body("{ \"title\": \"Writers list\" }")
-                .contentType(ContentType.JSON).post("/task/list");
+                .contentType(ContentType.JSON).post("/api/task/list");
         response.then().statusCode(201);
         Integer id = Integer.parseInt(response.header("Location").replaceAll(".*?/task/list/", ""));
 
-        given().auth().oauth2(writerToken).when().delete("/task/list/{id}", id).then().statusCode(403);
-        given().auth().oauth2(this.token).when().delete("/task/list/{id}", id).then().statusCode(204);
+        given().auth().oauth2(writerToken).when().delete("/api/task/list/{id}", id).then().statusCode(403);
+        given().auth().oauth2(this.token).when().delete("/api/task/list/{id}", id).then().statusCode(204);
     }
 
     @Test
     @Order(8)
     void shouldRejectRequestWithoutToken() {
 
-        given().when().get("/task/lists").then().statusCode(401);
+        given().when().get("/api/task/lists").then().statusCode(401);
     }
 
     @Test
     @Order(9)
     void shouldRejectRequestWithInvalidToken() {
 
-        given().auth().oauth2("not-a-valid-token").when().get("/task/lists").then().statusCode(401);
+        given().auth().oauth2("not-a-valid-token").when().get("/api/task/lists").then().statusCode(401);
     }
 
     @Test
@@ -135,7 +135,7 @@ class TaskServiceIT {
     void shouldProvideLogoutUrlOfKeycloakForAuthenticatedUser() {
 
         given().auth().oauth2(this.token).when().body("{ \"idToken\": \"dummy-id-token\" }")
-                .contentType(ContentType.JSON).post("/auth/logout").then().statusCode(200)
+                .contentType(ContentType.JSON).post("/api/auth/logout").then().statusCode(200)
                 .body("logoutUrl", Matchers.containsString("/protocol/openid-connect/logout"))
                 .body("logoutUrl", Matchers.containsString("client_id=frontend"))
                 .body("logoutUrl", Matchers.containsString("id_token_hint=dummy-id-token"));
@@ -145,6 +145,6 @@ class TaskServiceIT {
     @Order(11)
     void shouldRejectLogoutWithoutToken() {
 
-        given().when().body("{}").contentType(ContentType.JSON).post("/auth/logout").then().statusCode(401);
+        given().when().body("{}").contentType(ContentType.JSON).post("/api/auth/logout").then().statusCode(401);
     }
 }
