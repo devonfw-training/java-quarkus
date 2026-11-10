@@ -16,11 +16,11 @@ After a successful login the frontend receives a signed access token (JWT) and s
 * The backend does not know any passwords and does not have a session.
 It uses the `quarkus-oidc` extension that validates the token of every request (signature, issuer and expiry) and turns the roles contained in the token into the roles of the current user.
 This is configured in `backend/src/main/resources/application.properties`.
-* Keycloak is started for you:
-** in dev mode (`mvn quarkus:dev` in the `backend` folder) by Quarkus Dev Services.
-** with docker compose (see link:docker-compose.asciidoc[docker-compose]) as container.
+* Keycloak runs as container of docker compose (see link:docker-compose.asciidoc[docker-compose]) on port `8180`, both when you start the backend in dev mode (`mvn quarkus:dev` in the `backend` folder) and when the whole landscape runs in containers.
+Start it together with the database: `docker compose -f docker-compose.db.yaml -f docker-compose.auth.yaml up -d`
 +
-NOTE: Use one of them, not both at the same time, as they use the same port `8180`.
+NOTE: Only the automated tests start their own Keycloak (Quarkus Dev Services) on the same port `8180`.
+Stop the Keycloak container before you run them.
 * The realm of Keycloak is defined in `backend/src/main/resources/keycloak/quarkus-realm.json` and imported on startup.
 Every permission of our application (see `ApplicationAccessControlConfig`) exists as a role in this realm.
 

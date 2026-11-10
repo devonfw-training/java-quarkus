@@ -99,8 +99,8 @@ Keycloak is an open source identity and access management solution which mainly 
 * Navigate to users > view all users. Here you can see the test users `reader`, `writer` and `manager`, and in "Realm roles" the permissions of our application.
 * See link:access-control.asciidoc[access-control] for how our application uses this.
 
-NOTE: When you run the backend in dev mode (`mvn quarkus:dev`), Quarkus starts its own keycloak on the same port `8180`.
-Stop the keycloak container of docker compose in this case.
+NOTE: When you run the backend in dev mode (`mvn quarkus:dev`), it uses the postgres and keycloak containers of docker compose (`docker compose -f docker-compose.db.yaml -f docker-compose.auth.yaml up -d`) and serves the frontend on http://localhost:8080/ (the REST API is available under `/api`).
+Only the automated tests start their own keycloak (Quarkus Dev Services) on port `8180`, so stop the keycloak container before running them.
 
 ===== Stop services with Docker compose
 
