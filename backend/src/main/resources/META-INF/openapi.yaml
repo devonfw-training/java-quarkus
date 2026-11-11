@@ -215,7 +215,7 @@ components:
         deadline:
           allOf:
           - $ref: '#/components/schemas/LocalDateTime'
-          - description: Until when the task must be completed
+          - description: Until when the task must be completed. A time of 00:00:00.001 means a date without a time, 00:00:00 is midnight
     TaskList:
       description: Object that represents a task list
       required:

@@ -1,5 +1,7 @@
 package org.example.app.task.logic;
 
+import java.time.LocalDateTime;
+
 import jakarta.inject.Inject;
 
 import org.assertj.core.api.Assertions;
@@ -58,6 +60,33 @@ class UcSaveTaskItemTest extends Assertions {
     saved.setStarred(starred);
     TaskItemEto saved2 = this.ucSaveTaskItem.save(saved);
     assertThat(saved2.getVersion()).isEqualTo(version + 2);
+  }
+
+  /**
+   * A deadline of {@code 00:00:00.001} marks a date without a time (see {@link org.example.app.task.common.TaskItem#getDeadline()}), so the millisecond has to
+   * survive the database, and it has to be different from a real time at midnight.
+   */
+  @Test
+  void saveTaskItemKeepsMillisecondOfDeadline() {
+
+    LocalDateTime dateWithoutTime = LocalDateTime.of(2026, 11, 23, 0, 0, 0, 1_000_000);
+    LocalDateTime midnight = LocalDateTime.of(2026, 11, 23, 0, 0);
+    TaskItemEto item = this.ucFindTaskItem.findById(13L);
+    assertThat(item.getDeadline()).isNull();
+
+    item.setDeadline(dateWithoutTime);
+    this.ucSaveTaskItem.save(item);
+    TaskItemEto item2 = this.ucFindTaskItem.findById(13L);
+    assertThat(item2.getDeadline()).isEqualTo(dateWithoutTime);
+
+    item2.setDeadline(midnight);
+    this.ucSaveTaskItem.save(item2);
+    TaskItemEto item3 = this.ucFindTaskItem.findById(13L);
+    assertThat(item3.getDeadline()).isEqualTo(midnight).isNotEqualTo(dateWithoutTime);
+
+    // restore the original state for the other tests
+    item3.setDeadline(null);
+    this.ucSaveTaskItem.save(item3);
   }
 
 }

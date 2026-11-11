@@ -30,7 +30,7 @@ public class TaskItemEto extends AbstractEto implements TaskItem {
   @Schema(required = true, example = "1", description = "The id of the task list to which this item belongs")
   private Long taskListId;
 
-  @Schema(required = false, description = "Until when the task must be completed")
+  @Schema(required = false, description = "Until when the task must be completed. A time of 00:00:00.001 means a date without a time, 00:00:00 is midnight")
   private LocalDateTime deadline;
 
   @Override

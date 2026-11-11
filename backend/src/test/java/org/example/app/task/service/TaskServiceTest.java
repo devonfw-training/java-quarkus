@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -264,6 +265,18 @@ class TaskServiceTest extends Assertions {
       }
 
       @Test
+      void shouldKeepMillisecondOfDeadlineWhenSavingTaskItem() {
+        given(TaskServiceTest.this.saveTaskItem.save(Mockito.any())).willReturn(TaskItemMother.complete());
+
+        given().when().body("{ \"title\": \"Buy Milk\", \"taskListId\": 123, \"deadline\": \"2026-11-23T00:00:00.001\" }")
+                .contentType(ContentType.JSON).post("/api/task/item").then().statusCode(201);
+
+        ArgumentCaptor<TaskItemEto> taskItemCaptor = ArgumentCaptor.forClass(TaskItemEto.class);
+        then(TaskServiceTest.this.saveTaskItem).should().save(taskItemCaptor.capture());
+        BDDAssertions.then(taskItemCaptor.getValue().getDeadline()).isEqualTo(LocalDateTime.of(2026, 11, 23, 0, 0, 0, 1_000_000));
+      }
+
+      @Test
       void shouldFailWith400AndValidationErrorWhenTitleIsEmpty() {
 
         given().when().body("{ \"title\": \"\", \"taskListId\": 123 }").contentType(ContentType.JSON)
@@ -295,6 +308,26 @@ class TaskServiceTest extends Assertions {
 
           given().when().get("/api/task/item/42").then().statusCode(200).body(jsonEquals(
               "{\"id\":42,\"version\":1,\"completed\":false,\"starred\":false,\"taskListId\":123,\"title\":\"Buy Eggs\"}"));
+        }
+
+        @Test
+        void shouldReturnDeadlineWithMillisecondWhenItemHasDateWithoutTime() {
+
+          TaskItemEto item = TaskItemMother.complete();
+          item.setDeadline(LocalDateTime.of(2026, 11, 23, 0, 0, 0, 1_000_000));
+          given(TaskServiceTest.this.findTaskItem.findById(anyLong())).willReturn(item);
+
+          given().when().get("/api/task/item/42").then().statusCode(200).body("deadline", is("2026-11-23T00:00:00.001"));
+        }
+
+        @Test
+        void shouldReturnDeadlineWithoutMillisecondWhenItemHasTimeAtMidnight() {
+
+          TaskItemEto item = TaskItemMother.complete();
+          item.setDeadline(LocalDateTime.of(2026, 11, 23, 0, 0));
+          given(TaskServiceTest.this.findTaskItem.findById(anyLong())).willReturn(item);
+
+          given().when().get("/api/task/item/42").then().statusCode(200).body("deadline", is("2026-11-23T00:00:00"));
         }
 
         @Test

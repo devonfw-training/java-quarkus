@@ -40,7 +40,8 @@ public interface TaskItem extends ApplicationEntity {
   void setStarred(boolean starred);
 
   /**
-   * @return the deadline as until this task shall be {@link #isCompleted() completed}.
+   * @return the deadline as until this task shall be {@link #isCompleted() completed}. A deadline with the time {@code 00:00:00.001} (midnight plus one
+   *         millisecond) means a date without a time, while {@code 00:00:00} is a real time at midnight.
    */
   LocalDateTime getDeadline();
 
