@@ -43,9 +43,9 @@ Observe the changes in Swagger UI. Look up what each parameter does in the docum
 
 Now we want to add further information about the available operations, their input and output data formats and descriptions to our REST API.
 
-Refer to the Quarkus Guide and MicroProfile OpenAPI specification (see below) and start annotating the REST API service methods (JAX-RS class/interface) and your ETOs. You may want to refer to the OpenAPI specification which you removed (and hopefully backed up) to get inspiration on what you could and should describe. Here you can find examples of usage for key annotations `+@Operation+`, `+@APIResponse+`, `+@Parameter+`: https://download.eclipse.org/microprofile/microprofile-open-api-3.0/microprofile-openapi-spec-3.0.html#_detailed_usage_of_key_annotations
+Refer to the Quarkus Guide and MicroProfile OpenAPI specification (see below) and start annotating the REST API service methods (JAX-RS class/interface) and your ETOs. You may want to refer to the OpenAPI specification which you removed (and hopefully backed up) to get inspiration on what you could and should describe. Examples of usage for the key annotations `+@Operation+`, `+@APIResponse+` and `+@Parameter+` can be found in the guides linked below.
 
 === Links
 
-- https://download.eclipse.org/microprofile/microprofile-open-api-3.0/microprofile-openapi-spec-3.0.html
+- https://github.com/microprofile/microprofile-open-api[MicroProfile OpenAPI specification]
 - https://quarkus.io/guides/openapi-swaggerui

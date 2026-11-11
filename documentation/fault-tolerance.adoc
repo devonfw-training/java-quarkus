@@ -11,9 +11,9 @@ When the REST client cannot get a response from Ollama (in time) instead of thro
 
 To achieve such as behavior we need to wrap our method which calls Ollama via our MicroProfile REST client with the necessary annotations from the MicroProfile Fault Tolerance API. Check the Quarkus guide linked below for some ideas.
 
-Again you can test this with Swagger UI (see link:setup.asciidoc[setup]), while the Ollama container is stopped: `docker compose -f docker-compose.ollama.yaml stop`. Start it again with `docker compose -f docker-compose.ollama.yaml start` to see the normal behavior.
+Again you can test this with Swagger UI (see link:service.asciidoc[service]), while the Ollama container is stopped: `docker compose -f docker-compose.ollama.yaml stop`. Start it again with `docker compose -f docker-compose.ollama.yaml start` to see the normal behavior.
 
 === Links
 
-- https://download.eclipse.org/microprofile/microprofile-fault-tolerance-4.0.2/microprofile-fault-tolerance-spec-4.0.2.html
+- https://github.com/microprofile/microprofile-fault-tolerance[MicroProfile Fault Tolerance specification]
 - https://quarkus.io/guides/smallrye-fault-tolerance

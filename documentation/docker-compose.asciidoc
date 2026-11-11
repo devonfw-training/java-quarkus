@@ -15,14 +15,14 @@ In this exercise we will launch our application in a container. For this we have
 === Docker Compose
 
 Now, we will containerize our application.
-We will learn how to run docker compose with postgres, our application and keycloak as well how to navigate inside a container.
+We will learn how to run docker compose with Postgres, our application and keycloak as well how to navigate inside a container.
 
 ==== Running with docker
 
 NOTE: The following `docker` commands need to be executed inside the `backend` sub-folder of your `java-quarkus` project.
 However, the `docker compose` commands need to be run directly in the top-level `java-quarkus` project folder.
 
-Familiarize yourself with the structure of `Dockerfile.jvm` and `docker-compose.yaml`
+Familiarize yourself with the structure of `Dockerfile.jvm` and `docker-compose.app.yaml` (`docker-compose.yaml` only includes the other compose files).
 
 Until now you started the application from your IDE in dev mode.
 Now it runs the way it would in production: as a packaged application in a container.
@@ -39,8 +39,8 @@ First create a separate network for the database, Keycloak and the app by runnin
 +
 [source,commandline]
 ----
-docker pull postgres:15.1
-docker run --name myPostgresDb -p 5432:5432 --net=quarkus-net -e POSTGRES_USER=quarkus -e POSTGRES_PASSWORD=quarkus -e POSTGRES_DB=quarkus -d postgres:15.1
+docker pull postgres
+docker run --name myPostgresDb -p 5432:5432 --net=quarkus-net -e POSTGRES_USER=quarkus -e POSTGRES_PASSWORD=quarkus -e POSTGRES_DB=quarkus -d postgres
 ----
 * Start the Keycloak container (in the top-level folder, it is defined in `docker-compose.auth.yaml` and uses the same network):
 +
@@ -81,7 +81,8 @@ You can also start only a part, e.g. the database and keycloak for development i
 Further, a file named `.env` is used to configure environment variables for a docker container managed by docker compose.
 See `backend/.env` for an example.
 
-* Start application by running `docker compose up -d --build`
+* Build the application in the `backend` folder with `mvn package`. The image of the backend is created from the result in `backend/target/quarkus-app` (see `Dockerfile.jvm`), docker compose does not run Maven. Repeat this whenever you changed the code or ran `mvn clean`.
+* Start application by running `docker compose up -d --build` in the top-level folder
 +
 With this command we started container for our backend app, frontend, database, keycloak and ollama.
 These images are defined as services in docker compose.
@@ -93,7 +94,8 @@ Otherwise (without `-d`) your terminal will get blocked and if your enter `[Ctrl
 _Note:_ It will take some minutes until the Ollama AI model is downloaded and finishes to start up.
 The containers are started in parallel, so the backend may restart a few times until the database and keycloak are ready.
 * Open the web application on http://localhost:8082/ and log in with one of the test users (`reader`, `writer` or `manager`, the password is the same as the username).
-The web server of the frontend container forwards the requests below `/api` to the backend container, which has no port of its own on your computer.
+The frontend is not delivered by the backend here, but by a separate container: its image (`frontend/Dockerfile`) contains the built web application and an nginx web server, which is configured in `frontend/nginx.conf`.
+nginx forwards the requests below `/api` to the backend container, which has no port of its own on your computer.
 * To list all build images run `docker compose images`
 * Run this command to see that the containers are up and running `docker compose ps`
 
@@ -137,4 +139,3 @@ If you change the realm file, recreate the container: `docker compose -f docker-
 * https://www.docker.com/
 * https://docs.docker.com/compose/
 * https://rancherdesktop.io/
-* https://docs.docker.com/compose/compose-file/compose-file-v3/[Docker compose 3 reference documentation]

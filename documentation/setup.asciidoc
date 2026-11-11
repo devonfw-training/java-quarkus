@@ -4,27 +4,20 @@ toc::[]
 == Setup
 
 This chapter prepares your workstation for all exercises:
-You install the tools, build the project, start the database and Keycloak and learn how to start, debug and test the application from your IDE.
+You install the tools, build the project, start the database and Keycloak and start the application from your IDE.
 
-=== How the training environment works
+=== The training environment
 
 [options="header",cols="2,3,3"]
 |===
 | Part | Runs as | Reachable at
-| PostgreSQL (database) | Docker container | `localhost:5432`, database, user and password `quarkus`
-| Keycloak (login, users and roles) | Docker container | http://localhost:8180/ (admin console: `admin` / `admin`)
-| Backend (Quarkus) | started by you from the IDE in *dev mode* | http://localhost:8080/ (REST API below `/api`)
-| Frontend (React) | delivered by the backend, you do not start it separately | http://localhost:8080/
+| PostgreSQL (database) | Docker container | `localhost:5432`
+| Keycloak (login) | Docker container | http://localhost:8180/
+| Backend (Quarkus) and frontend (React) | started by you from the IDE in dev mode | http://localhost:8080/
 |===
 
-The containers are only started once.
-How Docker and docker compose work is the topic of the exercise link:docker-compose.asciidoc[docker-compose] later, until then you just use the commands given here.
-
-Log in to the web application with one of the test users (the password is the same as the username): `reader` (only reading), `writer` (reading and writing) and `manager` (reading, writing and deleting).
-
-NOTE: In *dev mode* Quarkus reloads your changes automatically and offers a debugger port and a developer UI.
-Quarkus could also start a database and Keycloak on its own there (*Dev Services*), but we use the containers above, as they keep their data.
-Dev Services are only used by the automated tests (see <<_run_the_tests,Run the tests>>).
+The frontend is delivered by the backend, you do not start it separately.
+Log in to the web application with one of the test users `reader`, `writer` or `manager` (the password is the same as the username).
 
 === Install the tools
 
@@ -57,7 +50,7 @@ mvn clean install -DskipTests
 ```
 +
 All following commands are executed in this folder (the top-level folder of the project), if not stated otherwise.
-The build also builds the frontend and embeds it into the backend, so it needs an internet connection and takes a few minutes the first time.
+The build also builds the frontend and needs an internet connection, so it takes a few minutes the first time.
 
 === Start the database and Keycloak
 
@@ -72,6 +65,7 @@ The first time the images are downloaded, which takes a few minutes.
 With `docker ps` you can check that two containers with `postgres` and `keycloak` in their names are running.
 Do this again after every reboot of your computer.
 To stop the containers use the same command with `stop` instead of `up -d`.
+How docker compose works is the topic of the exercise link:docker-compose.asciidoc[docker-compose].
 
 === Import into an IDE
 
@@ -85,33 +79,25 @@ For best support from the trainers we recommend to use IntelliJ.
 * Right-click on it and select `+ Add as maven project`
 * Wait until IntelliJ has imported the project (progress bar at the bottom right).
 The module `app` appears in the `Project` view.
-* Check that a Java 21 SDK is used: `File` > `Project Structure` > `Project`.
+* Check that a JDK is set as project SDK: `File` > `Project Structure` > `Project`.
 
-===== Start the application in dev mode
+===== Start the application
 
 Make sure the containers are running (see above).
-With IntelliJ IDEA Ultimate and its Quarkus plugin:
+The application is started in dev mode:
 
 * Select the run configuration `Quarkus Dev Mode` (module `app`) at the top right.
 If it does not exist, create it via `Run` > `Edit Configurations...` > `+` > `Quarkus Dev Mode`.
 * Click the green *Run* button, or the *Debug* button (bug icon) to use breakpoints.
-* After a few seconds the `Run` tool window shows `... started in ...s. Listening on: http://localhost:8080` and `Profile dev activated`.
+* After a few seconds the `Run` tool window shows `Listening on: http://localhost:8080` and `Profile dev activated`.
 
-Alternatively (also with IntelliJ Community Edition and on the command line):
-
-* In the `Maven` tool window double-click `app` > `Plugins` > `quarkus` > `quarkus:dev`, or run `mvn quarkus:dev` in the folder `backend`.
-* To debug, create a `Remote JVM Debug` run configuration (`Run` > `Edit Configurations...` > `+`) with host `localhost` and port `5005` and start it with the *Debug* button while the application is running.
+Without the run configuration you can instead double-click `app` > `Plugins` > `quarkus` > `quarkus:dev` in the `Maven` tool window, or run `mvn quarkus:dev` in the folder `backend`.
+To debug in this case, attach a `Remote JVM Debug` run configuration (`Run` > `Edit Configurations...` > `+`) with host `localhost` and port `5005` to the running application.
 
 Then open http://localhost:8080/ and log in with `writer` / `writer`.
-Further URLs: http://localhost:8080/q/swagger-ui (REST API documentation, you can try it) and http://localhost:8080/q/dev-ui (developer UI).
 
-In dev mode:
-
-* Changes of Java code, configuration or resources are applied automatically on the next request (reload the page), you do not need to restart.
-Compile errors are shown in the browser and the console.
-* The development server of the frontend (Vite) is started for you, so changes in `frontend/src` show up immediately. You do not run `npm start` yourself.
-* Stop the application with the red *Stop* button.
-Make sure that no other instance is still running, otherwise port `8080` is occupied.
+Changes of your code are applied automatically on the next request (reload the page), you do not need to restart the application.
+Stop it with the red *Stop* button and make sure that no other instance is still running, otherwise port `8080` is occupied.
 
 ==== Eclipse
 
@@ -127,7 +113,7 @@ Make sure that no other instance is still running, otherwise port `8080` is occu
 
 === Run the tests
 
-Tests do not need the running application and do not use the data of your containers: Quarkus starts its own PostgreSQL and Keycloak for them (Dev Services).
+Tests do not need the running application and do not use the data of your containers: Quarkus starts its own PostgreSQL and Keycloak for them.
 Therefore Docker must be running, but you have to *stop the Keycloak container* first, because the tests start their Keycloak on the same port `8180`:
 
 [source,bash]
@@ -140,14 +126,7 @@ The first test run takes longer, as images have to be downloaded.
 
 * *IntelliJ*: click the green arrow in the margin next to a test class or method and select `Run` (or `Debug`).
 To run all tests of a package or of the module, right-click it (e.g. `src/test/java`) and select `Run 'Tests in ...'`.
-* *Maven*:
-+
-[source,bash]
-----
-mvn test                         # unit tests and @QuarkusTest tests
-mvn verify                       # additionally packages the application and runs the integration tests (*IT)
-mvn test -Dtest=TaskServiceTest  # only one test class
-----
+* *Maven*: `mvn test` runs the tests, `mvn verify` additionally runs the integration tests (classes ending with `IT`).
 
 === Typical problems
 
@@ -157,14 +136,7 @@ mvn test -Dtest=TaskServiceTest  # only one test class
 | `Cannot connect to the Docker daemon` | Docker Desktop / Rancher Desktop is not running. Start it and wait until it is ready.
 | `Port 8080 already in use` | Another instance of the application is still running. Stop it (check the `Run` tool window and your terminals).
 | `port is already allocated` (`8180`) when running tests | The Keycloak container is still running, stop it (see above).
-| Connection error to the database or login page does not open | The containers are not running or Keycloak is still starting. Check with `docker ps`, start them again if necessary.
-| After login `No permissions` is shown | You are logged in as a user without the required role, e.g. `reader` tries to delete. Log in as `manager`.
+| Connection error to the database or the login page does not open | The containers are not running or Keycloak is still starting. Check with `docker ps`, start them again if necessary.
 | Tests fail or run that you do not know, e.g. after switching the git branch | Old compiled classes remain in `backend/target`. Run `mvn clean` once.
 | `Flyway` reports a checksum or migration error after you changed an SQL script | The database still contains the old version. Reset it with `docker compose -f docker-compose.db.yaml down -v` and start the containers again.
 |===
-
-=== Links
-
-* https://github.com/devonfw/IDEasy[IDEasy]
-* https://quarkus.io/guides/maven-tooling#dev-mode[Quarkus: Dev mode]
-* https://quarkus.io/guides/dev-services[Quarkus: Dev Services]
