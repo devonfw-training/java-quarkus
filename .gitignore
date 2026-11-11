@@ -12,3 +12,4 @@
 target
 eclipse-target
 war
+.env

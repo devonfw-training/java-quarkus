@@ -35,11 +35,18 @@ public class TaskService {
 Now create all endpoints required for implementing the todo list application as expected by the frontend. As we're following a design-first approach you must implement the REST endpoints as defined in the OpenAPI specification, which is available in the backend at `+src/main/resources/META-INF/openapi.yaml+`.
 The frontend code is located in ../frontend. The REST calls issued by the frontend are defined in the files todoListProvider.tsx and todoProvider.tsx, which map directly to the backend endpoints described in the OpenAPI specification.
 
+NOTE: The whole REST API is served below the path `/api`, which is configured once in `application.properties` (`quarkus.rest.path=/api`).
+Therefore, the OpenAPI specification and the frontend use paths like `/api/task/list/1`, but in your code you only write `@Path("/task")` and `@Path("/list/{id}")` - Quarkus adds the prefix.
+The reason is that the backend also delivers the web application (at `/`), so the two must be separable.
+
 You can view the documentation of our pre-defined API using Swagger UI reachable at http://localhost:8080/q/swagger-ui and use it for testing it manually.
+For this, start the application as described in the link:setup.asciidoc[setup] (database and Keycloak containers running).
 
 === Testing of service layer
 
 To properly test our REST service, we define a tests in the class `org.example.app.task.service.TaskServiceTest`.
+Note that the paths used in the tests include the `/api` prefix.
+How to run tests (Docker must be running and the Keycloak container must be stopped) is described in the link:setup.asciidoc#_run_the_tests[setup].
 
 You can write tests which integrate with all below layers:
 
@@ -52,7 +59,7 @@ public class TaskServiceTest extends Assertions {
   @Test
   public void testFindTaskList() {
 
-    given().when().get("/task/list/1").then().statusCode(200)
+    given().when().get("/api/task/list/1").then().statusCode(200)
         .body(is("{\"id\":1,\"version\":0,\"title\":\"Shopping List\"}"));
   }
 
@@ -81,7 +88,7 @@ public class TaskServiceTest {
 
     given()
         .when()
-        .get("/task/list/123")
+        .get("/api/task/list/123")
         .then()
         .statusCode(200)
         .body(jsonEquals("{\"id\":123,\"version\":1,\"title\":\"Shopping List\"}"));

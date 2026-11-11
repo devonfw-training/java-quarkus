@@ -56,6 +56,7 @@ public class UcFindTaskList {
    * @param listId the {@link TaskListEntity#getId() primary key} of the {@link TaskListEntity} to find.
    * @return the {@link TaskListCto} for the given {@link TaskListEto#getId() primary key} or {@code null} if not found.
    */
+  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_FIND_TASK_LIST)
   public TaskListCto findWithItems(Long listId) {
 
     Optional<TaskListEntity> taskList = this.taskListRepository.findById(listId);

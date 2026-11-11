@@ -1,50 +1,57 @@
 package org.example.app.general.common.security;
 
-import jakarta.ws.rs.GET;
+import java.util.Map;
+
+import io.quarkus.security.Authenticated;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
+/**
+ * Rest service for the logout of the current user.
+ * <p>
+ * The backend is stateless: it only validates the bearer token of every request and does not hold a session. Logging out therefore means ending the session
+ * of the user in Keycloak (single sign-out). This resource builds the URL of the Keycloak end-session endpoint (RP-initiated logout) to which the frontend has
+ * to send the browser. The access token that has already been issued stays valid until it expires, which is why the realm configures a short lifespan for
+ * access tokens.
+ */
 @Path("/auth")
 public class AuthLogoutResource {
 
-
-  @ConfigProperty(name = "quarkus.oidc.auth-server-url")
-  String authServerUrl;
+  @ConfigProperty(name = "app.keycloak.public-url")
+  String keycloakPublicUrl;
 
   @ConfigProperty(name = "app.frontend-client-id")
   String frontendClientId;
 
   @ConfigProperty(name = "app.logout-redirect")
-  String appLogoutRedirect;
+  String logoutRedirect;
 
-  @GET
+  /**
+   * @param request the JSON body with the optional {@code idToken} of the user. It is sent in the body instead of the URL so that it does not end up in
+   *     access logs, the browser history or referrer headers.
+   * @return a JSON object with the {@code logoutUrl} to which the browser has to be redirected.
+   */
+  @POST
   @Path("/logout")
-  public Response logout(@QueryParam("idToken") String idToken) {
-    if (idToken == null || idToken.isBlank()) {
-      return Response.status(Response.Status.BAD_REQUEST)
-          .entity("Missing idToken")
-          .build();
+  @Authenticated
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response logout(Map<String, String> request) {
+
+    UriBuilder logoutUrl = UriBuilder.fromUri(this.keycloakPublicUrl).path("protocol/openid-connect/logout")
+        .queryParam("client_id", this.frontendClientId).queryParam("post_logout_redirect_uri", this.logoutRedirect);
+    String idToken = (request == null) ? null : request.get("idToken");
+    if ((idToken != null) && !idToken.isBlank()) {
+      logoutUrl.queryParam("id_token_hint", idToken);
     }
-
-    String logoutUrl =
-        authServerUrl +
-            "/protocol/openid-connect/logout" +
-            "?client_id=" + encode(frontendClientId) +
-            "&id_token_hint=" + encode(idToken) +
-            "&post_logout_redirect_uri=" + encode(appLogoutRedirect);
-
-    return Response.status(Response.Status.FOUND)
-        .header("Location", logoutUrl)
-        .build();
-  }
-
-  private String encode(String value) {
-    return URLEncoder.encode(value, StandardCharsets.UTF_8);
+    return Response.ok(Map.of("logoutUrl", logoutUrl.build().toString())).build();
   }
 
 }

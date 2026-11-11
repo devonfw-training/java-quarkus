@@ -59,6 +59,9 @@ public class TaskItemRepositoryTest extends Assertions {
 }
 ----
 
+How to run the tests is described in the link:setup.asciidoc#_run_the_tests[setup].
+Docker has to be running, because Quarkus starts a PostgreSQL database for the tests automatically (Dev Services) and fills it with the SQL scripts mentioned above.
+
 Here are some ideas, what you can test:
 
 * Give me all TaskLists without the TaskItems

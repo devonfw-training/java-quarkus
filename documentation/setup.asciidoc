@@ -3,6 +3,24 @@ toc::[]
 
 == Setup
 
+This chapter prepares your workstation for all exercises:
+You install the tools, build the project, start the database and Keycloak and start the application from your IDE.
+
+=== The training environment
+
+[options="header",cols="2,3,3"]
+|===
+| Part | Runs as | Reachable at
+| PostgreSQL (database) | Docker container | `localhost:5432`
+| Keycloak (login) | Docker container | http://localhost:8180/
+| Backend (Quarkus) and frontend (React) | started by you from the IDE in dev mode | http://localhost:8080/
+|===
+
+The frontend is delivered by the backend, you do not start it separately.
+Log in to the web application with one of the test users `reader`, `writer` or `manager` (the password is the same as the username).
+
+=== Install the tools
+
 Install https://github.com/devonfw/IDEasy[IDEasy]:
 
 * Install https://git-scm.com/downloads[git] if not already installed (download and run installer or run `winget install Git.Git` in PowerShell or CMD)
@@ -13,6 +31,7 @@ Install https://github.com/devonfw/IDEasy[IDEasy]:
 ide create java-quarkus https://github.com/devonfw-training/java-quarkus-settings.git#main
 ```
 * Wait until the setup process has completed.
+This installs the tools you need for the exercises (among others Java and Maven) and the IDEs.
 * If you do not have already Docker Desktop or Rancher Desktop installed, you should do so by running in Git-Bash the command:
 +
 ```
@@ -20,38 +39,67 @@ icd -p java-quarkus
 ide install docker
 ```
 
-=== Build Backend
+=== Build the backend
 
-Now we build our application `backend`:
-
-* Run the following command in your termianl (git-bash):
+* Run the following commands in your terminal (git-bash):
 +
 ```
 icd -p java-quarkus -w main
 cd java-quarkus
 mvn clean install -DskipTests
 ```
++
+All following commands are executed in this folder (the top-level folder of the project), if not stated otherwise.
+The build also builds the frontend and needs an internet connection, so it takes a few minutes the first time.
 
-==== Import into an IDE
+=== Start the database and Keycloak
+
+Start *Docker Desktop* or *Rancher Desktop*, wait until it is running and start the containers:
+
+[source,bash]
+----
+docker compose -f docker-compose.db.yaml -f docker-compose.auth.yaml up -d
+----
+
+The first time the images are downloaded, which takes a few minutes.
+With `docker ps` you can check that two containers with `postgres` and `keycloak` in their names are running.
+Do this again after every reboot of your computer.
+To stop the containers use the same command with `stop` instead of `up -d`.
+How docker compose works is the topic of the exercise link:docker-compose.asciidoc[docker-compose].
+
+=== Import into an IDE
 
 Please choose your favorite IDE.
 For best support from the trainers we recommend to use IntelliJ.
 
-===== IntelliJ
+==== IntelliJ
 
 * Launch IntelliJ via `ide intellij`
-* In your Intellij `Project` view open `java-quarkus` folder and select `pom.xml`.
+* In your IntelliJ `Project` view open the `java-quarkus` folder and select `pom.xml`.
 * Right-click on it and select `+ Add as maven project`
+* Wait until IntelliJ has imported the project (progress bar at the bottom right).
+The module `app` appears in the `Project` view.
+* Check that a JDK is set as project SDK: `File` > `Project Structure` > `Project`.
 
-===== Import into IntelliJ
+===== Start the application
 
-* `ide intellij`
-* In your Intellij `Project` view open `java-quarkus` folder and select `pom.xml`.
-* Right-click on it and select `+ Add as maven project`
+Make sure the containers are running (see above).
+The application is started in dev mode:
 
-===== Eclipse
+* Select the run configuration `Quarkus Dev Mode` (module `app`) at the top right.
+If it does not exist, create it via `Run` > `Edit Configurations...` > `+` > `Quarkus Dev Mode`.
+* Click the green *Run* button, or the *Debug* button (bug icon) to use breakpoints.
+* After a few seconds the `Run` tool window shows `Listening on: http://localhost:8080` and `Profile dev activated`.
 
-Next, we import the new `backend` project into our Eclipse IDE:
+Without the run configuration you can instead double-click `app` > `Plugins` > `quarkus` > `quarkus:dev` in the `Maven` tool window, or run `mvn quarkus:dev` in the folder `backend`.
+To debug in this case, attach a `Remote JVM Debug` run configuration (`Run` > `Edit Configurations...` > `+`) with host `localhost` and port `5005` to the running application.
+
+Then open http://localhost:8080/ and log in with `writer` / `writer`.
+
+Changes of your code are applied automatically on the next request (reload the page), you do not need to restart the application.
+Stop it with the red *Stop* button and make sure that no other instance is still running, otherwise port `8080` is occupied.
+
+==== Eclipse
 
 * `ide eclipse`
 * In Eclipse `Import` as `Existing Maven Project`, there click `Browse` and choose your `backend` folder in `workspaces/main/java-quarkus`.
@@ -61,15 +109,34 @@ Next, we import the new `backend` project into our Eclipse IDE:
 * Click on the first icon from the bar above that list (with tooltip `New launch configuration`)
 * Change the `Name` to `app` and ensure the `Project` is set to `app`.
 * Click on `Debug` to start your app in debug mode.
-* Open http://localhost:8080/ in your browser and you should see the quarkus welcome page of the app.
+* Open http://localhost:8080/ in your browser, as described above for IntelliJ.
 
-=== Build Frontend
-The frontend is written in react and can be build with npm. Please go into `frontend` and run `npm install` on a command line.
+=== Run the tests
 
-When the build was successful and the backend is running, too, you can start the frontend by running `npm start` in the same directory.
+Tests do not need the running application and do not use the data of your containers: Quarkus starts its own PostgreSQL and Keycloak for them.
+Therefore Docker must be running, but you have to *stop the Keycloak container* first, because the tests start their Keycloak on the same port `8180`:
 
-The frontend is reachable under http://localhost:3000/. You can append the id of the list you want to load, default is 1: http://localhost:3000/1.
+[source,bash]
+----
+docker compose -f docker-compose.auth.yaml stop
+----
 
-=== Links
+Start it again afterwards with `docker compose -f docker-compose.auth.yaml start`.
+The first test run takes longer, as images have to be downloaded.
 
-* https://github.com/devonfw/IDEasy[IDEasy]
+* *IntelliJ*: click the green arrow in the margin next to a test class or method and select `Run` (or `Debug`).
+To run all tests of a package or of the module, right-click it (e.g. `src/test/java`) and select `Run 'Tests in ...'`.
+* *Maven*: `mvn test` runs the tests, `mvn verify` additionally runs the integration tests (classes ending with `IT`).
+
+=== Typical problems
+
+[options="header",cols="3,4"]
+|===
+| Problem | Solution
+| `Cannot connect to the Docker daemon` | Docker Desktop / Rancher Desktop is not running. Start it and wait until it is ready.
+| `Port 8080 already in use` | Another instance of the application is still running. Stop it (check the `Run` tool window and your terminals).
+| `port is already allocated` (`8180`) when running tests | The Keycloak container is still running, stop it (see above).
+| Connection error to the database or the login page does not open | The containers are not running or Keycloak is still starting. Check with `docker ps`, start them again if necessary.
+| Tests fail or run that you do not know, e.g. after switching the git branch | Old compiled classes remain in `backend/target`. Run `mvn clean` once.
+| `Flyway` reports a checksum or migration error after you changed an SQL script | The database still contains the old version. Reset it with `docker compose -f docker-compose.db.yaml down -v` and start the containers again.
+|===

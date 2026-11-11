@@ -15,34 +15,58 @@ In this exercise we will launch our application in a container. For this we have
 === Docker Compose
 
 Now, we will containerize our application.
-We will learn how to run docker compose with postgres, our application and keycloak as well how to navigate inside a container.
+We will learn how to run docker compose with Postgres, our application and keycloak as well how to navigate inside a container.
 
 ==== Running with docker
 
 NOTE: The following `docker` commands need to be executed inside the `backend` sub-folder of your `java-quarkus` project.
-However, the `docker-compose` commands need to be run directly in the top-level `java-quarkus` project folder.
+However, the `docker compose` commands need to be run directly in the top-level `java-quarkus` project folder.
 
-Familiarize yourself with the structure of `Dockerfile.jvm` and `docker-compose.yaml`
+Familiarize yourself with the structure of `Dockerfile.jvm` and `docker-compose.app.yaml` (`docker-compose.yaml` only includes the other compose files).
 
-First create a separate network for the database and app by running: :
-`docker network create --driver bridge quarkus`
+Until now you started the application from your IDE in dev mode.
+Now it runs the way it would in production: as a packaged application in a container.
+In this mode Quarkus does not start a database or Keycloak on its own and does not know where they are, so we have to tell the container with environment variables (`-e`).
 
-* Start database container:
+If you still have the containers of the link:setup.asciidoc[setup] (database and Keycloak) running, stop them first (`docker compose -f docker-compose.db.yaml -f docker-compose.auth.yaml down`), because we start them by hand now and the ports would be occupied.
+Also stop the application in your IDE.
+
+First create a separate network for the database, Keycloak and the app by running:
+`docker network create --driver bridge quarkus-net`
+(if this answers that the network already exists, everything is fine).
+
+* Start the database container:
 +
 [source,commandline]
 ----
 docker pull postgres
-docker run --name myPostgresDb -p 5432:5432 --net=quarkus -e POSTGRES_USER=quarkus -e POSTGRES_PASSWORD=quarkus -e POSTGRES_DB=quarkus-db -d postgres
+docker run --name myPostgresDb -p 5432:5432 --net=quarkus-net -e POSTGRES_USER=quarkus -e POSTGRES_PASSWORD=quarkus -e POSTGRES_DB=quarkus -d postgres
 ----
-* Build and start the application:
+* Start the Keycloak container (in the top-level folder, it is defined in `docker-compose.auth.yaml` and uses the same network):
++
+[source,commandline]
+----
+docker compose -f docker-compose.auth.yaml up -d
+----
+* Build and start the application (in the `backend` folder). The frontend is built and included, so this takes a while:
 +
 [source,commandline]
 ----
 mvn package
 docker build -f src/main/docker/Dockerfile.jvm -t quarkus/backend .
-docker run -i --rm -p 8080:8080 --net=quarkus quarkus/backend
+docker run -i --rm -p 8080:8080 --net=quarkus-net \
+  -e QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://myPostgresDb:5432/quarkus \
+  -e QUARKUS_FLYWAY_SCHEMAS=quarkus \
+  -e QUARKUS_OIDC_AUTH_SERVER_URL=http://keycloak:8080/realms/quarkus \
+  -e QUARKUS_OIDC_TOKEN_ISSUER=http://localhost:8180/realms/quarkus \
+  quarkus/backend
 ----
-* Check created containers running `docker ps`
++
+Inside the network the containers reach each other by their name (`myPostgresDb`, `keycloak`).
+Your browser, however, reaches Keycloak as `localhost:8180`; therefore the issuer of the tokens (`QUARKUS_OIDC_TOKEN_ISSUER`) differs from the address the backend uses.
+In the output you should see `Profile prod activated` (not `dev`).
+* Check created containers running `docker ps` (in another terminal) and open http://localhost:8080/.
+* Stop the application with `[Ctrl][c]` and remove the database container with `docker rm -f myPostgresDb`.
 
 ==== Run docker compose
 
@@ -50,13 +74,17 @@ To run the containers you had to execute many commands.
 It would be easier if we only had to execute one command. We can achieve this by using Docker Compose.
 
 ===== Running Docker compose
-Docker Compose works by applying many rules declared within the `docker-compose.yml` configuration file.
+Docker Compose works by applying many rules declared within the `docker-compose.yaml` configuration file.
+To keep it readable, this file only includes the definitions of the individual services, which are located in separate files:
+`docker-compose.db.yaml` (database), `docker-compose.auth.yaml` (keycloak), `docker-compose.ollama.yaml` (ollama) and `docker-compose.app.yaml` (backend and frontend).
+You can also start only a part, e.g. the database and keycloak for development in your IDE: `docker compose -f docker-compose.db.yaml -f docker-compose.auth.yaml up -d` (see link:setup.asciidoc[setup]).
 Further, a file named `.env` is used to configure environment variables for a docker container managed by docker compose.
 See `backend/.env` for an example.
 
-* Start application by running `docker compose up -d`
+* Build the application in the `backend` folder with `mvn package`. The image of the backend is created from the result in `backend/target/quarkus-app` (see `Dockerfile.jvm`), docker compose does not run Maven. Repeat this whenever you changed the code or ran `mvn clean`.
+* Start application by running `docker compose up -d --build` in the top-level folder
 +
-With this command we started container for our backend app, database, keycloak and ollama.
+With this command we started container for our backend app, frontend, database, keycloak and ollama.
 These images are defined as services in docker compose.
 A volume is a shared directory in the host, visible from some or all containers.
 Similarly, networks define the communication rules between containers, and between a container and the host.
@@ -64,24 +92,28 @@ The option `-d` starts the containers in the background (as daemon).
 Otherwise (without `-d`) your terminal will get blocked and if your enter `[Ctrl][c]` the containers will be terminated.
 +
 _Note:_ It will take some minutes until the Ollama AI model is downloaded and finishes to start up.
-* To list all build images run `docker-compose images`
-* Run this command to see that the containers are up and running `docker-compose ps`
+The containers are started in parallel, so the backend may restart a few times until the database and keycloak are ready.
+* Open the web application on http://localhost:8082/ and log in with one of the test users (`reader`, `writer` or `manager`, the password is the same as the username).
+The frontend is not delivered by the backend here, but by a separate container: its image (`frontend/Dockerfile`) contains the built web application and an nginx web server, which is configured in `frontend/nginx.conf`.
+nginx forwards the requests below `/api` to the backend container, which has no port of its own on your computer.
+* To list all build images run `docker compose images`
+* Run this command to see that the containers are up and running `docker compose ps`
 
-NOTE: If you want to stop what you have started with `docker-compose`, you can run `docker-compose down`.
-In case you use `docker-compose down -v` then all volumes will be discarded (so your state with database, etc is thrown away).
+NOTE: If you want to stop what you have started with `docker compose`, you can run `docker compose down`.
+In case you use `docker compose down -v` then all volumes will be discarded (so your state with database, etc is thrown away).
 That can be helpful, if you changed flyway SQL scripts during development and DDL migration will fail otherwise.
 
 ===== Access the database
 Now we will access Postgres using psql.
 
-* Connect to Postgres with this command
+* Find the name of your database container with `docker ps` and connect to it with this command
 `docker exec -it <name of your db container> bash`
 
 Now you are ‘inside’ your container.
 
-* Connect to our quarkus database:
+* Connect to our quarkus database (user `quarkus`, database `quarkus`; the password is `quarkus` as well):
 +
-`psql -h localhost -p 5432 -U <name of db user> -W`
+`psql -h localhost -p 5432 -U quarkus -d quarkus -W`
 * List all available databases inside of your container with `\l`
 * List all tables that were created with `\dt`, press "Enter" to show more tables.
 
@@ -90,16 +122,20 @@ Keycloak is an open source identity and access management solution which mainly 
 
 * Access Keycloak bei call the URL `localhost:<keycloak port from docker compose>`
 * Go to "Administration Console" and enter the user login data from docker compose
-* Navigate to users > view all users. Here you can see your admin-user.
+* Select the realm `quarkus` (top left). It was imported from `backend/src/main/resources/keycloak/quarkus-realm.json`.
+* Navigate to users > view all users. Here you can see the test users `reader`, `writer` and `manager`, and in "Realm roles" the permissions of our application.
+* See link:access-control.asciidoc[access-control] for how our application uses this.
+
+NOTE: Keycloak imports the realm only when its container is created, and keeps its data only as long as the container exists.
+If you change the realm file, recreate the container: `docker compose -f docker-compose.auth.yaml up -d --force-recreate keycloak`.
 
 ===== Stop services with Docker compose
 
-* To safely stop the active services, we can use stop, which will preserve containers, volumes, and networks, along with every modification made to them `docker-compose stop`
-* To reset the status of our project, we can simply run down, which will destroy everything with the exception of external volumes `docker-compose down`
+* To safely stop the active services, we can use stop, which will preserve containers, volumes, and networks, along with every modification made to them `docker compose stop`
+* To reset the status of our project, we can simply run down, which will destroy everything with the exception of external volumes `docker compose down`
 
 === Links
 
 * https://www.docker.com/
 * https://docs.docker.com/compose/
 * https://rancherdesktop.io/
-* https://docs.docker.com/compose/compose-file/compose-file-v3/[Docker compose 3 reference documentation]

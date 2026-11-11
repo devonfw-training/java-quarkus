@@ -1,6 +1,18 @@
+
 = devonfw Java Quarkus Training
 
 Training for the https://github.com/devonfw/java[Java Stack] (https://github.com/devonfw/devon4j[devon4j]) of https://devonfw.com[devonfw] using https://quarkus.io[Quarkus].
+
+== Quick start
+
+The details are described in the link:documentation/setup.asciidoc[setup].
+In short, once the tools are installed and the project is built:
+
+. Start Docker (Docker Desktop or Rancher Desktop).
+. Start the database and Keycloak in the top-level folder of the project: `docker compose -f docker-compose.db.yaml -f docker-compose.auth.yaml up -d`
+. Start the backend in dev mode from your IDE (IntelliJ: run configuration `Quarkus Dev Mode`) or with `mvn quarkus:dev` in the folder `backend`.
+. Open http://localhost:8080/ and log in with `writer` / `writer`.
+. Run the tests with `mvn test` (stop the Keycloak container before: `docker compose -f docker-compose.auth.yaml stop`).
 
 Agenda for exercises:
 
@@ -8,7 +20,6 @@ Agenda for exercises:
 * link:documentation/dataaccess.asciidoc[dataaccess]
 * link:documentation/logic.asciidoc[logic]
 * link:documentation/service.asciidoc[service]
-//* link:documentation/access-control.asciidoc[5-access-control]
 * link:documentation/docker-compose.asciidoc[docker-compose]
 * link:documentation/inter-service-communication.adoc[inter-service communication]
 * link:documentation/fault-tolerance.adoc[fault tolerance]

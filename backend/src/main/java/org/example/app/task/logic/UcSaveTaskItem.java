@@ -33,7 +33,8 @@ public class UcSaveTaskItem {
   public TaskItemEto save(TaskItemEto item) {
 
     TaskItemEntity entity = this.taskItemMapper.toEntity(item);
-    entity = this.taskItemRepository.save(entity);
+    // flush so that the version is incremented before it is returned (the client needs it to save the item again)
+    entity = this.taskItemRepository.saveAndFlush(entity);
     return this.taskItemMapper.toEto(entity);
   }
 

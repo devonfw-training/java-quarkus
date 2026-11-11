@@ -2,7 +2,6 @@ package org.example.app.task.service;
 
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.*;
 import io.restassured.http.ContentType;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.BDDAssertions;
@@ -22,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -76,14 +76,14 @@ class TaskServiceTest extends Assertions {
 
         given(TaskServiceTest.this.saveTaskList.save(Mockito.any())).willReturn(taskListEto);
 
-        given().when().body("{ \"title\": \"Shopping List\" }").contentType(ContentType.JSON).post("/task/list").then()
+        given().when().body("{ \"title\": \"Shopping List\" }").contentType(ContentType.JSON).post("/api/task/list").then()
                 .statusCode(201);
       }
 
       @Test
       void shouldFailWith400AndValidationErrorWhenTitleIsEmpty() {
 
-        given().when().body("{ \"title\": \"\" }").contentType(ContentType.JSON).post("/task/list").then()
+        given().when().body("{ \"title\": \"\" }").contentType(ContentType.JSON).post("/api/task/list").then()
             .statusCode(400);
         then(TaskServiceTest.this.saveTaskList).shouldHaveNoInteractions();
       }
@@ -102,7 +102,7 @@ class TaskServiceTest extends Assertions {
 
           given(TaskServiceTest.this.findTaskList.findById(anyLong())).willReturn(TaskListMother.complete());
 
-          given().when().get("/task/list/123").then().statusCode(200)
+          given().when().get("/api/task/list/123").then().statusCode(200)
               .body(jsonEquals("{\"id\":123,\"version\":1,\"title\":\"Shopping List\"}"));
         }
 
@@ -111,7 +111,7 @@ class TaskServiceTest extends Assertions {
 
           given(TaskServiceTest.this.findTaskList.findById(anyLong())).willReturn(null);
 
-          given().when().get("/task/list/99").then().statusCode(404);
+          given().when().get("/api/task/list/99").then().statusCode(404);
         }
       }
 
@@ -122,7 +122,7 @@ class TaskServiceTest extends Assertions {
         @Test
         void shouldCallDeleteUseCaseAndReturn204() {
 
-          given().when().delete("/task/list/1").then().statusCode(204);
+          given().when().delete("/api/task/list/1").then().statusCode(204);
           then(TaskServiceTest.this.deleteTaskList).should().delete(1L);
         }
       }
@@ -137,7 +137,7 @@ class TaskServiceTest extends Assertions {
           @Test
           void shouldCallRandomActivityUseCaseAndReturn201() {
 
-            given().when().post("/task/list/1/random-activity").then().statusCode(201);
+            given().when().post("/api/task/list/1/random-activity").then().statusCode(201);
             then(TaskServiceTest.this.addRandomActivityTaskItem).should().addRandom(1L);
           }
         }
@@ -161,7 +161,7 @@ class TaskServiceTest extends Assertions {
 
           given(TaskServiceTest.this.findTaskList.findWithItems(123L)).willReturn(taskList);
 
-          given().when().get("/task/list-with-items/123").then().statusCode(200).body(jsonEquals(
+          given().when().get("/api/task/list-with-items/123").then().statusCode(200).body(jsonEquals(
               "{\"items\":[{\"id\":42,\"version\":1,\"completed\":false,\"starred\":false,\"taskListId\":123,\"title\":\"Buy Eggs\"}],\"list\":{\"id\":123,\"version\":1,\"title\":\"Shopping List\"}}"));
         }
 
@@ -170,7 +170,7 @@ class TaskServiceTest extends Assertions {
 
           given(TaskServiceTest.this.findTaskList.findWithItems(anyLong())).willReturn(null);
 
-          given().when().get("/task/list-with-items/99").then().statusCode(404);
+          given().when().get("/api/task/list-with-items/99").then().statusCode(404);
         }
       }
     }
@@ -190,14 +190,14 @@ class TaskServiceTest extends Assertions {
 
           given(TaskServiceTest.this.saveTaskList.save(Mockito.any())).willReturn(taskListEto);
 
-          given().when().body("Shopping list").contentType(ContentType.TEXT).post("/task/list/multiple-random-activities").then().statusCode(201);
+          given().when().body("Shopping list").contentType(ContentType.TEXT).post("/api/task/list/multiple-random-activities").then().statusCode(201);
           then(TaskServiceTest.this.addRandomActivityTaskItem).should().addMultipleRandom(anyLong(), anyString());
         }
 
         @Test
         void shouldFailWith400AndValidationErrorWhenTitleIsEmpty() {
 
-          given().when().contentType(ContentType.TEXT).post("/task/list/multiple-random-activities").then().statusCode(400);
+          given().when().contentType(ContentType.TEXT).post("/api/task/list/multiple-random-activities").then().statusCode(400);
           then(TaskServiceTest.this.addRandomActivityTaskItem).shouldHaveNoInteractions();
         }
       }
@@ -219,21 +219,21 @@ class TaskServiceTest extends Assertions {
           given(TaskServiceTest.this.saveTaskList.save(Mockito.any())).willReturn(taskListEto);
 
           given().when().body("{\"listTitle\": \"Shopping list\", \"recipe\": \"Take flour, sugar and chocolate and mix everything.\"}")
-                  .contentType(ContentType.JSON).post("/task/list/ingredient-list").then().statusCode(201);
+                  .contentType(ContentType.JSON).post("/api/task/list/ingredient-list").then().statusCode(201);
           then(TaskServiceTest.this.addRandomActivityTaskItem).should().addExtractedIngredients(anyLong(), anyString());
         }
 
         @Test
         void shouldFailWith400AndValidationErrorWhenTitleIsEmpty() {
 
-          given().when().body("{\"recipe\": \"Take flour, sugar and chocolate and mix everything.\"}").contentType(ContentType.JSON).post("/task/list/ingredient-list").then().statusCode(400);
+          given().when().body("{\"recipe\": \"Take flour, sugar and chocolate and mix everything.\"}").contentType(ContentType.JSON).post("/api/task/list/ingredient-list").then().statusCode(400);
           then(TaskServiceTest.this.addRandomActivityTaskItem).shouldHaveNoInteractions();
         }
 
         @Test
         void shouldFailWith400AndValidationErrorWhenRecipeIsEmpty() {
 
-          given().when().body("{\"listTitle\": \"Shopping list\"}").contentType(ContentType.JSON).post("/task/list/ingredient-list").then().statusCode(400);
+          given().when().body("{\"listTitle\": \"Shopping list\"}").contentType(ContentType.JSON).post("/api/task/list/ingredient-list").then().statusCode(400);
           then(TaskServiceTest.this.addRandomActivityTaskItem).shouldHaveNoInteractions();
         }
       }
@@ -255,7 +255,7 @@ class TaskServiceTest extends Assertions {
         given(TaskServiceTest.this.saveTaskItem.save(Mockito.any())).willReturn(taskItemEto);
 
         given().when().body("{ \"title\": \"Buy Milk\", \"taskListId\": 123 }").contentType(ContentType.JSON)
-                .post("/task/item").then().statusCode(201).body(is("42"));
+                .post("/api/task/item").then().statusCode(201).body(is("42"));
 
         ArgumentCaptor<TaskItemEto> taskItemCaptor = ArgumentCaptor.forClass(TaskItemEto.class);
         then(TaskServiceTest.this.saveTaskItem).should().save(taskItemCaptor.capture());
@@ -264,17 +264,29 @@ class TaskServiceTest extends Assertions {
       }
 
       @Test
+      void shouldKeepMillisecondOfDeadlineWhenSavingTaskItem() {
+        given(TaskServiceTest.this.saveTaskItem.save(Mockito.any())).willReturn(TaskItemMother.complete());
+
+        given().when().body("{ \"title\": \"Buy Milk\", \"taskListId\": 123, \"deadline\": \"2026-11-23T00:00:00.001\" }")
+                .contentType(ContentType.JSON).post("/api/task/item").then().statusCode(201);
+
+        ArgumentCaptor<TaskItemEto> taskItemCaptor = ArgumentCaptor.forClass(TaskItemEto.class);
+        then(TaskServiceTest.this.saveTaskItem).should().save(taskItemCaptor.capture());
+        BDDAssertions.then(taskItemCaptor.getValue().getDeadline()).isEqualTo(LocalDateTime.of(2026, 11, 23, 0, 0, 0, 1_000_000));
+      }
+
+      @Test
       void shouldFailWith400AndValidationErrorWhenTitleIsEmpty() {
 
         given().when().body("{ \"title\": \"\", \"taskListId\": 123 }").contentType(ContentType.JSON)
-            .post("/task/item").then().statusCode(400);
+            .post("/api/task/item").then().statusCode(400);
         then(TaskServiceTest.this.saveTaskItem).shouldHaveNoInteractions();
       }
 
       @Test
       void shouldFailWith400AndValidationErrorWhenTaskListIdNotGiven() {
 
-        given().when().body("{ \"title\": \"Buy Milk\" }").contentType(ContentType.JSON).post("/task/item").then()
+        given().when().body("{ \"title\": \"Buy Milk\" }").contentType(ContentType.JSON).post("/api/task/item").then()
             .statusCode(400);
         then(TaskServiceTest.this.saveTaskItem).shouldHaveNoInteractions();
       }
@@ -293,8 +305,28 @@ class TaskServiceTest extends Assertions {
 
           given(TaskServiceTest.this.findTaskItem.findById(anyLong())).willReturn(TaskItemMother.complete());
 
-          given().when().get("/task/item/42").then().statusCode(200).body(jsonEquals(
+          given().when().get("/api/task/item/42").then().statusCode(200).body(jsonEquals(
               "{\"id\":42,\"version\":1,\"completed\":false,\"starred\":false,\"taskListId\":123,\"title\":\"Buy Eggs\"}"));
+        }
+
+        @Test
+        void shouldReturnDeadlineWithMillisecondWhenItemHasDateWithoutTime() {
+
+          TaskItemEto item = TaskItemMother.complete();
+          item.setDeadline(LocalDateTime.of(2026, 11, 23, 0, 0, 0, 1_000_000));
+          given(TaskServiceTest.this.findTaskItem.findById(anyLong())).willReturn(item);
+
+          given().when().get("/api/task/item/42").then().statusCode(200).body("deadline", is("2026-11-23T00:00:00.001"));
+        }
+
+        @Test
+        void shouldReturnDeadlineWithoutMillisecondWhenItemHasTimeAtMidnight() {
+
+          TaskItemEto item = TaskItemMother.complete();
+          item.setDeadline(LocalDateTime.of(2026, 11, 23, 0, 0));
+          given(TaskServiceTest.this.findTaskItem.findById(anyLong())).willReturn(item);
+
+          given().when().get("/api/task/item/42").then().statusCode(200).body("deadline", is("2026-11-23T00:00:00"));
         }
 
         @Test
@@ -302,7 +334,7 @@ class TaskServiceTest extends Assertions {
 
           given(TaskServiceTest.this.findTaskItem.findById(anyLong())).willReturn(null);
 
-          given().when().get("/task/item/99").then().statusCode(404);
+          given().when().get("/api/task/item/99").then().statusCode(404);
         }
 
       }
@@ -314,7 +346,7 @@ class TaskServiceTest extends Assertions {
         @Test
         void shouldCallDeleteUseCaseAndReturn204() {
 
-          given().when().delete("/task/item/42").then().statusCode(204);
+          given().when().delete("/api/task/item/42").then().statusCode(204);
           then(TaskServiceTest.this.deleteTaskItem).should().delete(42L);
         }
       }

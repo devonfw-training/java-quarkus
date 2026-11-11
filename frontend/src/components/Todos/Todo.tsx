@@ -8,6 +8,7 @@ import { TaskItemTypeI } from "../../types/types";
 import { DeleteTodoConfirm } from "../dialogs/todo/deleteTodoConfirm";
 import EditTodo from "../dialogs/todo/editTodo";
 import Checkbox from "../utils/checkbox";
+import { formatDeadline } from "../../utils/deadline";
 
 interface TodoI {
   todo: TaskItemTypeI;
@@ -59,7 +60,7 @@ const Todo = forwardRef(({ todo, onDelete, onEdit }: TodoI, ref: any) => {
             >
               <CalendarDays className="w-4 h-4 dark:text-white text-black" />
               <p className="text-xs dark:text-white text-black">
-                {new Date(todo.deadline ?? "").toLocaleString()}
+                {todo.deadline ? formatDeadline(todo.deadline) : ""}
               </p>
             </div>
           </div>
@@ -102,7 +103,7 @@ const Todo = forwardRef(({ todo, onDelete, onEdit }: TodoI, ref: any) => {
           setEditOpen(false);
         }}
         title={todo.title}
-        deadline={todo.deadline?.substring(0, 16) ?? null}
+        deadline={todo.deadline}
       />
     </div>
   );

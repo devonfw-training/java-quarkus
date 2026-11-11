@@ -55,6 +55,7 @@ public class UcAddRandomActivityTaskItem {
    *     {@link org.example.app.task.dataaccess.TaskListEntity} to which random tasks will be added.
    * @param listTitle the title of the task list
    */
+  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM)
   public void addMultipleRandom(Long taskListId, String listTitle) {
     List<TaskItemEto> taskItems = this.activityService.getMultipleRandomActivities(listTitle);
 
@@ -75,6 +76,7 @@ public class UcAddRandomActivityTaskItem {
    *     {@link org.example.app.task.dataaccess.TaskListEntity} to which the extracted ingredients will be added as tasks.
    * @param recipe the recipe from which to extract ingredients.
    */
+  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_SAVE_TASK_ITEM)
   public void addExtractedIngredients(Long taskListId, String recipe) {
     List<TaskItemEto> ingredients = this.activityService.getExtractedIngredients(recipe);
 

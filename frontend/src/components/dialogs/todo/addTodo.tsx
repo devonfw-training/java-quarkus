@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { TodoContext } from "../../../provider/todoProvider";
+import { joinDeadline } from "../../../utils/deadline";
 import DialogBase from "../dialogBase";
 
 interface AddTodoI {
@@ -8,21 +9,22 @@ interface AddTodoI {
   close: () => void;
 }
 
+const inputClass =
+  "dark:text-white text-black border-2 dark:border-white border-black p-4 rounded-lg mt-1";
+
 const AddTodo = ({ open, close }: AddTodoI) => {
   const { addTodo } = useContext(TodoContext)!;
   const [title, setTitle] = useState("New Item");
-  const [deadline, setDeadline] = useState(null) as [
-    string | null,
-    Dispatch<SetStateAction<string | null>>
-  ];
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  // changing the key of the date and time inputs also removes a partly typed date or time
+  const [resetKey, setResetKey] = useState(0);
 
   const onClose = () => {
     setTitle("New Item");
-    setDeadline("reset");
-    //Necessary to clean date input if not filled out fully
-    setTimeout(() => {
-      setDeadline(null);
-    }, 100);
+    setDate("");
+    setTime("");
+    setResetKey((key) => key + 1);
     close();
   };
 
@@ -41,23 +43,42 @@ const AddTodo = ({ open, close }: AddTodoI) => {
         <span className="dark:text-white text-black mt-6">Title</span>
         <input
           type="text"
-          className="dark:text-white text-black border-2 dark:border-white border-black p-4 rounded-lg mt-1"
+          className={inputClass}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <span className="dark:text-white text-black mt-6">Date (optional)</span>
-        <input
-          type="datetime-local"
-          className="dark:text-white text-black border-2 dark:border-white border-black p-4 rounded-lg mt-1"
-          value={deadline ?? ""}
-          onChange={(e) => {
-            setDeadline(0 === e.target.value.length ? null : e.target.value);
-          }}
-        />
+        <div className="flex flex-row gap-4 mt-6">
+          <div className="flex flex-col flex-1">
+            <span className="dark:text-white text-black">Date (optional)</span>
+            <input
+              key={`date-${resetKey}`}
+              type="date"
+              className={inputClass}
+              value={date}
+              onChange={(e) => {
+                setDate(e.target.value);
+                if (!e.target.value) {
+                  setTime("");
+                }
+              }}
+            />
+          </div>
+          <div className="flex flex-col flex-1">
+            <span className="dark:text-white text-black">Time (optional)</span>
+            <input
+              key={`time-${resetKey}`}
+              type="time"
+              className={inputClass}
+              value={time}
+              disabled={!date}
+              onChange={(e) => setTime(e.target.value)}
+            />
+          </div>
+        </div>
         <button
           className="mt-12 text-white bg-primary rounded-lg py-4 cursor-pointer"
           onClick={() => {
-            addTodo(title.trim(), deadline);
+            addTodo(title.trim(), joinDeadline(date, time));
             onClose();
           }}
         >

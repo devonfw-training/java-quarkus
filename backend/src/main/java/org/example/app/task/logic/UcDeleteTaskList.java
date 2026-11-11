@@ -29,7 +29,7 @@ public class UcDeleteTaskList {
    * @param id the {@link org.example.app.task.dataaccess.TaskListEntity#getId() primary key} of the {@link org.example.app.task.dataaccess.TaskListEntity}
    *     to delete.
    */
-  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_DELETE_TASK_ITEM)
+  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_DELETE_TASK_LIST)
   public void delete(Long id) {
 
     this.taskListRepository.deleteById(id);
@@ -38,7 +38,7 @@ public class UcDeleteTaskList {
   /**
    * @param list the {@link TaskListEto} to delete.
    */
-  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_DELETE_TASK_ITEM)
+  @RolesAllowed(ApplicationAccessControlConfig.PERMISSION_DELETE_TASK_LIST)
   public void delete(TaskListEto list) {
 
     Long id = list.getId();

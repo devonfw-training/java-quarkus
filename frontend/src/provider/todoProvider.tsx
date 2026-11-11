@@ -8,6 +8,7 @@ import {
 import { TaskItemTypeI } from "../types/types";
 import { MainContext } from "./mainProvider";
 import { keycloak } from "../auth/keycloak";
+import { errorAlertMessage } from "../auth/httpErrors";
 
 export const TodoContext = createContext<TodoInterfaceI | null>(null);
 
@@ -79,7 +80,7 @@ export const TodoProvider = ({ children }: PropsI) => {
 
                 if (!response.ok) {
                     console.error("Items could not be loaded:", response.status);
-                    setErrorAlert("Items could not be loaded!");
+                    setErrorAlert(errorAlertMessage(response.status, "Items could not be loaded!"));
                     return;
                 }
 
@@ -119,7 +120,7 @@ export const TodoProvider = ({ children }: PropsI) => {
 
             if (!response.ok) {
                 console.error("Items could not be loaded:", response.status);
-                setErrorAlert("Items could not be loaded!");
+                setErrorAlert(errorAlertMessage(response.status, "Items could not be loaded!"));
                 return;
             }
 
@@ -150,7 +151,7 @@ export const TodoProvider = ({ children }: PropsI) => {
 
             if (!response.ok) {
                 console.error("Item could not be saved:", response.status);
-                setErrorAlert("Item could not be saved!");
+                setErrorAlert(errorAlertMessage(response.status, "Item could not be saved!"));
                 return;
             }
 
@@ -190,7 +191,7 @@ export const TodoProvider = ({ children }: PropsI) => {
 
             if (!response.ok) {
                 console.error("Random item could not be created:", response.status);
-                setErrorAlert("Item could not be saved!");
+                setErrorAlert(errorAlertMessage(response.status, "Item could not be saved!"));
                 return;
             }
 
@@ -324,14 +325,9 @@ export const TodoProvider = ({ children }: PropsI) => {
                 headers: authHeaders(),
             });
 
-            if (response.status === 403) {
-                setErrorAlert("Item could not be deleted (No permissions)!");
-                return;
-            }
-
             if (!response.ok) {
                 console.error("Item could not be deleted:", response.status);
-                setErrorAlert("Item could not be deleted!");
+                setErrorAlert(errorAlertMessage(response.status, "Item could not be deleted!"));
                 return;
             }
 

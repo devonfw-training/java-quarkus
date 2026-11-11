@@ -14,7 +14,7 @@ servers:
 - url: http://0.0.0.0:8080
   description: Auto generated value
 paths:
-  /task/item:
+  /api/task/item:
     post:
       tags:
       - Task Service
@@ -35,7 +35,7 @@ paths:
           description: Validation error
         "500":
           description: Server unavailable or a server-side error occurred
-  /task/item/{id}:
+  /api/task/item/{id}:
     get:
       tags:
       - Task Service
@@ -80,7 +80,7 @@ paths:
           description: Task list deleted
         "500":
           description: Server unavailable or a server-side error occurred
-  /task/list:
+  /api/task/list:
     post:
       tags:
       - Task Service
@@ -101,7 +101,7 @@ paths:
           description: Validation error
         "500":
           description: Server unavailable or a server-side error occurred
-  /task/list-with-items/{id}:
+  /api/task/list-with-items/{id}:
     get:
       tags:
       - Task Service
@@ -127,7 +127,7 @@ paths:
           description: Task list not found
         "500":
           description: Server unavailable or a server-side error occurred
-  /task/list/{id}:
+  /api/task/list/{id}:
     get:
       tags:
       - Task Service
@@ -215,7 +215,7 @@ components:
         deadline:
           allOf:
           - $ref: '#/components/schemas/LocalDateTime'
-          - description: Until when the task must be completed
+          - description: Until when the task must be completed. A time of 00:00:00.001 means a date without a time, 00:00:00 is midnight
     TaskList:
       description: Object that represents a task list
       required:
