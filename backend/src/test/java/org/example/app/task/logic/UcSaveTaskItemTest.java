@@ -39,4 +39,25 @@ class UcSaveTaskItemTest extends Assertions {
     this.ucSaveTaskItem.save(item2);
   }
 
+  /**
+   * The client continues with the result of {@link UcSaveTaskItem#save(TaskItemEto)}, so it has to contain the new version. Otherwise, saving the same item
+   * again fails with an optimistic locking exception.
+   */
+  @Test
+  void saveTaskItemReturnsNewVersionAndCanBeSavedAgain() {
+
+    TaskItemEto item = this.ucFindTaskItem.findById(12L);
+    int version = item.getVersion();
+    boolean starred = item.isStarred();
+    item.setStarred(!starred);
+
+    TaskItemEto saved = this.ucSaveTaskItem.save(item);
+    assertThat(saved.getVersion()).isEqualTo(version + 1);
+
+    // second change of the same item with the result of the first save (and restore of the original state)
+    saved.setStarred(starred);
+    TaskItemEto saved2 = this.ucSaveTaskItem.save(saved);
+    assertThat(saved2.getVersion()).isEqualTo(version + 2);
+  }
+
 }

@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DialogBase from "../dialogBase";
 
 interface EditTodoI {
@@ -18,6 +18,12 @@ const EditTodo = ({ open, close, title, deadline, yes }: EditTodoI) => {
     setNewDeadline(deadline);
     close();
   };
+
+  // the dialog is created only once per item, so take over the current values of the item whenever they change
+  useEffect(() => {
+    setNewTitle(title);
+    setNewDeadline(deadline);
+  }, [title, deadline]);
 
   return (
     <DialogBase show={open} close={onClose}>

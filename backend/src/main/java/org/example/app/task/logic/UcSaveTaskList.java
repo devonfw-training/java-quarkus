@@ -30,7 +30,8 @@ public class UcSaveTaskList {
   public TaskListEto save(TaskListEto list) {
 
     TaskListEntity entity = this.taskListMapper.toEntity(list);
-    entity = this.taskListRepository.save(entity);
+    // flush so that the version is incremented before it is returned (the client needs it to save the list again)
+    entity = this.taskListRepository.saveAndFlush(entity);
     return this.taskListMapper.toEto(entity);
   }
 
