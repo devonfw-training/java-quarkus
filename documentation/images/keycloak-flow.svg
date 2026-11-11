@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="1199" viewBox="0 0 1060 1199">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333333"/></marker>
+<style>.t{font-family:Helvetica,Arial,sans-serif;fill:#222222}.h{font-family:Helvetica,Arial,sans-serif;fill:#222222}.halo{paint-order:stroke;stroke:#ffffff;stroke-width:4px;stroke-linejoin:round}</style>
+</defs>
+<rect width="1060" height="1199" fill="#ffffff"/>
+<line x1="140" y1="66" x2="140" y2="1189" stroke="#999999" stroke-width="1.2" stroke-dasharray="3,4"/>
+<line x1="400" y1="66" x2="400" y2="1189" stroke="#999999" stroke-width="1.2" stroke-dasharray="3,4"/>
+<line x1="660" y1="66" x2="660" y2="1189" stroke="#999999" stroke-width="1.2" stroke-dasharray="3,4"/>
+<line x1="920" y1="66" x2="920" y2="1189" stroke="#999999" stroke-width="1.2" stroke-dasharray="3,4"/>
+<rect x="45" y="14" width="190" height="52" rx="6" fill="#f5f5f5" stroke="#666666" stroke-width="1.5"/>
+<text x="140" y="36" text-anchor="middle" font-size="15" font-weight="bold" class="h">User</text>
+<text x="140" y="55" text-anchor="middle" font-size="12" font-weight="normal" class="h">(Browser)</text>
+<rect x="305" y="14" width="190" height="52" rx="6" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5"/>
+<text x="400" y="36" text-anchor="middle" font-size="15" font-weight="bold" class="h">Web app</text>
+<text x="400" y="55" text-anchor="middle" font-size="12" font-weight="normal" class="h">(React, runs in the browser)</text>
+<rect x="565" y="14" width="190" height="52" rx="6" fill="#d5e8d4" stroke="#82b366" stroke-width="1.5"/>
+<text x="660" y="36" text-anchor="middle" font-size="15" font-weight="bold" class="h">Backend</text>
+<text x="660" y="55" text-anchor="middle" font-size="12" font-weight="normal" class="h">(Quarkus)</text>
+<rect x="825" y="14" width="190" height="52" rx="6" fill="#ffe6cc" stroke="#d79b00" stroke-width="1.5"/>
+<text x="920" y="36" text-anchor="middle" font-size="15" font-weight="bold" class="h">Keycloak</text>
+<text x="920" y="55" text-anchor="middle" font-size="12" font-weight="normal" class="h">(Identity Provider)</text>
+<rect x="10" y="98" width="1040" height="26" fill="#eeeeee" stroke="#cccccc"/>
+<text x="22" y="116" text-anchor="start" font-size="14" font-weight="bold" class="h">Login (once, when the web application is opened)</text>
+<text x="400.0" y="150" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">1  open http://localhost:8080/</text>
+<line x1="140" y1="159" x2="659" y2="159" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="530.0" y="187" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">2  web application (HTML,</text>
+<text x="530.0" y="203" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">JavaScript)</text>
+<line x1="660" y1="212" x2="401" y2="212" stroke="#333333" stroke-width="1.5" stroke-dasharray="7,4" marker-end="url(#arrow)"/>
+<text x="660.0" y="240" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">3  redirect to Keycloak: login with authorization code flow and PKCE</text>
+<line x1="400" y1="249" x2="919" y2="249" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="530.0" y="277" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">4  login page</text>
+<line x1="920" y1="286" x2="141" y2="286" stroke="#333333" stroke-width="1.5" stroke-dasharray="7,4" marker-end="url(#arrow)"/>
+<text x="530.0" y="314" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">5  user name and password</text>
+<line x1="140" y1="323" x2="919" y2="323" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="660.0" y="351" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">6  redirect back to the web application with an authorization code</text>
+<line x1="920" y1="360" x2="401" y2="360" stroke="#333333" stroke-width="1.5" stroke-dasharray="7,4" marker-end="url(#arrow)"/>
+<text x="660.0" y="388" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">7  exchange the code (and the PKCE code verifier) for tokens</text>
+<line x1="400" y1="397" x2="919" y2="397" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="660.0" y="425" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">8  access token (JWT, valid 2 minutes), ID token and refresh token</text>
+<line x1="920" y1="434" x2="401" y2="434" stroke="#333333" stroke-width="1.5" stroke-dasharray="7,4" marker-end="url(#arrow)"/>
+<rect x="10" y="464" width="1040" height="26" fill="#eeeeee" stroke="#cccccc"/>
+<text x="22" y="482" text-anchor="start" font-size="14" font-weight="bold" class="h">Using the application (with every request)</text>
+<text x="530.0" y="516" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">9  e.g. GET /api/task/lists with</text>
+<text x="530.0" y="532" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">header  Authorization: Bearer</text>
+<text x="530.0" y="548" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">&lt;access token&gt;</text>
+<line x1="400" y1="557" x2="659" y2="557" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="580" y="573" width="420" height="76" fill="#fff8c4" stroke="#cfc25a"/>
+<text x="590" y="591" text-anchor="start" font-size="13" font-weight="normal" class="t">The backend has no session and does not ask Keycloak.</text>
+<text x="590" y="607" text-anchor="start" font-size="13" font-weight="normal" class="t">It validates the token itself: signature (public keys of</text>
+<text x="590" y="623" text-anchor="start" font-size="13" font-weight="normal" class="t">Keycloak), issuer and expiry.</text>
+<text x="590" y="639" text-anchor="start" font-size="13" font-weight="normal" class="t">The roles are taken from the claim "roles" of the token.</text>
+<text x="530.0" y="675" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">10  200 with the data, or 401</text>
+<text x="530.0" y="691" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">(token invalid or expired), or 403</text>
+<text x="530.0" y="707" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">(role missing)</text>
+<line x1="660" y1="716" x2="401" y2="716" stroke="#333333" stroke-width="1.5" stroke-dasharray="7,4" marker-end="url(#arrow)"/>
+<rect x="10" y="746" width="1040" height="26" fill="#eeeeee" stroke="#cccccc"/>
+<text x="22" y="764" text-anchor="start" font-size="14" font-weight="bold" class="h">Renewal (the access token is only valid for 2 minutes)</text>
+<text x="660.0" y="798" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">11  before each request: if the access token expires within 30 seconds,</text>
+<text x="660.0" y="814" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">send the refresh token</text>
+<line x1="400" y1="823" x2="919" y2="823" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="660.0" y="851" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">12  new access token</text>
+<line x1="920" y1="860" x2="401" y2="860" stroke="#333333" stroke-width="1.5" stroke-dasharray="7,4" marker-end="url(#arrow)"/>
+<rect x="10" y="890" width="1040" height="26" fill="#eeeeee" stroke="#cccccc"/>
+<text x="22" y="908" text-anchor="start" font-size="14" font-weight="bold" class="h">Logout</text>
+<text x="270.0" y="942" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">13  click LOGOUT</text>
+<line x1="140" y1="951" x2="399" y2="951" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="530.0" y="979" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">14  POST /api/auth/logout (access</text>
+<text x="530.0" y="995" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">token as bearer, ID token in the</text>
+<text x="530.0" y="1011" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">body)</text>
+<line x1="400" y1="1020" x2="659" y2="1020" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="530.0" y="1048" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">15  URL of the end-session</text>
+<text x="530.0" y="1064" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">endpoint of Keycloak</text>
+<line x1="660" y1="1073" x2="401" y2="1073" stroke="#333333" stroke-width="1.5" stroke-dasharray="7,4" marker-end="url(#arrow)"/>
+<text x="660.0" y="1101" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">16  redirect the browser to this URL (ends the session of the user in</text>
+<text x="660.0" y="1117" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">Keycloak)</text>
+<line x1="400" y1="1126" x2="919" y2="1126" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="660.0" y="1154" text-anchor="middle" font-size="13" font-weight="normal" class="t halo">17  redirect to http://localhost:8080/ (start again with step 1)</text>
+<line x1="920" y1="1163" x2="401" y2="1163" stroke="#333333" stroke-width="1.5" stroke-dasharray="7,4" marker-end="url(#arrow)"/>
+</svg>

@@ -24,6 +24,21 @@ Stop the Keycloak container before you run them.
 * The realm of Keycloak is defined in `backend/src/main/resources/keycloak/quarkus-realm.json` and imported on startup.
 Every permission of our application (see `ApplicationAccessControlConfig`) exists as a role in this realm.
 
+The following diagram shows how the parts work together, from the login to the logout:
+
+image::images/keycloak-flow.png[Authentication flow with Keycloak, width="100%"]
+
+* *Steps 1-8 (login)*: the backend delivers the web application, which sends the user to Keycloak.
+The user enters the credentials only at Keycloak, never in our application.
+The web application receives the tokens in exchange for the authorization code.
+* *Steps 9-10 (every request)*: the web application sends the access token with each request to the backend.
+The backend checks the token itself and answers with `401` if it is invalid or expired.
+If the user lacks the role (permission) required by the use-case, it answers with `403`.
+You will build exactly this check with `@RolesAllowed` in the following authorization part.
+* *Steps 11-12 (renewal)*: the access token is only valid for two minutes.
+Before each request the web application checks whether it is still valid for at least 30 seconds and otherwise gets a new one from Keycloak with the refresh token.
+* *Steps 13-17 (logout)*: the backend only builds the URL of the Keycloak end-session endpoint; Keycloak ends the session of the user when the browser calls it.
+
 The following test users are available (the password is the same as the username):
 
 [options="header"]
