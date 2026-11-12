@@ -39,6 +39,11 @@ Each of use-case implementation shall be annotated as following:
 @Transactional
 ----
 
+=== Testing
+
+Test your use-cases with JUnit tests as in the link:dataaccess.asciidoc[dataaccess exercise].
+How to run the tests (in IntelliJ and with Maven) is described in the link:setup.asciidoc#_run_the_tests[setup].
+
 === Links
 
 * https://github.com/devonfw/devon4j/blob/develop/documentation/guide-logic-layer.asciidoc#logic-layer[devon4j: Logic-Layer]

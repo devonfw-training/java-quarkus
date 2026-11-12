@@ -3,17 +3,17 @@ toc::[]
 
 == Fault Tolerance
 
-When we request a random activity for our ToDo-list we are using an internet service. If our connection is interrupted, this will no longer work. Instead of getting an exception and our use case failing we now instead want to add some pre-defined default activities to our task list.
+When we request a random activity for our ToDo-list we are calling an external service, the AI model running in the Ollama container (see link:inter-service-communication.adoc[inter-service communication]). If the connection is interrupted or the service is too slow, this will no longer work. Instead of getting an exception and our use case failing we now instead want to add some pre-defined default activities to our task list.
 
 === Implement a timeout and fallback
 
-When the REST client cannot get a response from the BoredAPI (in time) instead of throwing an exception and failing our use case should add one of multiple pre-defined activities. 
+When the REST client cannot get a response from Ollama (in time) instead of throwing an exception and failing our use case should add one of multiple pre-defined activities. 
 
-To achieve such as behavior we need to wrap our method which calls the BoredAPI via our MicroProfile REST client with the necessary annotations from the MicroProfile Fault Tolerance API. Check the Quarkus guide linked below for some ideas.
+To achieve such as behavior we need to wrap our method which calls Ollama via our MicroProfile REST client with the necessary annotations from the MicroProfile Fault Tolerance API. Check the Quarkus guide linked below for some ideas.
 
-Again you can test this with Swagger UI while disabling your WLAN.
+Again you can test this with Swagger UI (see link:service.asciidoc[service]), while the Ollama container is stopped: `docker compose -f docker-compose.ollama.yaml stop`. Start it again with `docker compose -f docker-compose.ollama.yaml start` to see the normal behavior.
 
 === Links
 
-- https://download.eclipse.org/microprofile/microprofile-fault-tolerance-4.0.2/microprofile-fault-tolerance-spec-4.0.2.html
+- https://github.com/microprofile/microprofile-fault-tolerance[MicroProfile Fault Tolerance specification]
 - https://quarkus.io/guides/smallrye-fault-tolerance
